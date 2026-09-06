@@ -1,0 +1,17 @@
+{
+  "name": "creature-clash",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=22.13.0 <23",
+    "pnpm": "10.29.3"
+  },
+  "scripts": {
+    "build": "pnpm --filter @creature-clash/battle-engine build",
+    "dev": "pnpm build && pnpm --parallel --filter @creature-clash/battle-engine --filter @creature-clash/mobile dev",
+    "typecheck": "pnpm build && pnpm -r typecheck",
+    "check": "pnpm typecheck && pnpm --filter @creature-clash/mobile exec expo install --check",
+    "bundle:check": "pnpm build && pnpm --filter @creature-clash/mobile bundle:check"
+  }
+}
