@@ -93,6 +93,9 @@ describe('validateSnapshot', () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
 
+    expect(Object.isFrozen(result.value)).toBe(true);
+    expect(Object.isFrozen(result.value.stats)).toBe(true);
+
     input.instanceId = 'mutated';
     input.stats.Attack = 1;
 
@@ -207,13 +210,17 @@ describe('validateTypeChart', () => {
     expect(validateTypeChart(8).ok).toBe(false);
   });
 
-  it('isolates validated chart from input mutation', () => {
+  it('isolates validated chart from nested cell mutation', () => {
     const input = cloneDefaultChart();
     const result = validateTypeChart(input);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
 
-    input.Fire = { ...input.Fire, Grass: 9 };
+    expect(Object.isFrozen(result.value)).toBe(true);
+    expect(Object.isFrozen(result.value.Fire)).toBe(true);
+
+    // Mutate the nested cell — a shallow row share would fail this.
+    input.Fire.Grass = 9;
     expect(result.value.Fire.Grass).toBe(11);
   });
 });
