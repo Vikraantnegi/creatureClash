@@ -1,4 +1,4 @@
-import { CATEGORY, TYPE } from './types.js';
+import { CATEGORY, PLAYER, TYPE } from './types.js';
 
 export const CATEGORIES: CATEGORY[] = [
   CATEGORY.ATTACK,
@@ -10,7 +10,10 @@ export const CATEGORIES: CATEGORY[] = [
 export const TYPES: TYPE[] = [TYPE.FIRE, TYPE.WATER, TYPE.GRASS, TYPE.ELECTRIC, TYPE.ROCK];
 
 export const SUPPORTED_MULTIPLIER_TENTHS: number[] = [9, 10, 11];
+
 export const STARTING_HP = 2;
 export const MAX_NORMAL_EXCHANGES = 3;
 export const CONDITIONAL_FOURTH_EXCHANGES = 1;
 export const MAX_SAFE_STAT = Math.floor(Number.MAX_SAFE_INTEGER / 11);
+
+export const PLAYERS: PLAYER[] = [PLAYER.A, PLAYER.B];

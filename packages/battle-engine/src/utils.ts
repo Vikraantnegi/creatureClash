@@ -1,5 +1,5 @@
-import { SUPPORTED_MULTIPLIER_TENTHS, TYPES } from './constants.js';
-import { MULTIPLIER_TENTHS, Result, TYPE } from './types.js';
+import { CATEGORIES, SUPPORTED_MULTIPLIER_TENTHS, TYPES } from './constants.js';
+import { CATEGORY, MULTIPLIER_TENTHS, Result, TYPE } from './types.js';
 
 export const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -16,6 +16,9 @@ export const produceFailResult = (error: string): Result<never> => ({ ok: false,
 
 export const isTypeId = (value: unknown): value is TYPE =>
   isString(value) && (TYPES as readonly string[]).includes(value);
+
+export const isCategory = (value: unknown): value is CATEGORY =>
+  isString(value) && (CATEGORIES as readonly string[]).includes(value);
 
 export const isMultiplierTenths = (value: unknown): value is MULTIPLIER_TENTHS =>
   isNumber(value) &&

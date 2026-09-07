@@ -11,16 +11,16 @@ const CONTRACT_TENTHS: MULTIPLIER_TENTHS[][] = [
   /* Rock */ [10, 10, 9, 11, 10],
 ];
 
-// Fire: { Fire: 10, Water: 9, Grass: 11, Electric: 10, Rock: 10 }
 const buildDefaultTypeChart = (): TypeChart => {
   const chart = {} as Record<TYPE, Record<TYPE, MULTIPLIER_TENTHS>>;
   for (const own of TYPES) {
     const ownIndex = TYPES.indexOf(own);
+    const row = {} as Record<TYPE, MULTIPLIER_TENTHS>;
     for (const opp of TYPES) {
       const oppIndex = TYPES.indexOf(opp);
-      chart[own] = chart[own] ?? {};
-      chart[own][opp] = CONTRACT_TENTHS[ownIndex]![oppIndex]!;
+      row[opp] = CONTRACT_TENTHS[ownIndex]![oppIndex]!;
     }
+    chart[own] = row;
   }
   return chart;
 };

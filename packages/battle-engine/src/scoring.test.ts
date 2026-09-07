@@ -17,7 +17,7 @@ const CONTRACT_EXPECTED_TENTHS: readonly (readonly MULTIPLIER_TENTHS[])[] = [
 ];
 
 type MutableTypeChart = {
-  -readonly [K in TYPE]: { -readonly [P in TYPE]: MULTIPLIER_TENTHS };
+  [K in TYPE]: { [P in TYPE]: MULTIPLIER_TENTHS };
 };
 
 function cloneDefaultChart(): MutableTypeChart {
