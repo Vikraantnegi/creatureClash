@@ -6,6 +6,7 @@ pnpm workspace for an Expo React Native app and a shared, pure TypeScript battle
 
 - Node.js 22.13 or newer within Node 22; `.nvmrc` pins 22.23.2.
 - pnpm 10.29.3, pinned in the root `packageManager` field.
+- For local development builds: [Xcode](https://docs.expo.dev/get-started/set-up-your-environment/) (iOS) and/or [Android Studio](https://docs.expo.dev/get-started/set-up-your-environment/) (Android). Full Xcode.app is required for iOS — Command Line Tools alone are not enough.
 
 Expo SDK 57 requires Node 22.13+. With nvm, run `nvm install` and `nvm use` in this directory. If needed, install the pinned pnpm with `npm install --global pnpm@10.29.3` after selecting Node 22.
 
@@ -13,19 +14,34 @@ Expo SDK 57 requires Node 22.13+. With nvm, run `nvm install` and `nvm use` in t
 
 ```sh
 pnpm install --frozen-lockfile
+pnpm native:prebuild   # generates apps/mobile/ios and android (gitignored; CNG)
+pnpm ios               # or: pnpm android
+```
+
+`pnpm ios` / `pnpm android` compile a local **development build** (includes `expo-dev-client`), install it on the simulator/emulator or device, and start Metro. After the first native compile, day-to-day JS/TS work is:
+
+```sh
 pnpm dev
 ```
 
-Run commands from the repository root. `pnpm dev` builds the engine first, then starts its TypeScript watcher and Expo together. The app imports the engine by package name via `workspace:*`. Engine changes rebuild automatically while developing.
+That builds the engine watcher and starts Expo in `--dev-client` mode against the installed development build.
 
-The initial screen displays the categories imported from the engine. This proves workspace integration; it is not a playable battle yet. Expo Go is optional for that smoke test. Local Expo development builds are the next pass.
+Optional Expo Go smoke (compatible JS-only check; not the working app):
+
+```sh
+pnpm --filter @creature-clash/mobile start:go
+```
+
+The initial screen displays categories imported from the engine. This proves workspace integration; it is not a playable battle yet.
+
+Native projects are regenerated from Expo config (`app.json` + config plugins). Prefer changing native behaviour through Expo configuration/plugins, then re-run `pnpm native:prebuild` (or `expo run:*`, which prebuilds when dirs are missing). Do not hand-maintain `ios/` / `android/` as the source of truth.
 
 ## Structure
 
-**Current (this foundation pass):**
+**Current:**
 
 ```text
-apps/mobile/                 Expo SDK 57 + React Native + TypeScript
+apps/mobile/                 Expo SDK 57 + TypeScript + expo-dev-client
 packages/battle-engine/      Framework-independent TypeScript, compiled to dist/
 ```
 
@@ -37,9 +53,9 @@ apps/simulator/              Match schedules, seeds, policy comparisons, traces
 docs/battle-contract.md      Approved Phase 0 contract snapshot
 ```
 
-The engine has no runtime dependencies, React imports, native APIs, or app imports. Its public entry point is `src/index.ts`. Only the category vocabulary is implemented in this setup pass. Mobile never depends on engine source (`dist/` only); the engine never imports Expo or React Native.
+The engine has no runtime dependencies, React imports, native APIs, or app imports. Its public entry point is `src/index.ts`. Only the category vocabulary is implemented so far. Mobile never depends on engine source (`dist/` only); the engine never imports Expo or React Native.
 
-Expo uses its standard Metro monorepo support. No custom resolver, hoisting workaround, or Turborepo. Add Turborepo only when build orchestration becomes useful.
+Expo uses its standard Metro monorepo support. No custom resolver, hoisting workaround, or Turborepo. Add Turborepo only when build orchestration becomes useful. EAS cloud builds are optional and not configured yet.
 
 ## Package boundaries
 
@@ -56,12 +72,13 @@ Battle implementation should follow the [authoritative Phase 0 contract](https:/
 ```sh
 pnpm check          # Engine build, both TypeScript checks, Expo dependency check
 pnpm bundle:check   # Export iOS and Android JavaScript bundles through Metro
+pnpm native:prebuild  # Regenerate native projects from app config (needs CocoaPods for iOS pods)
 ```
 
-The bundle check verifies package resolution and production bundling. It does not compile native projects or prove the app runs on a physical device. Output folders are ignored by Git.
+The bundle check verifies package resolution and production bundling. Compiling and installing a development build requires local Xcode / Android Studio (`pnpm ios` / `pnpm android`). Output and generated native folders are ignored by Git.
 
-## Next pass
+## Later
 
-Set up and run a local Expo development build (`expo-dev-client`), using Expo configuration and config plugins for native changes where practical. Expo Go remains optional for a compatible initial smoke test. Native projects, signing, EAS, `game-data`, simulator, Vitest, duel resolution, and progression stay for subsequent work.
+`game-data`, simulator, Vitest, duel resolution, progression, signing, and EAS stay for subsequent work.
 
 The mobile starter includes the Expo template's original license in `apps/mobile/LICENSE`.

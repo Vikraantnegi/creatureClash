@@ -8,3 +8,7 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Continuous Native Generation — regenerate with `pnpm native:prebuild`
+apps/mobile/ios/
+apps/mobile/android/
