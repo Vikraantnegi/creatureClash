@@ -13,6 +13,7 @@
     "ios": "pnpm build && pnpm --filter @creature-clash/mobile ios",
     "android": "pnpm build && pnpm --filter @creature-clash/mobile android",
     "native:prebuild": "pnpm --filter @creature-clash/mobile exec expo prebuild",
+    "test": "pnpm --filter @creature-clash/battle-engine test",
     "typecheck": "pnpm build && pnpm -r typecheck",
     "check": "pnpm typecheck && pnpm --filter @creature-clash/mobile exec expo install --check",
     "bundle:check": "pnpm build && pnpm --filter @creature-clash/mobile bundle:check"

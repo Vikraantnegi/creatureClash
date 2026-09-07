@@ -59,7 +59,7 @@ apps/simulator/              Match schedules, seeds, policy comparisons, traces
 docs/battle-contract.md      Approved Phase 0 contract snapshot
 ```
 
-The engine has no runtime dependencies, React imports, native APIs, or app imports. Its public entry point is `src/index.ts`. Only the category vocabulary is implemented so far. Mobile never depends on engine source (`dist/` only); the engine never imports Expo or React Native.
+The engine has no runtime dependencies, React imports, native APIs, or app imports. Its public entry point is `src/index.ts`. Phase 1 covers snapshot/type-chart validation and fixed-point scoring (Vitest colocated in the package). Duel resolution comes next. Mobile never depends on engine source (`dist/` only); the engine never imports Expo or React Native.
 
 Expo uses its standard Metro monorepo support. No custom resolver, hoisting workaround, or Turborepo. Add Turborepo only when build orchestration becomes useful. EAS cloud builds are optional and not configured yet.
 
@@ -76,6 +76,7 @@ Battle implementation should follow the [authoritative Phase 0 contract](https:/
 ## Checks
 
 ```sh
+pnpm test           # battle-engine Vitest suite
 pnpm check          # Engine build, both TypeScript checks, Expo dependency check
 pnpm bundle:check   # Export iOS and Android JavaScript bundles through Metro
 pnpm native:prebuild  # Regenerate native projects from app config (needs CocoaPods for iOS pods)
@@ -85,6 +86,6 @@ The bundle check verifies package resolution and production bundling. Compiling 
 
 ## Later
 
-`game-data`, simulator, Vitest, duel resolution, progression, signing, and EAS stay for subsequent work.
+`game-data`, simulator, duel resolution (`advanceDuel` / `timeoutPick`), progression, signing, and EAS stay for subsequent work.
 
 The mobile starter includes the Expo template's original license in `apps/mobile/LICENSE`.

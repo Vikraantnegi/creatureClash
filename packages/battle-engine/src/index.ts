@@ -1,9 +1,23 @@
-/** Public category vocabulary. Battle resolution will be implemented next. */
-export const CATEGORIES = Object.freeze([
-  'Attack',
-  'Defense',
-  'Speed',
-  'Special',
-] as const);
+export {
+  CATEGORIES,
+  TYPES,
+  SUPPORTED_MULTIPLIER_TENTHS,
+  STARTING_HP,
+  MAX_NORMAL_EXCHANGES,
+  CONDITIONAL_FOURTH_EXCHANGES,
+  MAX_SAFE_STAT,
+} from './types.js';
 
-export type Category = (typeof CATEGORIES)[number];
+export type {
+  CategoryId,
+  Category,
+  TypeId,
+  MultiplierTenths,
+  TypeChart,
+  CreatureSnapshot,
+  Result,
+} from './types.js';
+
+export { DEFAULT_TYPE_CHART } from './defaultTypeChart.js';
+export { multiplierTenths, effectiveTenths } from './scoring.js';
+export { validateSnapshot, validateTypeChart } from './validate.js';
