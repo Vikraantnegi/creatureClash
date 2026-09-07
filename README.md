@@ -4,21 +4,27 @@ pnpm workspace for an Expo React Native app and a shared, pure TypeScript battle
 
 ## Requirements
 
-- Node.js 22.13 or newer within Node 22; `.nvmrc` pins 22.23.2.
+- Node.js 22.13 or newer within Node 22; `.nvmrc` pins 22.23.2. Run `nvm use` in this directory — shells often default to Node 20.
 - pnpm 10.29.3, pinned in the root `packageManager` field.
-- For local development builds: [Xcode](https://docs.expo.dev/get-started/set-up-your-environment/) (iOS) and/or [Android Studio](https://docs.expo.dev/get-started/set-up-your-environment/) (Android). Full Xcode.app is required for iOS — Command Line Tools alone are not enough.
+- **Android (verified):** Android Studio + SDK at `~/Library/Android/sdk`, with `ANDROID_HOME` set. React Native 0.86 / Expo 57 need:
+  - platforms;android-36
+  - build-tools;36.0.0
+  - ndk;27.1.12297006  
+  Install via `sdkmanager` (Homebrew cask `android-commandlinetools` works). Use Android Studio’s JBR for `JAVA_HOME` if needed.
+- **iOS (not yet verified on this machine):** full [Xcode.app](https://docs.expo.dev/get-started/set-up-your-environment/) and CocoaPods. Command Line Tools alone are not enough.
 
-Expo SDK 57 requires Node 22.13+. With nvm, run `nvm install` and `nvm use` in this directory. If needed, install the pinned pnpm with `npm install --global pnpm@10.29.3` after selecting Node 22.
+Expo SDK 57 requires Node 22.13+. If needed, install the pinned pnpm with `npm install --global pnpm@10.29.3` after selecting Node 22.
 
 ## Start
 
 ```sh
+nvm use
 pnpm install --frozen-lockfile
 pnpm native:prebuild   # generates apps/mobile/ios and android (gitignored; CNG)
-pnpm ios               # or: pnpm android
+pnpm android           # local development build (verified). iOS: pnpm ios when Xcode is ready
 ```
 
-`pnpm ios` / `pnpm android` compile a local **development build** (includes `expo-dev-client`), install it on the simulator/emulator or device, and start Metro. After the first native compile, day-to-day JS/TS work is:
+`pnpm android` / `pnpm ios` compile a local **development build** (includes `expo-dev-client`), install it on the emulator/simulator or device, and start Metro. After the first native compile, day-to-day JS/TS work is:
 
 ```sh
 pnpm dev

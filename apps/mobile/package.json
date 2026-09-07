@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "expo start --dev-client",
     "start": "pnpm --filter @creature-clash/battle-engine build && expo start --dev-client",
-    "start:go": "pnpm --filter @creature-clash/battle-engine build && expo start",
+    "start:go": "pnpm --filter @creature-clash/battle-engine build && expo start --go",
     "typecheck": "tsc --noEmit",
     "bundle:check": "expo export --platform ios --platform android --output-dir dist",
     "native:prebuild": "expo prebuild",
