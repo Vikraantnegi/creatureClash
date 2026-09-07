@@ -10,7 +10,7 @@ pnpm workspace for an Expo React Native app and a shared, pure TypeScript battle
   - platforms;android-36
   - build-tools;36.0.0
   - ndk;27.1.12297006  
-  Install via `sdkmanager` (Homebrew cask `android-commandlinetools` works). Use Android Studio’s JBR for `JAVA_HOME` if needed.
+    Install via `sdkmanager` (Homebrew cask `android-commandlinetools` works). Use Android Studio’s JBR for `JAVA_HOME` if needed.
 - **iOS (not yet verified on this machine):** full [Xcode.app](https://docs.expo.dev/get-started/set-up-your-environment/) and CocoaPods. Command Line Tools alone are not enough.
 
 Expo SDK 57 requires Node 22.13+. If needed, install the pinned pnpm with `npm install --global pnpm@10.29.3` after selecting Node 22.
@@ -38,7 +38,7 @@ Optional Expo Go smoke (compatible JS-only check; not the working app):
 pnpm --filter @creature-clash/mobile start:go
 ```
 
-The initial screen displays categories imported from the engine. This proves workspace integration; it is not a playable battle yet.
+The initial screen displays categories imported from the engine, styled with **NativeWind** (Tailwind utilities via `className`). This proves workspace integration; it is not a playable battle yet.
 
 Native projects are regenerated from Expo config (`app.json` + config plugins). Prefer changing native behaviour through Expo configuration/plugins, then re-run `pnpm native:prebuild` (or `expo run:*`, which prebuilds when dirs are missing). Do not hand-maintain `ios/` / `android/` as the source of truth.
 
@@ -47,7 +47,7 @@ Native projects are regenerated from Expo config (`app.json` + config plugins). 
 **Current:**
 
 ```text
-apps/mobile/                 Expo SDK 57 + TypeScript + expo-dev-client
+apps/mobile/                 Expo SDK 57 + TypeScript + expo-dev-client + NativeWind
 packages/battle-engine/      Framework-independent TypeScript, compiled to dist/
 ```
 
@@ -76,11 +76,17 @@ Battle implementation should follow the [authoritative Phase 0 contract](https:/
 ## Checks
 
 ```sh
+pnpm format         # Prettier write
+pnpm format:check   # Prettier check
+pnpm lint           # ESLint (Expo flat config + Prettier)
+pnpm lint:fix      # ESLint with --fix
 pnpm test           # battle-engine Vitest suite
-pnpm check          # Engine build, both TypeScript checks, Expo dependency check
+pnpm check          # format:check + lint + typecheck + Expo dependency check
 pnpm bundle:check   # Export iOS and Android JavaScript bundles through Metro
 pnpm native:prebuild  # Regenerate native projects from app config (needs CocoaPods for iOS pods)
 ```
+
+Husky runs `lint-staged` on pre-commit (ESLint --fix + Prettier on staged files). `pnpm install` runs `prepare` → `husky`.
 
 The bundle check verifies package resolution and production bundling. Compiling and installing a development build requires local Xcode / Android Studio (`pnpm ios` / `pnpm android`). Output and generated native folders are ignored by Git.
 

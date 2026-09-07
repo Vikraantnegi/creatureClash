@@ -1,26 +1,22 @@
-import type { MultiplierTenths, TypeChart, TypeId } from './types.js';
+import type { MULTIPLIER_TENTHS, TYPE, TypeChart } from './types.js';
 
 /**
- * Look up the integer tenths factor for own vs opponent type.
+ * Type-chart multiplier in integer tenths (9 / 10 / 11).
  * Assumes a validated chart — not a Result boundary; always uses the supplied chart.
  */
-export function multiplierTenths(
+export const getTypeMultiplier = (
   chart: TypeChart,
-  ownType: TypeId,
-  opponentType: TypeId,
-): MultiplierTenths {
-  return chart[ownType][opponentType];
-}
+  ownType: TYPE,
+  opponentType: TYPE,
+): MULTIPLIER_TENTHS => chart[ownType][opponentType];
 
 /**
- * Effective comparison score in tenths: `stat * factor`.
+ * Effective comparison score in tenths: `stat * type multiplier`.
  * Assumes validated chart and a safe nonnegative integer `stat`.
  */
-export function effectiveTenths(
+export const getEffectiveScore = (
   stat: number,
   chart: TypeChart,
-  ownType: TypeId,
-  opponentType: TypeId,
-): number {
-  return stat * multiplierTenths(chart, ownType, opponentType);
-}
+  ownType: TYPE,
+  opponentType: TYPE,
+): number => stat * getTypeMultiplier(chart, ownType, opponentType);

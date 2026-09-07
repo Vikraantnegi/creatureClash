@@ -8,6 +8,7 @@
     "pnpm": "10.29.3"
   },
   "scripts": {
+    "prepare": "husky",
     "build": "pnpm --filter @creature-clash/battle-engine build",
     "dev": "pnpm build && pnpm --parallel --filter @creature-clash/battle-engine --filter @creature-clash/mobile dev",
     "ios": "pnpm build && pnpm --filter @creature-clash/mobile ios",
@@ -15,7 +16,36 @@
     "native:prebuild": "pnpm --filter @creature-clash/mobile exec expo prebuild",
     "test": "pnpm --filter @creature-clash/battle-engine test",
     "typecheck": "pnpm build && pnpm -r typecheck",
-    "check": "pnpm typecheck && pnpm --filter @creature-clash/mobile exec expo install --check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm --filter @creature-clash/mobile exec expo install --check",
     "bundle:check": "pnpm build && pnpm --filter @creature-clash/mobile bundle:check"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "unrs-resolver"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "9.39.1",
+    "eslint-config-expo": "10.0.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.4",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "prettier": "3.6.2",
+    "prettier-plugin-tailwindcss": "0.5.14"
   }
 }
