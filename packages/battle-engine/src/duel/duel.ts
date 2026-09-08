@@ -1,4 +1,4 @@
-import { CATEGORIES, MAX_NORMAL_EXCHANGES, STARTING_HP, TYPES } from '../constants.js';
+import { CATEGORIES, MAX_NORMAL_EXCHANGES, STARTING_HP } from '../constants.js';
 import { getEffectiveScore, getTypeMultiplier } from '../scoring/scoring.js';
 import { DUEL_STATUS, DUEL_WINNER, PLAYER } from '../types.js';
 import type {
@@ -6,32 +6,20 @@ import type {
   AdvanceDuelResult,
   CATEGORY,
   CreateDuelInput,
-  CreatureSnapshot,
   DuelState,
   ExchangeResultEvent,
   ResolvedExchange,
   Result,
   TimeoutPickResult,
-  TypeChart,
 } from '../types.js';
-import { isCategory, isNonEmptyString, produceFailResult } from '../utils.js';
+import {
+  copySnapshot,
+  copyTypeChart,
+  isCategory,
+  isNonEmptyString,
+  produceFailResult,
+} from '../utils.js';
 import { validateCreatureSnapshot, validateTypeChart } from '../snapshots/validate.js';
-
-// helpers
-const copySnapshot = (snapshot: CreatureSnapshot): CreatureSnapshot => ({
-  instanceId: snapshot.instanceId,
-  speciesId: snapshot.speciesId,
-  typeId: snapshot.typeId,
-  stats: { ...snapshot.stats },
-});
-
-const copyTypeChart = (chart: TypeChart): TypeChart => {
-  const next = {} as TypeChart;
-  for (const own of TYPES) {
-    next[own] = { ...chart[own] };
-  }
-  return next;
-};
 
 const remainingCategory = (used: CATEGORY[]): CATEGORY => {
   const remaining = CATEGORIES.filter((category) => !used.includes(category));
@@ -80,12 +68,16 @@ const resolveExchange = (
   let hpB = state.hpB;
 
   let exchangeWinner: ExchangeResultEvent['exchangeWinner'] = 'tie';
+  let damageToA: 0 | 1 = 0;
+  let damageToB: 0 | 1 = 0;
 
   if (aEffective > bEffective) {
     exchangeWinner = PLAYER.A;
+    damageToB = 1;
     hpB -= 1;
   } else if (bEffective > aEffective) {
     exchangeWinner = PLAYER.B;
+    damageToA = 1;
     hpA -= 1;
   }
 
@@ -102,6 +94,8 @@ const resolveExchange = (
       aEffective,
       bEffective,
       exchangeWinner,
+      damageToA,
+      damageToB,
       hpA,
       hpB,
       isAutomaticFourth,

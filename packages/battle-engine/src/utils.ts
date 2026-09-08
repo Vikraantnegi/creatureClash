@@ -1,5 +1,5 @@
 import { CATEGORIES, SUPPORTED_MULTIPLIER_TENTHS, TYPES } from './constants.js';
-import { CATEGORY, MULTIPLIER_TENTHS, Result, TYPE } from './types.js';
+import { CATEGORY, CreatureSnapshot, MULTIPLIER_TENTHS, Result, TYPE, TypeChart } from './types.js';
 
 export const isObject = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -24,3 +24,18 @@ export const isMultiplierTenths = (value: unknown): value is MULTIPLIER_TENTHS =
   isNumber(value) &&
   Number.isInteger(value) &&
   (SUPPORTED_MULTIPLIER_TENTHS as readonly number[]).includes(value);
+
+export const copySnapshot = (snapshot: CreatureSnapshot): CreatureSnapshot => ({
+  instanceId: snapshot.instanceId,
+  speciesId: snapshot.speciesId,
+  typeId: snapshot.typeId,
+  stats: { ...snapshot.stats },
+});
+
+export const copyTypeChart = (chart: TypeChart): TypeChart => {
+  const next = {} as TypeChart;
+  for (const own of TYPES) {
+    next[own] = { ...chart[own] };
+  }
+  return next;
+};

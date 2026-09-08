@@ -24,9 +24,12 @@ export type {
   AdvanceDuelSuccess,
   AdvanceDuelResult,
   TimeoutPickResult,
+  SidePublic,
+  PlayerView,
 } from './types.js';
 
 export { DEFAULT_TYPE_CHART } from './snapshots/defaultTypeChart.js';
 export { getTypeMultiplier, getEffectiveScore } from './scoring/scoring.js';
 export { validateCreatureSnapshot, validateTypeChart } from './snapshots/validate.js';
 export { createDuel, advanceDuel, timeoutPick } from './duel/duel.js';
+export { getPlayerView } from './view/view.js';

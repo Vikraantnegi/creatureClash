@@ -55,6 +55,8 @@ export type ExchangeResultEvent = {
   aEffective: number;
   bEffective: number;
   exchangeWinner: PLAYER | 'tie';
+  damageToA: 0 | 1;
+  damageToB: 0 | 1;
   hpA: number;
   hpB: number;
   isAutomaticFourth: boolean;
@@ -114,4 +116,25 @@ export type ResolvedExchange = {
   hpB: number;
   usedA: CATEGORY[];
   usedB: CATEGORY[];
+};
+
+export type SidePublic = {
+  creature: CreatureSnapshot;
+  hp: number;
+  usedCategories: CATEGORY[];
+  availableCategories: CATEGORY[];
+  typeFactor: MULTIPLIER_TENTHS;
+  effectiveScores: Record<CATEGORY, number>;
+};
+
+export type PlayerView = {
+  duelId: string;
+  viewer: PLAYER;
+  status: DUEL_STATUS;
+  winner: DUEL_WINNER;
+  currentExchangeId: number | null;
+  exchangesCompleted: number;
+  history: ExchangeResultEvent[];
+  self: SidePublic;
+  opponent: SidePublic;
 };

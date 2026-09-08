@@ -508,3 +508,78 @@ describe('engine regression — Ashkit vs Brookfin', () => {
     expect(state.exchangesCompleted).toBe(3);
   });
 });
+
+describe('exchange damage fields', () => {
+  it('records damage matching HP change for A win, B win, and tie', () => {
+    const aWins = mustAdvance(
+      mustCreate('dmg-a', ashkit, brookfin),
+      CATEGORY.ATTACK,
+      CATEGORY.DEFENSE,
+    );
+    expect(aWins.events[0]!.exchangeWinner).toBe('A');
+    expect(aWins.events[0]!.damageToA).toBe(0);
+    expect(aWins.events[0]!.damageToB).toBe(1);
+    expect(aWins.nextState.hpA).toBe(2);
+    expect(aWins.nextState.hpB).toBe(1);
+
+    const bWins = mustAdvance(
+      mustCreate('dmg-b', ashkit, brookfin),
+      CATEGORY.ATTACK,
+      CATEGORY.SPECIAL,
+    );
+    expect(bWins.events[0]!.exchangeWinner).toBe('B');
+    expect(bWins.events[0]!.damageToA).toBe(1);
+    expect(bWins.events[0]!.damageToB).toBe(0);
+    expect(bWins.nextState.hpA).toBe(1);
+    expect(bWins.nextState.hpB).toBe(2);
+
+    const tie = mustAdvance(
+      mustCreate('dmg-tie', equalFire, equalFireB),
+      CATEGORY.ATTACK,
+      CATEGORY.ATTACK,
+    );
+    expect(tie.events[0]!.exchangeWinner).toBe('tie');
+    expect(tie.events[0]!.damageToA).toBe(0);
+    expect(tie.events[0]!.damageToB).toBe(0);
+    expect(tie.nextState.hpA).toBe(2);
+    expect(tie.nextState.hpB).toBe(2);
+  });
+
+  it('records damage on the automatic fourth event', () => {
+    const a = {
+      instanceId: 'a',
+      speciesId: 'a',
+      typeId: TYPE.FIRE,
+      stats: {
+        [CATEGORY.ATTACK]: 50,
+        [CATEGORY.DEFENSE]: 50,
+        [CATEGORY.SPEED]: 50,
+        [CATEGORY.SPECIAL]: 80,
+      },
+    };
+    const b = {
+      instanceId: 'b',
+      speciesId: 'b',
+      typeId: TYPE.FIRE,
+      stats: {
+        [CATEGORY.ATTACK]: 50,
+        [CATEGORY.DEFENSE]: 50,
+        [CATEGORY.SPEED]: 50,
+        [CATEGORY.SPECIAL]: 40,
+      },
+    };
+
+    let state = mustCreate('dmg-fourth', a, b);
+    state = mustAdvance(state, CATEGORY.ATTACK, CATEGORY.ATTACK).nextState;
+    state = mustAdvance(state, CATEGORY.DEFENSE, CATEGORY.DEFENSE).nextState;
+    const third = mustAdvance(state, CATEGORY.SPEED, CATEGORY.SPEED);
+
+    expect(third.events[0]!.damageToA).toBe(0);
+    expect(third.events[0]!.damageToB).toBe(0);
+    expect(third.events[1]!.isAutomaticFourth).toBe(true);
+    expect(third.events[1]!.damageToA).toBe(0);
+    expect(third.events[1]!.damageToB).toBe(1);
+    expect(third.nextState.hpA).toBe(2);
+    expect(third.nextState.hpB).toBe(1);
+  });
+});
