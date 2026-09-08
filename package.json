@@ -14,7 +14,7 @@
     "ios": "pnpm build && pnpm --filter @creature-clash/mobile ios",
     "android": "pnpm build && pnpm --filter @creature-clash/mobile android",
     "native:prebuild": "pnpm --filter @creature-clash/mobile exec expo prebuild",
-    "test": "pnpm --filter @creature-clash/battle-engine test",
+    "test": "pnpm build && pnpm -r --if-present test",
     "typecheck": "pnpm build && pnpm -r typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -34,6 +34,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@shopify/react-native-skia",
       "esbuild",
       "unrs-resolver"
     ]
