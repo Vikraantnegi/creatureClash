@@ -138,3 +138,97 @@ export type PlayerView = {
   self: SidePublic;
   opponent: SidePublic;
 };
+
+export type SessionState = {
+  duel: DuelState;
+  pendingA: CATEGORY | null;
+  pendingB: CATEGORY | null;
+};
+
+export type SessionView = {
+  view: PlayerView;
+  aCommitted: boolean;
+  bCommitted: boolean;
+};
+
+export type SubmitAction = {
+  duelId: string;
+  exchangeId: number;
+  side: PLAYER;
+  pick: unknown;
+};
+
+export enum SUBMIT_REASON {
+  DUEL_FINISHED = 'duel_finished',
+  WRONG_DUEL = 'wrong_duel',
+  WRONG_EXCHANGE = 'wrong_exchange',
+  ALREADY_COMMITTED = 'already_committed',
+  INVALID_CATEGORY = 'invalid_category',
+  CATEGORY_ALREADY_USED = 'category_already_used',
+  ADVANCE_REJECTED = 'advance_rejected',
+}
+
+export enum DRIVER_REASON {
+  SESSION_NOT_READY = 'session_not_ready',
+  POLICY_FAILED = 'policy_failed',
+}
+
+export type SubmitRejection =
+  | { ok: false; reason: SUBMIT_REASON.DUEL_FINISHED }
+  | {
+      ok: false;
+      reason: SUBMIT_REASON.WRONG_DUEL;
+      expected: string;
+      received: string;
+    }
+  | {
+      ok: false;
+      reason: SUBMIT_REASON.WRONG_EXCHANGE;
+      expected: number;
+      received: number;
+    }
+  | { ok: false; reason: SUBMIT_REASON.ALREADY_COMMITTED; side: PLAYER }
+  | {
+      ok: false;
+      reason: SUBMIT_REASON.INVALID_CATEGORY;
+      side: PLAYER;
+      pick: unknown;
+    }
+  | {
+      ok: false;
+      reason: SUBMIT_REASON.CATEGORY_ALREADY_USED;
+      side: PLAYER;
+      pick: CATEGORY;
+    }
+  | {
+      ok: false;
+      reason: SUBMIT_REASON.ADVANCE_REJECTED;
+      cause: AdvanceDuelRejection;
+    };
+
+export type SubmitSuccess = {
+  ok: true;
+  value: {
+    session: SessionState;
+    events: ExchangeResultEvent[];
+    advanced: boolean;
+  };
+};
+
+export type SubmitResult = SubmitSuccess | SubmitRejection;
+
+export type PolicyResult = Result<CATEGORY>;
+
+export type Policy = (view: PlayerView, rng: () => number) => PolicyResult;
+
+export type DriverRejection =
+  | { ok: false; reason: DRIVER_REASON.SESSION_NOT_READY }
+  | { ok: false; reason: DRIVER_REASON.POLICY_FAILED; side: PLAYER; error: string }
+  | SubmitRejection;
+
+export type DriverResult = SubmitSuccess | DriverRejection;
+
+export enum POLICY_RESULT {
+  NO_LEGAL_CATEGORY = 'no_legal_category',
+  INVALID_RNG = 'invalid_rng',
+}
