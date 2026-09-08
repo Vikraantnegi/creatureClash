@@ -26,7 +26,7 @@ export type {
   TimeoutPickResult,
 } from './types.js';
 
-export { DEFAULT_TYPE_CHART } from './defaultTypeChart.js';
-export { getTypeMultiplier, getEffectiveScore } from './scoring.js';
-export { validateCreatureSnapshot, validateTypeChart } from './validate.js';
-export { createDuel, advanceDuel, timeoutPick } from './duel.js';
+export { DEFAULT_TYPE_CHART } from './snapshots/defaultTypeChart.js';
+export { getTypeMultiplier, getEffectiveScore } from './scoring/scoring.js';
+export { validateCreatureSnapshot, validateTypeChart } from './snapshots/validate.js';
+export { createDuel, advanceDuel, timeoutPick } from './duel/duel.js';

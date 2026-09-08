@@ -1,5 +1,5 @@
-import { TYPES } from './constants.js';
-import type { MULTIPLIER_TENTHS, TYPE, TypeChart } from './types.js';
+import { TYPES } from '../constants.js';
+import type { MULTIPLIER_TENTHS, TYPE, TypeChart } from '../types.js';
 
 /** Contract table as integer tenths (1.10→11, 1.00→10, 0.90→9). */
 const CONTRACT_TENTHS: MULTIPLIER_TENTHS[][] = [

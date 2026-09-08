@@ -1,6 +1,6 @@
-import { CATEGORIES, MAX_NORMAL_EXCHANGES, STARTING_HP, TYPES } from './constants.js';
-import { getEffectiveScore, getTypeMultiplier } from './scoring.js';
-import { DUEL_STATUS, DUEL_WINNER, PLAYER } from './types.js';
+import { CATEGORIES, MAX_NORMAL_EXCHANGES, STARTING_HP, TYPES } from '../constants.js';
+import { getEffectiveScore, getTypeMultiplier } from '../scoring/scoring.js';
+import { DUEL_STATUS, DUEL_WINNER, PLAYER } from '../types.js';
 import type {
   AdvanceDuelAction,
   AdvanceDuelResult,
@@ -13,9 +13,9 @@ import type {
   Result,
   TimeoutPickResult,
   TypeChart,
-} from './types.js';
-import { isCategory, isNonEmptyString, produceFailResult } from './utils.js';
-import { validateCreatureSnapshot, validateTypeChart } from './validate.js';
+} from '../types.js';
+import { isCategory, isNonEmptyString, produceFailResult } from '../utils.js';
+import { validateCreatureSnapshot, validateTypeChart } from '../snapshots/validate.js';
 
 // helpers
 const copySnapshot = (snapshot: CreatureSnapshot): CreatureSnapshot => ({

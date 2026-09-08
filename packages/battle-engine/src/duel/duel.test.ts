@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { CATEGORIES, TYPES } from './constants.js';
-import { DEFAULT_TYPE_CHART } from './defaultTypeChart.js';
+import { CATEGORIES, TYPES } from '../constants.js';
+import { DEFAULT_TYPE_CHART } from '../snapshots/defaultTypeChart.js';
 import { advanceDuel, createDuel, timeoutPick } from './duel.js';
-import { CATEGORY, PLAYER, TYPE, type DuelState, type MULTIPLIER_TENTHS } from './types.js';
+import { CATEGORY, PLAYER, TYPE, type DuelState, type MULTIPLIER_TENTHS } from '../types.js';
 
 const ashkit = {
   instanceId: 'ashkit-1',

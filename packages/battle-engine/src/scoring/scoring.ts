@@ -1,4 +1,4 @@
-import type { MULTIPLIER_TENTHS, TYPE, TypeChart } from './types.js';
+import type { MULTIPLIER_TENTHS, TYPE, TypeChart } from '../types.js';
 
 /**
  * Type-chart multiplier in integer tenths (9 / 10 / 11).

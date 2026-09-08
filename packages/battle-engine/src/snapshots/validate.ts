@@ -1,5 +1,12 @@
-import { CATEGORIES, MAX_SAFE_STAT, TYPES } from './constants.js';
-import { CATEGORY, CreatureSnapshot, MULTIPLIER_TENTHS, Result, TYPE, TypeChart } from './types.js';
+import { CATEGORIES, MAX_SAFE_STAT, TYPES } from '../constants.js';
+import {
+  CATEGORY,
+  CreatureSnapshot,
+  MULTIPLIER_TENTHS,
+  Result,
+  TYPE,
+  TypeChart,
+} from '../types.js';
 import {
   isObject,
   isNumber,
@@ -7,7 +14,7 @@ import {
   isTypeId,
   produceFailResult,
   isMultiplierTenths,
-} from './utils.js';
+} from '../utils.js';
 
 export const validateCreatureSnapshot = (input: unknown): Result<CreatureSnapshot> => {
   if (!isObject(input)) {

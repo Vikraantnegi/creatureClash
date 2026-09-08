@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { MAX_SAFE_STAT, TYPES } from './constants.js';
-import { DEFAULT_TYPE_CHART } from './defaultTypeChart.js';
+import { MAX_SAFE_STAT, TYPES } from '../constants.js';
+import { DEFAULT_TYPE_CHART } from '../snapshots/defaultTypeChart.js';
 import { getEffectiveScore, getTypeMultiplier } from './scoring.js';
-import { CATEGORY, TYPE, type MULTIPLIER_TENTHS } from './types.js';
-import { validateCreatureSnapshot } from './validate.js';
+import { CATEGORY, TYPE, type MULTIPLIER_TENTHS } from '../types.js';
+import { validateCreatureSnapshot } from '../snapshots/validate.js';
 
 /** Independent Contract expectations — not derived from DEFAULT_TYPE_CHART. */
 const CONTRACT_EXPECTED_TENTHS: readonly (readonly MULTIPLIER_TENTHS[])[] = [
