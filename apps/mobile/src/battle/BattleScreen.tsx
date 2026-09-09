@@ -1,5 +1,4 @@
 import {
-  CATEGORY,
   CATEGORIES,
   DUEL_WINNER,
   PLAYER,
@@ -9,16 +8,11 @@ import {
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import type { Matchup } from './controller';
+import { BATTLE_MODES, type CREATURES, type Matchup } from './types';
 import { FIXTURES, creatureName } from './fixtures';
 import { useBattle } from './useBattle';
+import { CATEGORY_LABEL } from './constants';
 
-const CATEGORY_LABEL: Record<CATEGORY, string> = {
-  [CATEGORY.ATTACK]: 'Attack',
-  [CATEGORY.DEFENSE]: 'Defense',
-  [CATEGORY.SPEED]: 'Speed',
-  [CATEGORY.SPECIAL]: 'Special',
-};
 const score = (tenths: number) => String(tenths / 10);
 const typeLabel = (type: string) => type[0] + type.slice(1).toLowerCase();
 
@@ -60,7 +54,7 @@ function CreatureSheet({ side, label }: { side: SidePublic; label: string }) {
   return (
     <View style={styles.sheet}>
       <Text style={styles.caption}>{label}</Text>
-      <Text style={styles.creatureName}>{creatureName(side.creature.speciesId)}</Text>
+      <Text style={styles.creatureName}>{creatureName(side.creature.speciesId as CREATURES)}</Text>
       <Text style={styles.detail}>
         {typeLabel(side.creature.typeId)} · ×{(side.typeFactor / 10).toFixed(2)}
       </Text>
@@ -113,12 +107,12 @@ function MatchupControls({
         <Button
           label="AI: Greedy"
           selected={matchup.ai === 'greedy'}
-          onPress={() => configure({ ...matchup, ai: 'greedy' })}
+          onPress={() => configure({ ...matchup, ai: BATTLE_MODES.GREEDY })}
         />
         <Button
           label="AI: Random"
           selected={matchup.ai === 'random'}
-          onPress={() => configure({ ...matchup, ai: 'random' })}
+          onPress={() => configure({ ...matchup, ai: BATTLE_MODES.RANDOM })}
         />
       </View>
     </View>

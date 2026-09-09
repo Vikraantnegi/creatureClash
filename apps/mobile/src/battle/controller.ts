@@ -17,39 +17,18 @@ import {
   type SessionState,
 } from '@creature-clash/battle-engine';
 
-import { creatureFor, type FixtureId } from './fixtures';
-
-export const SELECTION_MS = 10_000;
-export const COMMITMENT_MS = 400;
-export type AiMode = 'greedy' | 'random';
-export type BattlePhase = 'ready' | 'selecting' | 'committed' | 'reveal' | 'finished' | 'error';
-export type Matchup = { yours: FixtureId; opponent: FixtureId; ai: AiMode };
-export type BattleDisplay = {
-  phase: BattlePhase;
-  matchup: Matchup;
-  view: PlayerView;
-  paused: boolean;
-  remainingMs: number;
-  choice: CATEGORY | null;
-  choiceSource: 'manual' | 'timeout' | null;
-  reveal: ExchangeResultEvent | null;
-  // UI callbacks carry the token captured when their controls were rendered.
-  actionKey: string;
-  error: string | null;
-};
-
-type Timer = ReturnType<typeof setTimeout>;
-export type BattleClock = {
-  now: () => number;
-  schedule: (callback: () => void, delay: number) => Timer;
-  cancel: (timer: Timer) => void;
-};
-type Options = {
-  clock?: BattleClock;
-  rng?: () => number;
-  nextDuelId?: () => string;
-  initiallyActive?: boolean;
-};
+import { creatureFor } from './fixtures';
+import {
+  CREATURES,
+  Matchup,
+  BattleDisplay,
+  BattleClock,
+  Options,
+  Timer,
+  BATTLE_PHASES,
+  BATTLE_MODES,
+} from './types';
+import { SELECTION_MS, COMMITMENT_MS } from './constants';
 
 let duelSequence = 0;
 const systemClock: BattleClock = {
@@ -58,8 +37,7 @@ const systemClock: BattleClock = {
   cancel: (timer) => clearTimeout(timer),
 };
 
-// Presentation only: apply an already-resolved event. No comparison or damage math.
-function presentEvent(view: PlayerView, event: ExchangeResultEvent): PlayerView {
+const presentEvent = (view: PlayerView, event: ExchangeResultEvent): PlayerView => {
   return {
     ...view,
     status: DUEL_STATUS.ONGOING,
@@ -80,10 +58,9 @@ function presentEvent(view: PlayerView, event: ExchangeResultEvent): PlayerView 
       availableCategories: [],
     },
   };
-}
+};
 
-/** Mobile controller owns timing and the session. Components only receive display data. */
-export function createBattleController(options: Options = {}) {
+export const createBattleController = (options: Options = {}) => {
   const clock = options.clock ?? systemClock;
   const rng = options.rng ?? Math.random;
   const nextDuelId = options.nextDuelId ?? (() => `mobile-${Date.now()}-${++duelSequence}`);
@@ -113,7 +90,7 @@ export function createBattleController(options: Options = {}) {
   function fail(message: string) {
     cancelTimer();
     queuedEvents = [];
-    publish({ phase: 'error', error: message });
+    publish({ phase: BATTLE_PHASES.ERROR, error: message });
   }
 
   function prepare(matchup: Matchup) {
@@ -129,7 +106,7 @@ export function createBattleController(options: Options = {}) {
     if (!created.ok) throw new Error(created.error); // These are local, validated fixtures.
     session = createSession(created.value);
     display = {
-      phase: 'ready',
+      phase: BATTLE_PHASES.READY,
       matchup: { ...matchup },
       view: getSessionView(session, PLAYER.A).view,
       paused: !active,
@@ -151,7 +128,7 @@ export function createBattleController(options: Options = {}) {
       return;
     }
     publish({
-      phase: 'reveal',
+      phase: BATTLE_PHASES.REVEAL,
       reveal: { ...event },
       view: presentEvent(display.view, event),
       actionKey: `${session.duel.duelId}:reveal:${event.exchangeId}`,
@@ -168,9 +145,9 @@ export function createBattleController(options: Options = {}) {
     const tick = () => {
       if (disposed || !active || ticket !== generation || actionKey !== display.actionKey) return;
       phaseTimeLeft = Math.max(0, (deadline ?? clock.now()) - clock.now());
-      if (display.phase === 'selecting') publish({ remainingMs: phaseTimeLeft });
+      if (display.phase === BATTLE_PHASES.SELECTING) publish({ remainingMs: phaseTimeLeft });
       if (phaseTimeLeft <= 0) {
-        if (display.phase === 'selecting') commitTimeout();
+        if (display.phase === BATTLE_PHASES.SELECTING) commitTimeout();
         else if (display.phase === 'committed') revealNext();
         return;
       }
@@ -200,7 +177,7 @@ export function createBattleController(options: Options = {}) {
     }
     session = committed.value.session;
     publish({
-      phase: 'selecting',
+      phase: BATTLE_PHASES.SELECTING,
       view: getSessionView(session, PLAYER.A).view,
       remainingMs: SELECTION_MS,
       choice: null,
@@ -227,7 +204,7 @@ export function createBattleController(options: Options = {}) {
     session = result.value.session;
     queuedEvents = result.value.events.map((event) => ({ ...event }));
     // Keep the pre-exchange view while showing commitment feedback; final state remains private.
-    publish({ phase: 'committed', choice: pick, choiceSource: source });
+    publish({ phase: BATTLE_PHASES.COMMITTED, choice: pick, choiceSource: source });
     armTimer(COMMITMENT_MS);
   }
 
@@ -240,7 +217,7 @@ export function createBattleController(options: Options = {}) {
     commit(pick.value, 'timeout');
   }
 
-  prepare({ yours: 'ashkit', opponent: 'brookfin', ai: 'greedy' });
+  prepare({ yours: CREATURES.ASHKIT, opponent: CREATURES.BROOKFIN, ai: BATTLE_MODES.GREEDY });
 
   return {
     getSnapshot: () => display,
@@ -256,7 +233,6 @@ export function createBattleController(options: Options = {}) {
     choose(pick: CATEGORY, actionKey: string) {
       if (disposed || !active || display.phase !== 'selecting' || actionKey !== display.actionKey)
         return;
-      // A delayed timer callback must not allow a late tap to beat the deadline.
       if (deadline !== null && clock.now() >= deadline) {
         commitTimeout();
         return;
@@ -265,12 +241,17 @@ export function createBattleController(options: Options = {}) {
       commit(pick, 'manual');
     },
     continue(actionKey: string) {
-      if (disposed || !active || display.phase !== 'reveal' || actionKey !== display.actionKey)
+      if (
+        disposed ||
+        !active ||
+        display.phase !== BATTLE_PHASES.REVEAL ||
+        actionKey !== display.actionKey
+      )
         return;
       if (queuedEvents.length > 0) revealNext();
       else if (session.duel.status === DUEL_STATUS.FINISHED) {
         publish({
-          phase: 'finished',
+          phase: BATTLE_PHASES.FINISHED,
           view: getSessionView(session, PLAYER.A).view,
           reveal: null,
           actionKey: `${session.duel.duelId}:finished`,
@@ -278,7 +259,11 @@ export function createBattleController(options: Options = {}) {
       } else openSelection();
     },
     configure(matchup: Matchup) {
-      if (disposed || (display.phase !== 'ready' && display.phase !== 'finished')) return;
+      if (
+        disposed ||
+        (display.phase !== BATTLE_PHASES.READY && display.phase !== BATTLE_PHASES.FINISHED)
+      )
+        return;
       prepare(matchup);
     },
     rematch() {
@@ -293,9 +278,12 @@ export function createBattleController(options: Options = {}) {
       cancelTimer();
       publish({
         paused: !next,
-        ...(display.phase === 'selecting' ? { remainingMs: phaseTimeLeft } : {}),
+        ...(display.phase === BATTLE_PHASES.SELECTING ? { remainingMs: phaseTimeLeft } : {}),
       });
-      if (next && (display.phase === 'selecting' || display.phase === 'committed'))
+      if (
+        next &&
+        (display.phase === BATTLE_PHASES.SELECTING || display.phase === BATTLE_PHASES.COMMITTED)
+      )
         armTimer(phaseTimeLeft);
     },
     dispose() {
@@ -304,6 +292,6 @@ export function createBattleController(options: Options = {}) {
       listeners.clear();
     },
   };
-}
+};
 
 export type BattleController = ReturnType<typeof createBattleController>;

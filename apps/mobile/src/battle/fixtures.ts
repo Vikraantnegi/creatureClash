@@ -1,9 +1,9 @@
 import { CATEGORY, TYPE, type CreatureSnapshot } from '@creature-clash/battle-engine';
+import { CREATURES } from './types';
 
-// Local prototype data. The third fixture also allows an all-ties mirror duel.
 export const FIXTURES = [
   {
-    id: 'ashkit',
+    id: CREATURES.ASHKIT,
     name: 'Ashkit',
     typeId: TYPE.FIRE,
     stats: {
@@ -14,7 +14,7 @@ export const FIXTURES = [
     },
   },
   {
-    id: 'brookfin',
+    id: CREATURES.BROOKFIN,
     name: 'Brookfin',
     typeId: TYPE.WATER,
     stats: {
@@ -25,7 +25,7 @@ export const FIXTURES = [
     },
   },
   {
-    id: 'slate',
+    id: CREATURES.SLATE,
     name: 'Slate',
     typeId: TYPE.ROCK,
     stats: {
@@ -35,16 +35,14 @@ export const FIXTURES = [
       [CATEGORY.SPECIAL]: 60,
     },
   },
-] as const;
+];
 
-export type FixtureId = (typeof FIXTURES)[number]['id'];
-
-export function creatureFor(id: FixtureId, instanceId: string): CreatureSnapshot {
+export function creatureFor(id: CREATURES, instanceId: string): CreatureSnapshot {
   const fixture = FIXTURES.find((candidate) => candidate.id === id);
   if (!fixture) throw new Error(`Unknown fixture: ${id}`);
   return { instanceId, speciesId: fixture.id, typeId: fixture.typeId, stats: { ...fixture.stats } };
 }
 
-export function creatureName(speciesId: string): string {
-  return FIXTURES.find((fixture) => fixture.id === speciesId)?.name ?? speciesId;
+export function creatureName(speciesId: CREATURES): string {
+  return FIXTURES.find((fixture) => fixture.id === speciesId)?.name ?? 'Unknown';
 }

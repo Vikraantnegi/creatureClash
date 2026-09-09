@@ -16,7 +16,6 @@ export function useBattle() {
     });
     return () => {
       subscription.remove();
-      // Cancel timers on unmount; also supports React's setup/cleanup/setup in development.
       controller.setActive(false);
     };
   }, [controller]);
