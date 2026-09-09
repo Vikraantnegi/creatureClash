@@ -1,13 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CATEGORY, DUEL_WINNER } from '@creature-clash/battle-engine';
 
-import {
-  COMMITMENT_MS,
-  SELECTION_MS,
-  createBattleController,
-  type BattleClock,
-  type BattleController,
-} from './controller';
+import { COMMITMENT_MS, SELECTION_MS } from './constants';
+
+import { createBattleController, type BattleController } from './controller';
+import { BATTLE_MODES, CREATURES, type BattleClock } from './types';
 
 let controllers: BattleController[];
 beforeEach(() => {
@@ -47,7 +44,11 @@ describe('selection and presentation', () => {
   it('starts only on request and locks the AI once, before the human chooses', () => {
     const rng = vi.fn(() => 0.75);
     const controller = make({ rng });
-    controller.configure({ yours: 'ashkit', opponent: 'brookfin', ai: 'random' });
+    controller.configure({
+      yours: CREATURES.ASHKIT,
+      opponent: CREATURES.BROOKFIN,
+      ai: BATTLE_MODES.RANDOM,
+    });
     vi.advanceTimersByTime(20_000);
     expect(controller.getSnapshot().phase).toBe('ready');
     expect(rng).not.toHaveBeenCalled();
@@ -105,7 +106,11 @@ describe('selection and presentation', () => {
 
   it('reveals exchange three, automatic four, then the draw without leaking future history', () => {
     const controller = make();
-    controller.configure({ yours: 'slate', opponent: 'slate', ai: 'greedy' });
+    controller.configure({
+      yours: CREATURES.SLATE,
+      opponent: CREATURES.SLATE,
+      ai: BATTLE_MODES.GREEDY,
+    });
     controller.start();
     reveal(controller, CATEGORY.ATTACK);
     next(controller);
@@ -131,7 +136,11 @@ describe('selection and presentation', () => {
   it('reads each reveal HP from the event, not the final duel state', () => {
     const controller = make();
     // Ashkit mirror: tie, each side wins once, and the two remaining categories differ.
-    controller.configure({ yours: 'ashkit', opponent: 'ashkit', ai: 'greedy' });
+    controller.configure({
+      yours: CREATURES.ASHKIT,
+      opponent: CREATURES.ASHKIT,
+      ai: BATTLE_MODES.GREEDY,
+    });
     controller.start();
     reveal(controller, CATEGORY.ATTACK); // 85 vs 85
     next(controller);
@@ -272,7 +281,11 @@ describe('clock and stale callbacks', () => {
   it('can suspend and resume without starting a second AI choice', () => {
     const rng = vi.fn(() => 0);
     const controller = make({ initiallyActive: false, rng });
-    controller.configure({ yours: 'slate', opponent: 'slate', ai: 'random' });
+    controller.configure({
+      yours: CREATURES.SLATE,
+      opponent: CREATURES.SLATE,
+      ai: BATTLE_MODES.RANDOM,
+    });
     controller.start();
     expect(controller.getSnapshot().phase).toBe('ready');
     controller.setActive(true);
@@ -287,7 +300,11 @@ describe('clock and stale callbacks', () => {
 
   it('surfaces an AI failure without starting a timer or fabricating a pick', () => {
     const controller = make({ rng: () => NaN });
-    controller.configure({ yours: 'ashkit', opponent: 'brookfin', ai: 'random' });
+    controller.configure({
+      yours: CREATURES.ASHKIT,
+      opponent: CREATURES.BROOKFIN,
+      ai: BATTLE_MODES.RANDOM,
+    });
     controller.start();
     expect(controller.getSnapshot().phase).toBe('error');
     expect(controller.getSnapshot().error).toContain('invalid_rng');
