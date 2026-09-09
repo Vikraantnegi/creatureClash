@@ -55,3 +55,22 @@ export { getPlayerView } from './view/view.js';
 export { createSession, getSessionView, submit } from './session/session.js';
 export { greedyPolicy, randomPolicy } from './policies/policies.js';
 export { runPolicyExchange } from './policies/driver.js';
+
+export { TEAM_SIZE, RUN_LENGTH } from './encounters/constants.js';
+export { RUN_PHASE } from './run/types.js';
+export type { RunState, CreateRunInput, RunSelection, RunSwap } from './run/types.js';
+export {
+  createRun,
+  selectRunCreature,
+  recordRunDuel,
+  swapRunCreature,
+  canReplaceRunSlot,
+} from './run/run.js';
+export { PAIRED_PHASE } from './paired/types.js';
+export type { PairedState, CreatePairedInput } from './paired/types.js';
+export {
+  createPairedEncounter,
+  startPairedDuel,
+  recordPairedDuel,
+  pairedScore,
+} from './paired/paired.js';

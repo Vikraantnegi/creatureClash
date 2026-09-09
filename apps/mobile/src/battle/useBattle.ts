@@ -2,10 +2,11 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import { AppState } from 'react-native';
 
 import { createBattleController } from './controller';
+import type { Options } from './types';
 
-export function useBattle() {
+export function useBattle(options: Options = {}) {
   const [controller] = useState(() =>
-    createBattleController({ initiallyActive: AppState.currentState === 'active' }),
+    createBattleController({ ...options, initiallyActive: AppState.currentState === 'active' }),
   );
   const display = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
 

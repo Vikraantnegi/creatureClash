@@ -14,7 +14,8 @@
     "react-native-css-interop": "0.2.1",
     "react-native-reanimated": "4.5.1",
     "react-native-safe-area-context": "5.7.0",
-    "react-native-worklets": "0.10.1"
+    "react-native-worklets": "0.10.1",
+    "@creature-clash/battle-fixtures": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
@@ -24,8 +25,8 @@
   },
   "scripts": {
     "dev": "expo start --dev-client",
-    "start": "pnpm --filter @creature-clash/battle-engine build && expo start --dev-client",
-    "start:go": "pnpm --filter @creature-clash/battle-engine build && expo start --go",
+    "start": "pnpm --filter @creature-clash/battle-fixtures... build && expo start --dev-client",
+    "start:go": "pnpm --filter @creature-clash/battle-fixtures... build && expo start --go",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json --noEmit",
     "test": "vitest run",
     "bundle:check": "expo export --platform ios --platform android --output-dir dist",

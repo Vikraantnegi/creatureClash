@@ -9,19 +9,20 @@
   },
   "scripts": {
     "prepare": "husky",
-    "build": "pnpm --filter @creature-clash/battle-engine build",
-    "dev": "pnpm build && pnpm --parallel --filter @creature-clash/battle-engine --filter @creature-clash/mobile dev",
+    "build": "pnpm --filter @creature-clash/battle-fixtures... build",
+    "dev": "pnpm build && pnpm --parallel --filter @creature-clash/battle-engine --filter @creature-clash/battle-fixtures --filter @creature-clash/mobile dev",
     "ios": "pnpm build && pnpm --filter @creature-clash/mobile ios",
     "android": "pnpm build && pnpm --filter @creature-clash/mobile android",
     "native:prebuild": "pnpm --filter @creature-clash/mobile exec expo prebuild",
-    "test": "pnpm build && pnpm -r --if-present test",
+    "test": "pnpm build && pnpm -r --if-present test && node --test tools/battle-study/*.test.mjs",
     "typecheck": "pnpm build && pnpm -r typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm --filter @creature-clash/mobile exec expo install --check",
-    "bundle:check": "pnpm build && pnpm --filter @creature-clash/mobile bundle:check"
+    "bundle:check": "pnpm build && pnpm --filter @creature-clash/mobile bundle:check",
+    "study": "pnpm build && node tools/battle-study/run.mjs"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -47,6 +48,8 @@
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "prettier": "3.6.2",
-    "prettier-plugin-tailwindcss": "0.5.14"
+    "prettier-plugin-tailwindcss": "0.5.14",
+    "@creature-clash/battle-engine": "workspace:*",
+    "@creature-clash/battle-fixtures": "workspace:*"
   }
 }

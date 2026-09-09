@@ -15,6 +15,7 @@ import {
   type ExchangeResultEvent,
   type PlayerView,
   type SessionState,
+  type DuelState,
 } from '@creature-clash/battle-engine';
 
 import { creatureFor } from './fixtures';
@@ -93,17 +94,22 @@ export const createBattleController = (options: Options = {}) => {
     publish({ phase: BATTLE_PHASES.ERROR, error: message });
   }
 
-  function prepare(matchup: Matchup) {
+  function prepare(matchup: Matchup, preparedDuel?: DuelState) {
     cancelTimer();
     queuedEvents = [];
-    const duelId = nextDuelId();
+    const duelId = preparedDuel?.duelId ?? nextDuelId();
+    if (
+      preparedDuel &&
+      (preparedDuel.status !== DUEL_STATUS.ONGOING || preparedDuel.exchangesCompleted !== 0)
+    )
+      throw new Error('Expected a fresh prepared duel');
     const created = createDuel({
       duelId,
-      creatureA: creatureFor(matchup.yours, `${duelId}-a`),
-      creatureB: creatureFor(matchup.opponent, `${duelId}-b`),
-      typeChart: DEFAULT_TYPE_CHART,
+      creatureA: preparedDuel?.creatureA ?? creatureFor(matchup.yours, `${duelId}-a`),
+      creatureB: preparedDuel?.creatureB ?? creatureFor(matchup.opponent, `${duelId}-b`),
+      typeChart: preparedDuel?.typeChart ?? DEFAULT_TYPE_CHART,
     });
-    if (!created.ok) throw new Error(created.error); // These are local, validated fixtures.
+    if (!created.ok) throw new Error(created.error);
     session = createSession(created.value);
     display = {
       phase: BATTLE_PHASES.READY,
@@ -217,7 +223,14 @@ export const createBattleController = (options: Options = {}) => {
     commit(pick.value, 'timeout');
   }
 
-  prepare({ yours: CREATURES.ASHKIT, opponent: CREATURES.BROOKFIN, ai: BATTLE_MODES.GREEDY });
+  prepare(
+    {
+      yours: CREATURES.ASHKIT,
+      opponent: CREATURES.BROOKFIN,
+      ai: options.ai ?? BATTLE_MODES.GREEDY,
+    },
+    options.preparedDuel,
+  );
 
   return {
     getSnapshot: () => display,
@@ -256,18 +269,20 @@ export const createBattleController = (options: Options = {}) => {
           reveal: null,
           actionKey: `${session.duel.duelId}:finished`,
         });
+        options.onComplete?.(session.duel);
       } else openSelection();
     },
     configure(matchup: Matchup) {
       if (
         disposed ||
+        options.preparedDuel ||
         (display.phase !== BATTLE_PHASES.READY && display.phase !== BATTLE_PHASES.FINISHED)
       )
         return;
       prepare(matchup);
     },
     rematch() {
-      if (disposed) return;
+      if (disposed || options.preparedDuel) return;
       prepare(display.matchup);
       openSelection();
     },

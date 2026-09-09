@@ -1,10 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CATEGORY, DUEL_WINNER } from '@creature-clash/battle-engine';
+import {
+  CATEGORY,
+  DUEL_WINNER,
+  createDuel,
+  DEFAULT_TYPE_CHART,
+} from '@creature-clash/battle-engine';
 
 import { COMMITMENT_MS, SELECTION_MS } from './constants';
 
 import { createBattleController, type BattleController } from './controller';
 import { BATTLE_MODES, CREATURES, type BattleClock } from './types';
+import { creatureFor } from './fixtures';
 
 let controllers: BattleController[];
 beforeEach(() => {
@@ -310,5 +316,49 @@ describe('clock and stale callbacks', () => {
     expect(controller.getSnapshot().error).toContain('invalid_rng');
     vi.advanceTimersByTime(30_000);
     expect(controller.getSnapshot().view.history).toEqual([]);
+  });
+});
+
+describe('prepared encounter duels', () => {
+  it('notifies once only after the automatic fourth is acknowledged, with no standalone rematch', () => {
+    const created = createDuel({
+      duelId: 'encounter:pair:1',
+      creatureA: creatureFor(CREATURES.SLATE, 'a'),
+      creatureB: creatureFor(CREATURES.SLATE, 'b'),
+      typeChart: DEFAULT_TYPE_CHART,
+    });
+    if (!created.ok) throw new Error(created.error);
+    const completed = vi.fn();
+    const controller = make({ preparedDuel: created.value, onComplete: completed });
+    vi.advanceTimersByTime(20_000);
+    expect(controller.getSnapshot().phase).toBe('ready');
+    controller.start();
+    for (const pick of [CATEGORY.ATTACK, CATEGORY.DEFENSE, CATEGORY.SPEED]) {
+      reveal(controller, pick);
+      expect(completed).not.toHaveBeenCalled();
+      next(controller);
+    }
+    expect(controller.getSnapshot().reveal?.isAutomaticFourth).toBe(true);
+    expect(completed).not.toHaveBeenCalled();
+    const oldKey = controller.getSnapshot().actionKey;
+    next(controller);
+    expect(completed).toHaveBeenCalledTimes(1);
+    expect(completed.mock.calls[0]![0].duelId).toBe(created.value.duelId);
+    controller.continue(oldKey);
+    controller.rematch();
+    expect(completed).toHaveBeenCalledTimes(1);
+    expect(controller.getSnapshot().phase).toBe('finished');
+    expect(created.value.history).toHaveLength(0);
+  });
+  it('cancels an abandoned encounter duel before a new one starts', () => {
+    const complete = vi.fn();
+    const old = make({ onComplete: complete });
+    old.start();
+    choose(old, CATEGORY.SPECIAL);
+    old.dispose();
+    const replacement = make();
+    vi.advanceTimersByTime(20_000);
+    expect(complete).not.toHaveBeenCalled();
+    expect(replacement.getSnapshot().phase).toBe('ready');
   });
 });

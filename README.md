@@ -96,7 +96,7 @@ The bundle check verifies package resolution and production bundling. Compiling 
 
 ## Later
 
-`game-data`, simulator, lookahead, paired gyms, progression, signing, and EAS stay for subsequent work.
+XP, wild capture, permanent collection, final gym format (D16), relay, signing, and EAS stay for subsequent work. Phase 6 adds an optional in-run swap and a temporary paired comparison; it does not resolve D16.
 
 ## Prototype checks on a device
 
@@ -108,3 +108,13 @@ The bundle check verifies package resolution and production bundling. Compiling 
 - Switch sides/fixtures and try random AI between duels. Physical-phone play is still needed to judge readability, pacing, and whether you want another duel.
 
 The mobile starter includes the Expo template's original license in `apps/mobile/LICENSE`.
+
+## Phase 6
+
+The app offers **Duel**, **Swap run**, and **Paired 3v3**. Switching modes resets the current encounter. Both new modes reuse the same timed duel and ordered reveal controller.
+
+- Swap run: choose three creatures from six; win, optionally replace a roster member, and choose again for the next opponent. Fresh combat state each duel. Loss/draw ends the run; no permanent progression.
+- Paired 3v3: three fixed pairs, one point per duel win, explicit encounter draws. Temporary comparison only; **D16 remains open**.
+- `pnpm study`: run offline lookahead analysis and generate JSON/CSV in `outputs/battle-study/`.
+
+See [the Phase 6 decisions, architecture, and verification notes](docs/phase-6.md). Fixture definitions live in `packages/battle-fixtures`; mobile and analysis use the same data.

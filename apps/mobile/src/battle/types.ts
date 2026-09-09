@@ -1,10 +1,12 @@
-import { CATEGORY, ExchangeResultEvent, PlayerView } from '@creature-clash/battle-engine';
+import {
+  CATEGORY,
+  ExchangeResultEvent,
+  PlayerView,
+  DuelState,
+} from '@creature-clash/battle-engine';
 
-export enum CREATURES {
-  ASHKIT = 'ashkit',
-  BROOKFIN = 'brookfin',
-  SLATE = 'slate',
-}
+import { CREATURES } from '@creature-clash/battle-fixtures';
+export { CREATURES } from '@creature-clash/battle-fixtures';
 
 export enum BATTLE_PHASES {
   READY = 'ready',
@@ -44,6 +46,9 @@ export type BattleClock = {
 };
 
 export type Options = {
+  preparedDuel?: DuelState;
+  ai?: BATTLE_MODES;
+  onComplete?: (duel: DuelState) => void;
   clock?: BattleClock;
   rng?: () => number;
   nextDuelId?: () => string;

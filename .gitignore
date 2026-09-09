@@ -12,3 +12,6 @@ dist/
 # Continuous Native Generation — regenerate with `pnpm native:prebuild`
 apps/mobile/ios/
 apps/mobile/android/
+
+# Reproducible offline analysis output
+outputs/battle-study/
