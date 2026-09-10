@@ -28,6 +28,7 @@ import {
   Timer,
   BATTLE_PHASES,
   BATTLE_MODES,
+  StatVisibility,
 } from './types';
 import { SELECTION_MS, COMMITMENT_MS } from './constants';
 
@@ -66,6 +67,7 @@ export const createBattleController = (options: Options = {}) => {
   const rng = options.rng ?? Math.random;
   const nextDuelId = options.nextDuelId ?? (() => `mobile-${Date.now()}-${++duelSequence}`);
   const listeners = new Set<() => void>();
+  let statVisibility: StatVisibility = options.statVisibility ?? 'exact';
   let active = options.initiallyActive ?? true;
   let disposed = false;
   let timer: Timer | null = null;
@@ -112,6 +114,7 @@ export const createBattleController = (options: Options = {}) => {
     if (!created.ok) throw new Error(created.error);
     session = createSession(created.value);
     display = {
+      statVisibility,
       phase: BATTLE_PHASES.READY,
       matchup: { ...matchup },
       view: getSessionView(session, PLAYER.A).view,
@@ -280,6 +283,16 @@ export const createBattleController = (options: Options = {}) => {
       )
         return;
       prepare(matchup);
+    },
+    configureVisibility(visibility: StatVisibility) {
+      if (
+        disposed ||
+        options.preparedDuel ||
+        (display.phase !== BATTLE_PHASES.READY && display.phase !== BATTLE_PHASES.FINISHED)
+      )
+        return;
+      statVisibility = visibility;
+      prepare(display.matchup);
     },
     rematch() {
       if (disposed || options.preparedDuel) return;

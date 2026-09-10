@@ -1,5 +1,7 @@
 # Phase 6 implementation
 
+> Historical checkpoint. The playable Swap run and fixed Paired 3v3 have been superseded by [Gym 3v3](gym-encounter.md). The rules below document the earlier experiment, not the current encounter flow.
+
 ## Decisions
 
 The duel contract is unchanged. Four categories, two battle HP, up to three normal exchanges, conditional automatic fourth, ten-second selection, and manual Continue.

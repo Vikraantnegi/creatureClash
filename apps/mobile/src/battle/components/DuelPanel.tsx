@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 import { Button } from '../../atoms/Button';
 import type { BattleController } from '../controller';
-import type { BattleDisplay } from '../types';
+import type { BattleDisplay, BattleSheets } from '../types';
 import { CATEGORY_LABEL } from '../constants';
 import { duelResult } from '../copy';
 import { CreatureSheet } from './CreatureSheet';
@@ -11,23 +11,32 @@ import { ExchangeHistory } from './ExchangeHistory';
 export function DuelPanel({
   controller,
   display,
+  sheets,
   standalone = false,
 }: {
   controller: BattleController;
   display: BattleDisplay;
+  sheets: BattleSheets;
   standalone?: boolean;
 }) {
   const { phase, view, paused } = display;
   return (
     <View className="gap-4">
+      {standalone && (
+        <Text className="text-xs text-slate-600">
+          {display.statVisibility === 'approximate'
+            ? 'Opponent ranges · Your scores stay exact. Spent opponent scores become exact on reveal.'
+            : 'Exact stats · Both creatures’ scores are visible. Picks stay hidden.'}
+        </Text>
+      )}
       {paused && (
         <Text className="rounded-lg bg-amber-100 p-3 text-amber-950">
           Paused while the app is inactive. Your remaining time is saved.
         </Text>
       )}
       <View className="flex-row gap-2">
-        <CreatureSheet side={view.self} label="YOU · A" />
-        <CreatureSheet side={view.opponent} label="OPPONENT · B" />
+        <CreatureSheet side={sheets.self} label="YOU · A" />
+        <CreatureSheet side={sheets.opponent} label="OPPONENT · B" />
       </View>
       {phase === 'ready' && (
         <View className="gap-2">

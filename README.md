@@ -30,7 +30,7 @@ pnpm android           # local development build (verified). iOS: pnpm ios when 
 pnpm dev
 ```
 
-That builds the engine watcher and starts Expo in `--dev-client` mode against the installed development build.
+That builds the engine and fixtures, starts their watchers, and starts Expo in `--dev-client` mode against the installed development build.
 
 Optional Expo Go smoke (compatible JS-only check; not the working app):
 
@@ -69,7 +69,7 @@ Expo uses its standard Metro monorepo support. No custom resolver, hoisting work
 
 ## Package boundaries
 
-- **battle-engine** owns legal selection, commitment/resolution, type-adjusted comparison, HP and early termination, conditional fourth exchange, draws, and policies limited to public information. The future paired-gym coordinator remains deferred; relay is not a drop-in and requires decisions about carried HP and exhausted categories.
+- **battle-engine** owns legal selection, commitment/resolution, type-adjusted comparison, HP and early termination, conditional fourth exchange, draws, and policies limited to public information. The gym coordinator owns private team/deployment commitments and participant ownership exchanges after three duels. Relay is excluded for this version.
 - **game-data** (future) owns stable creature ids/attributes and the type chart. Four categories, two HP, three normal exchanges, and a conditional fourth are currently fixed engine rules, not arbitrary configuration.
 - **mobile** owns screens, input, timers, presentation, and app lifecycle. `src/battle/controller.ts` owns the current session and a separate display snapshot: queued events are revealed one at a time without exposing the engine's final HP/history early. Components receive views and callbacks, not pending AI choices. `useBattle.ts` connects the controller to React and AppState. No winner, effective-score, or damage calculation lives in the app.
 - **simulator** (future) owns schedules, seeds, policy comparisons, and traces. Same rule: no local winner/damage math — one resolution source for sim and phone.
@@ -96,7 +96,7 @@ The bundle check verifies package resolution and production bundling. Compiling 
 
 ## Later
 
-XP, wild capture, permanent collection, final gym format (D16), relay, signing, and EAS stay for subsequent work. Phase 6 adds an optional in-run swap and a temporary paired comparison; it does not resolve D16.
+XP, wild capture, permanent collection storage, networking, relay, signing, and EAS stay for subsequent work. Gym 3v3 now uses one duel per selected creature and an optional participant ownership exchange after the encounter.
 
 ## Prototype checks on a device
 
@@ -109,12 +109,17 @@ XP, wild capture, permanent collection, final gym format (D16), relay, signing, 
 
 The mobile starter includes the Expo template's original license in `apps/mobile/LICENSE`.
 
-## Phase 6
+## Gym 3v3
 
-The app offers **Duel**, **Swap run**, and **Paired 3v3**. Switching modes resets the current encounter. Both new modes reuse the same timed duel and ordered reveal controller.
+The app offers **Duel** (1v1, no exchange) and **Gym 3v3**:
 
-- Swap run: choose three creatures from six; win, optionally replace a roster member, and choose again for the next opponent. Fresh combat state each duel. Loss/draw ends the run; no permanent progression.
-- Paired 3v3: three fixed pairs, one point per duel win, explicit encounter draws. Temporary comparison only; **D16 remains open**.
-- `pnpm study`: run offline lookahead analysis and generate JSON/CSV in `outputs/battle-study/`.
+1. Preview the opponent's six active creatures and choose Exact or Ranges for battle stats.
+2. Enter the gym, privately lock three within 30 seconds, then secretly deploy an unused participant within 15 seconds before each duel.
+3. Play all three duels with fresh HP/categories; ties award neither side a point.
+4. The encounter winner may exchange one participating instance for one of the loser's three. Both rosters update atomically and carry into the next encounter in app memory. Reloading resets fixtures.
 
-See [the Phase 6 decisions, architecture, and verification notes](docs/phase-6.md). Fixture definitions live in `packages/battle-fixtures`; mobile and analysis use the same data.
+Mode switching is available before entering or after the encounter finishes. The local AI locks its creature choices before yours, uses greedy category choices, and exercises the same exchange right when it wins. See [gym rules, architecture, and verification](docs/gym-encounter.md).
+
+`pnpm study` runs offline lookahead comparisons through the same battle engine and writes JSON/CSV to `outputs/battle-study/`. Fixture definitions live in `packages/battle-fixtures`.
+
+The [original Phase 6 notes](docs/phase-6.md) describe the superseded swap-run/fixed-pair experiments. [Stat visibility notes](docs/stat-visibility-experiment.md) explain Exact versus Ranges and playtest limitations.

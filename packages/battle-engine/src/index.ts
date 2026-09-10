@@ -74,3 +74,25 @@ export {
   recordPairedDuel,
   pairedScore,
 } from './paired/paired.js';
+
+export {
+  ACTIVE_ROSTER_SIZE,
+  createGym,
+  commitGymTeam,
+  commitGymDeployment,
+  recordGymDuel,
+  exchangeGymCreatures,
+  getGymView,
+} from './gym/gym.js';
+export type {
+  GymState,
+  GymView,
+  GymPhase,
+  TrainerRosters,
+  GymExchange,
+  CreateGymInput,
+  TeamCommit,
+  DeploymentCommit,
+  GymExchangeAction,
+  CreaturePreview,
+} from './gym/types.js';

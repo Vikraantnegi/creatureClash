@@ -11,6 +11,7 @@ import { COMMITMENT_MS, SELECTION_MS } from './constants';
 import { createBattleController, type BattleController } from './controller';
 import { BATTLE_MODES, CREATURES, type BattleClock } from './types';
 import { creatureFor } from './fixtures';
+import { projectCreatureSheet } from './visibility';
 
 let controllers: BattleController[];
 beforeEach(() => {
@@ -360,5 +361,72 @@ describe('prepared encounter duels', () => {
     vi.advanceTimersByTime(20_000);
     expect(complete).not.toHaveBeenCalled();
     expect(replacement.getSnapshot().phase).toBe('ready');
+  });
+});
+
+describe('stat visibility comparison', () => {
+  it('locks visibility during play and preserves it through rematch and matchup changes', () => {
+    const controller = make();
+    expect(controller.getSnapshot().statVisibility).toBe('exact');
+    controller.configureVisibility('approximate');
+    controller.start();
+    const before = controller.getSnapshot();
+    controller.configureVisibility('exact');
+    expect(controller.getSnapshot()).toBe(before);
+    reveal(controller, CATEGORY.ATTACK);
+    next(controller);
+    reveal(controller, CATEGORY.SPEED);
+    next(controller);
+    controller.rematch();
+    expect(controller.getSnapshot().statVisibility).toBe('approximate');
+    expect(controller.getSnapshot().view.history).toEqual([]);
+    expect(controller.getSnapshot().view.opponent.usedCategories).toEqual([]);
+  });
+
+  it('keeps resolved scores private until each reveal, including the automatic fourth', () => {
+    const controller = make();
+    controller.configureVisibility('approximate');
+    controller.configure({
+      yours: CREATURES.SLATE,
+      opponent: CREATURES.SLATE,
+      ai: BATTLE_MODES.GREEDY,
+    });
+    expect(controller.getSnapshot().statVisibility).toBe('approximate');
+    controller.start();
+    const sheet = () =>
+      projectCreatureSheet(
+        controller.getSnapshot().view.opponent,
+        controller.getSnapshot().statVisibility,
+      );
+    for (const [index, pick] of [CATEGORY.ATTACK, CATEGORY.DEFENSE, CATEGORY.SPEED].entries()) {
+      choose(controller, pick);
+      expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index);
+      vi.advanceTimersByTime(COMMITMENT_MS);
+      expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index + 1);
+      if (index < 2) next(controller);
+    }
+    expect(sheet().categories[3]!.raw).toBeNull();
+    next(controller);
+    expect(controller.getSnapshot().reveal?.isAutomaticFourth).toBe(true);
+    expect(sheet().categories[3]!.raw).toBe('60');
+    next(controller);
+    controller.configureVisibility('exact');
+    expect(controller.getSnapshot().phase).toBe('ready');
+    expect(controller.getSnapshot().view.history).toEqual([]);
+    expect(controller.getSnapshot().statVisibility).toBe('exact');
+  });
+
+  it('resolves identical actions identically under either presentation', () => {
+    function play(visibility: 'exact' | 'approximate') {
+      const controller = make();
+      controller.configureVisibility(visibility);
+      controller.start();
+      for (const pick of [CATEGORY.SPECIAL, CATEGORY.ATTACK, CATEGORY.SPEED]) {
+        reveal(controller, pick);
+        next(controller);
+      }
+      return controller.getSnapshot().view;
+    }
+    expect(play('approximate')).toEqual(play('exact'));
   });
 });

@@ -3,6 +3,7 @@ import { AppState } from 'react-native';
 
 import { createBattleController } from './controller';
 import type { Options } from './types';
+import { projectCreatureSheet } from './visibility';
 
 export function useBattle(options: Options = {}) {
   const [controller] = useState(() =>
@@ -21,5 +22,9 @@ export function useBattle(options: Options = {}) {
     };
   }, [controller]);
 
-  return { controller, display };
+  const sheets = {
+    self: projectCreatureSheet(display.view.self),
+    opponent: projectCreatureSheet(display.view.opponent, display.statVisibility),
+  };
+  return { controller, display, sheets };
 }

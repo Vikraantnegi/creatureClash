@@ -3,6 +3,7 @@ import {
   ExchangeResultEvent,
   PlayerView,
   DuelState,
+  SidePublic,
 } from '@creature-clash/battle-engine';
 
 import { CREATURES } from '@creature-clash/battle-fixtures';
@@ -24,7 +25,20 @@ export enum BATTLE_MODES {
 
 export type Matchup = { yours: CREATURES; opponent: CREATURES; ai: BATTLE_MODES };
 
+export type StatVisibility = 'exact' | 'approximate';
+
+export type CreatureSheetView = {
+  speciesId: string;
+  typeId: SidePublic['creature']['typeId'];
+  typeFactor: SidePublic['typeFactor'];
+  hp: number;
+  categories: { category: CATEGORY; spent: boolean; raw: string | null; effective: string }[];
+};
+
+export type BattleSheets = { self: CreatureSheetView; opponent: CreatureSheetView };
+
 export type BattleDisplay = {
+  statVisibility: StatVisibility;
   phase: BATTLE_PHASES;
   matchup: Matchup;
   view: PlayerView;
@@ -46,6 +60,7 @@ export type BattleClock = {
 };
 
 export type Options = {
+  statVisibility?: StatVisibility;
   preparedDuel?: DuelState;
   ai?: BATTLE_MODES;
   onComplete?: (duel: DuelState) => void;
