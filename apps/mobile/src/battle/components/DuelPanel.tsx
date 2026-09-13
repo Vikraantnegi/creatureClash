@@ -24,9 +24,11 @@ export function DuelPanel({
     <View className="gap-4">
       {standalone && (
         <Text className="text-xs text-slate-600">
-          {display.statVisibility === 'approximate'
-            ? 'Opponent ranges · Your scores stay exact. Spent opponent scores become exact on reveal.'
-            : 'Exact stats · Both creatures’ scores are visible. Picks stay hidden.'}
+          {display.statVisibility === 'profile'
+            ? 'Species clues · Unplayed opponent values stay hidden. Played values are revealed.'
+            : display.statVisibility === 'approximate'
+              ? 'Opponent ranges · Your scores stay exact. Spent opponent scores become exact on reveal.'
+              : 'Exact stats · Both creatures’ scores are visible. Picks stay hidden.'}
         </Text>
       )}
       {paused && (

@@ -7,6 +7,7 @@ import {
   getPlayerView,
   getSessionView,
   greedyPolicy,
+  tacticalPolicy,
   PLAYER,
   randomPolicy,
   submit,
@@ -18,6 +19,7 @@ import {
   type DuelState,
 } from '@creature-clash/battle-engine';
 
+import { tacticalObservation } from './tacticalObservation';
 import { creatureFor } from './fixtures';
 import {
   CREATURES,
@@ -67,7 +69,7 @@ export const createBattleController = (options: Options = {}) => {
   const rng = options.rng ?? Math.random;
   const nextDuelId = options.nextDuelId ?? (() => `mobile-${Date.now()}-${++duelSequence}`);
   const listeners = new Set<() => void>();
-  let statVisibility: StatVisibility = options.statVisibility ?? 'exact';
+  let statVisibility: StatVisibility = options.statVisibility ?? 'profile';
   let active = options.initiallyActive ?? true;
   let disposed = false;
   let timer: Timer | null = null;
@@ -169,7 +171,11 @@ export const createBattleController = (options: Options = {}) => {
     const duel = session.duel;
     // Select and lock B before enabling the human's controls. No pending pick is a policy input.
     const policy = display.matchup.ai === 'greedy' ? greedyPolicy : randomPolicy;
-    const selected = policy(getPlayerView(duel, PLAYER.B), rng);
+    const view = getPlayerView(duel, PLAYER.B);
+    const selected =
+      display.matchup.ai === BATTLE_MODES.TACTICAL
+        ? tacticalPolicy(tacticalObservation(view, statVisibility), duel.typeChart, rng)
+        : policy(view, rng);
     if (!selected.ok) {
       fail(`Opponent could not choose: ${selected.error}`);
       return;
@@ -230,7 +236,7 @@ export const createBattleController = (options: Options = {}) => {
     {
       yours: CREATURES.ASHKIT,
       opponent: CREATURES.BROOKFIN,
-      ai: options.ai ?? BATTLE_MODES.GREEDY,
+      ai: options.ai ?? BATTLE_MODES.TACTICAL,
     },
     options.preparedDuel,
   );

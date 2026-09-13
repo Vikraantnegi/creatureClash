@@ -87,3 +87,11 @@ export function creatureFor(id: CREATURES, instanceId: string): CreatureSnapshot
 export function creatureName(speciesId: string): string {
   return FIXTURES.find((fixture) => fixture.id === speciesId)?.name ?? speciesId;
 }
+
+export {
+  speciesProfile,
+  TRAIT_LABEL,
+  TRAIT_ESTIMATE,
+  type SpeciesProfile,
+  type SpeciesTrait,
+} from './profiles.js';

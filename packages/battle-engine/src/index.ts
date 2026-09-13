@@ -96,3 +96,5 @@ export type {
   GymExchangeAction,
   CreaturePreview,
 } from './gym/types.js';
+
+export { tacticalPolicy, type TacticalObservation } from './policies/tactical.js';

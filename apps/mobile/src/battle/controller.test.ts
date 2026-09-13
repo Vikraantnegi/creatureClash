@@ -29,6 +29,8 @@ function make(overrides: Parameters<typeof createBattleController>[0] = {}) {
   const controller = createBattleController({
     clock: { now: Date.now, schedule: setTimeout, cancel: clearTimeout },
     nextDuelId: () => `test-${++id}`,
+    ai: BATTLE_MODES.GREEDY,
+    statVisibility: 'exact',
     ...overrides,
   });
   controllers.push(controller);
@@ -383,38 +385,41 @@ describe('stat visibility comparison', () => {
     expect(controller.getSnapshot().view.opponent.usedCategories).toEqual([]);
   });
 
-  it('keeps resolved scores private until each reveal, including the automatic fourth', () => {
-    const controller = make();
-    controller.configureVisibility('approximate');
-    controller.configure({
-      yours: CREATURES.SLATE,
-      opponent: CREATURES.SLATE,
-      ai: BATTLE_MODES.GREEDY,
-    });
-    expect(controller.getSnapshot().statVisibility).toBe('approximate');
-    controller.start();
-    const sheet = () =>
-      projectCreatureSheet(
-        controller.getSnapshot().view.opponent,
-        controller.getSnapshot().statVisibility,
-      );
-    for (const [index, pick] of [CATEGORY.ATTACK, CATEGORY.DEFENSE, CATEGORY.SPEED].entries()) {
-      choose(controller, pick);
-      expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index);
-      vi.advanceTimersByTime(COMMITMENT_MS);
-      expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index + 1);
-      if (index < 2) next(controller);
-    }
-    expect(sheet().categories[3]!.raw).toBeNull();
-    next(controller);
-    expect(controller.getSnapshot().reveal?.isAutomaticFourth).toBe(true);
-    expect(sheet().categories[3]!.raw).toBe('60');
-    next(controller);
-    controller.configureVisibility('exact');
-    expect(controller.getSnapshot().phase).toBe('ready');
-    expect(controller.getSnapshot().view.history).toEqual([]);
-    expect(controller.getSnapshot().statVisibility).toBe('exact');
-  });
+  it.each(['approximate', 'profile'] as const)(
+    'keeps %s scores private until each reveal, including the automatic fourth',
+    (visibility) => {
+      const controller = make();
+      controller.configureVisibility(visibility);
+      controller.configure({
+        yours: CREATURES.SLATE,
+        opponent: CREATURES.SLATE,
+        ai: BATTLE_MODES.GREEDY,
+      });
+      expect(controller.getSnapshot().statVisibility).toBe(visibility);
+      controller.start();
+      const sheet = () =>
+        projectCreatureSheet(
+          controller.getSnapshot().view.opponent,
+          controller.getSnapshot().statVisibility,
+        );
+      for (const [index, pick] of [CATEGORY.ATTACK, CATEGORY.DEFENSE, CATEGORY.SPEED].entries()) {
+        choose(controller, pick);
+        expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index);
+        vi.advanceTimersByTime(COMMITMENT_MS);
+        expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index + 1);
+        if (index < 2) next(controller);
+      }
+      expect(sheet().categories[3]!.raw).toBeNull();
+      next(controller);
+      expect(controller.getSnapshot().reveal?.isAutomaticFourth).toBe(true);
+      expect(sheet().categories[3]!.raw).toBe('60');
+      next(controller);
+      controller.configureVisibility('exact');
+      expect(controller.getSnapshot().phase).toBe('ready');
+      expect(controller.getSnapshot().view.history).toEqual([]);
+      expect(controller.getSnapshot().statVisibility).toBe('exact');
+    },
+  );
 
   it('resolves identical actions identically under either presentation', () => {
     function play(visibility: 'exact' | 'approximate') {
@@ -428,5 +433,26 @@ describe('stat visibility comparison', () => {
       return controller.getSnapshot().view;
     }
     expect(play('approximate')).toEqual(play('exact'));
+  });
+});
+
+describe('tactical experiment integration', () => {
+  it('defaults to species clues and tactical play, committing once before input', () => {
+    const rng = vi.fn(() => 0.3);
+    const controller = createBattleController({
+      rng,
+      clock: { now: Date.now, schedule: setTimeout, cancel: clearTimeout },
+    });
+    controllers.push(controller);
+    expect(controller.getSnapshot().statVisibility).toBe('profile');
+    expect(controller.getSnapshot().matchup.ai).toBe(BATTLE_MODES.TACTICAL);
+    controller.start();
+    expect(rng).toHaveBeenCalledTimes(1);
+    expect(controller.getSnapshot().view.history).toEqual([]);
+    choose(controller, CATEGORY.SPECIAL);
+    expect(rng).toHaveBeenCalledTimes(1);
+    expect(controller.getSnapshot().reveal).toBeNull();
+    vi.advanceTimersByTime(COMMITMENT_MS);
+    expect(controller.getSnapshot().view.history).toHaveLength(1);
   });
 });

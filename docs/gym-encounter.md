@@ -1,5 +1,7 @@
 # Gym encounter implementation
 
+> Update: the current default is Species clues + Tactical AI. See [the experiment](species-clues-experiment.md) for information rules, policy assumptions and the comparison protocol. Earlier Exact/Ranges and greedy-only descriptions below are historical.
+
 This implements the agreed local 3v3 flow and supersedes the temporary fixed-pair UI. It is single-player against a local AI. It does not add networking, disk persistence, XP, or a server ownership ledger.
 
 ## Rules

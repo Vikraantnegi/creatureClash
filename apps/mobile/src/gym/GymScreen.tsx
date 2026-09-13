@@ -57,6 +57,9 @@ export function GymScreen({
             visibility={display.visibility}
             configure={controller.configureVisibility}
           />
+          <Text className="text-xs text-slate-600">
+            Tactical opponent · plans from visible clues and can save strong categories.
+          </Text>
           <Text className="font-semibold text-slate-900">Your active six</Text>
           {view.roster.map((creature, index) => (
             <FixtureCard
@@ -136,7 +139,11 @@ export function GymScreen({
         <View className="gap-3">
           <Text className="text-sm text-slate-700">
             Both creatures revealed ·{' '}
-            {display.visibility === 'exact' ? 'exact opponent stats' : 'opponent score ranges'}
+            {display.visibility === 'profile'
+              ? 'opponent species clues'
+              : display.visibility === 'exact'
+                ? 'exact opponent stats'
+                : 'opponent score ranges'}
           </Text>
           <ManagedDuel
             key={view.activeDuel.duelId}

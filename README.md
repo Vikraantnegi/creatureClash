@@ -123,3 +123,5 @@ Mode switching is available before entering or after the encounter finishes. The
 `pnpm study` runs offline lookahead comparisons through the same battle engine and writes JSON/CSV to `outputs/battle-study/`. Fixture definitions live in `packages/battle-fixtures`.
 
 The [original Phase 6 notes](docs/phase-6.md) describe the superseded swap-run/fixed-pair experiments. [Stat visibility notes](docs/stat-visibility-experiment.md) explain Exact versus Ranges and playtest limitations.
+
+Current experiment: [Species clues + Tactical AI](docs/species-clues-experiment.md). Opponent unplayed values are hidden behind species tendencies; exact and range modes remain comparison controls.

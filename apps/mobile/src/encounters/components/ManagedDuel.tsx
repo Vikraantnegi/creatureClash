@@ -5,7 +5,7 @@ import type { StatVisibility } from '../../battle/types';
 export function ManagedDuel({
   duel,
   complete,
-  visibility = 'exact',
+  visibility = 'profile',
 }: {
   duel: DuelState;
   visibility?: StatVisibility;

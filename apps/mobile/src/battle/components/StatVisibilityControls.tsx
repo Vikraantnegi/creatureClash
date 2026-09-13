@@ -12,7 +12,13 @@ export function StatVisibilityControls({
   return (
     <View className="gap-2">
       <Text className="text-sm font-semibold text-slate-900">Opponent stats</Text>
-      <View className="flex-row gap-2">
+      <View className="flex-row flex-wrap gap-2">
+        <Button
+          testID="stats-profile"
+          label="Species clues"
+          selected={visibility === 'profile'}
+          onPress={() => configure('profile')}
+        />
         <Button
           testID="stats-exact"
           label="Exact"
@@ -27,8 +33,10 @@ export function StatVisibilityControls({
         />
       </View>
       <Text className="text-xs text-slate-600">
-        Ranges cover ten effective points, such as 70–79.9. Choose before starting; this setting
-        stays locked while you play.
+        {visibility === 'profile'
+          ? 'Species clues describe typical strengths, not individual numbers. Played values become exact on reveal.'
+          : 'Exact values or ten-point ranges: comparison controls.'}{' '}
+        Choose before starting; the setting stays locked while you play.
       </Text>
     </View>
   );

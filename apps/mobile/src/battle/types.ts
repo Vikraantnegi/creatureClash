@@ -19,13 +19,14 @@ export enum BATTLE_PHASES {
 }
 
 export enum BATTLE_MODES {
+  TACTICAL = 'tactical',
   GREEDY = 'greedy',
   RANDOM = 'random',
 }
 
 export type Matchup = { yours: CREATURES; opponent: CREATURES; ai: BATTLE_MODES };
 
-export type StatVisibility = 'exact' | 'approximate';
+export type StatVisibility = 'exact' | 'approximate' | 'profile';
 
 export type CreatureSheetView = {
   speciesId: string;

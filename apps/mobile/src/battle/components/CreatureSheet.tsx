@@ -15,7 +15,7 @@ export function CreatureSheet({ side, label }: { side: CreatureSheetView; label:
       <Text className="my-1 text-lg font-bold text-blue-900">
         HP: {side.hp} / {STARTING_HP}
       </Text>
-      <Text className="text-xs text-slate-600">Raw → effective · ranges are effective</Text>
+      <Text className="text-xs text-slate-600">Species clues or raw → effective</Text>
       {side.categories.map(({ category, spent, raw, effective }) => {
         return (
           <View key={category} className="gap-1 py-1">

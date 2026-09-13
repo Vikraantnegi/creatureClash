@@ -1,4 +1,5 @@
 import { CATEGORIES, type SidePublic } from '@creature-clash/battle-engine';
+import { speciesProfile, TRAIT_LABEL } from '@creature-clash/battle-fixtures';
 import { score } from './format';
 import { EFFECTIVE_RANGE_WIDTH_TENTHS } from './constants';
 import type { CreatureSheetView, StatVisibility } from './types';
@@ -13,6 +14,7 @@ export function projectCreatureSheet(
   side: SidePublic,
   visibility: StatVisibility = 'exact',
 ): CreatureSheetView {
+  const profile = speciesProfile(side.creature.speciesId);
   return {
     speciesId: side.creature.speciesId,
     typeId: side.creature.typeId,
@@ -27,7 +29,11 @@ export function projectCreatureSheet(
         raw: exact ? String(side.creature.stats[category]) : null,
         effective: exact
           ? score(side.effectiveScores[category])
-          : effectiveScoreRange(side.effectiveScores[category]),
+          : visibility === 'profile'
+            ? profile?.[category]
+              ? TRAIT_LABEL[profile[category]]
+              : 'Unknown profile'
+            : effectiveScoreRange(side.effectiveScores[category]),
       };
     }),
   };

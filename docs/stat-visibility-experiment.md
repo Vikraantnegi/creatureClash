@@ -1,5 +1,7 @@
 # Active-stat visibility experiment
 
+> Update: the current default is Species clues + Tactical AI. See [the experiment](species-clues-experiment.md) for information rules, policy assumptions and the comparison protocol. Earlier Exact/Ranges and greedy-only descriptions below are historical.
+
 > This records the initial standalone visibility patch. The follow-up [Gym 3v3 implementation](gym-encounter.md) now applies the same setting across a full encounter and replaces the old run/fixed-pair entry points.
 
 ## Purpose and scope

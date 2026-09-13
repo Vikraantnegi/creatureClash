@@ -29,7 +29,12 @@ export function MatchupControls({
           </View>
         </View>
       ))}
-      <View className="flex-row gap-2">
+      <View className="flex-row flex-wrap gap-2">
+        <Button
+          label="AI: Tactical"
+          selected={matchup.ai === BATTLE_MODES.TACTICAL}
+          onPress={() => configure({ ...matchup, ai: BATTLE_MODES.TACTICAL })}
+        />
         <Button
           label="AI: Greedy"
           selected={matchup.ai === BATTLE_MODES.GREEDY}
@@ -41,6 +46,10 @@ export function MatchupControls({
           onPress={() => configure({ ...matchup, ai: BATTLE_MODES.RANDOM })}
         />
       </View>
+      <Text className="text-xs text-slate-600">
+        Tactical plans with visible clues and can save strong categories. Greedy spends its highest
+        score.
+      </Text>
     </View>
   );
 }

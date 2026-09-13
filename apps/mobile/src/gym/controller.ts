@@ -54,7 +54,7 @@ export function createGymController(options: GymOptions = {}) {
     actionKey: `${state.encounterId}:preview:1`,
     error: null,
     notice: null,
-    visibility: 'exact',
+    visibility: 'profile',
   };
 
   function publish(patch: Partial<GymDisplay>) {
