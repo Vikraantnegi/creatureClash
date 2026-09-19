@@ -1,9 +1,6 @@
 import { View } from 'react-native';
-import { CATEGORIES, type CreatureSnapshot } from '@creature-clash/battle-engine';
-import { creatureName } from '@creature-clash/battle-fixtures';
-import { Button } from '../../atoms/Button';
-import { typeLabel } from '../../battle/format';
-import { CATEGORY_LABEL } from '../../battle/constants';
+import type { CreatureSnapshot } from '@creature-clash/battle-engine';
+import { CreatureTile } from '../../components/CreatureTile';
 export function CreatureChoices({
   creatures,
   selected,
@@ -18,16 +15,19 @@ export function CreatureChoices({
   prefix: string;
 }) {
   return (
-    <View className="gap-2">
+    <View className="flex-row flex-wrap gap-2">
       {creatures.map((creature, i) => (
-        <Button
-          key={creature.instanceId}
-          testID={`${prefix}-${i}`}
-          selected={selected.includes(creature.instanceId)}
-          disabled={disabled}
-          label={`${i + 1}. ${creatureName(creature.speciesId)} · ${typeLabel(creature.typeId)}\n${CATEGORIES.map((category) => `${CATEGORY_LABEL[category]} ${creature.stats[category]}`).join(' · ')}`}
-          onPress={() => choose(creature.instanceId)}
-        />
+        <View key={creature.instanceId} className="w-[48%]">
+          <CreatureTile
+            creature={creature}
+            slot={i + 1}
+            testID={`${prefix}-${i}`}
+            selected={selected.includes(creature.instanceId)}
+            disabled={disabled}
+            showStats
+            onPress={() => choose(creature.instanceId)}
+          />
+        </View>
       ))}
     </View>
   );

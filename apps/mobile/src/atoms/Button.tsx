@@ -17,10 +17,10 @@ export function Button({
       accessibilityState={{ disabled, selected }}
       disabled={disabled}
       onPress={onPress}
-      className={`min-h-12 items-center justify-center rounded-lg border px-3 py-3 ${primary || selected ? 'border-blue-900 bg-blue-900' : 'border-slate-400 bg-white'} ${disabled ? 'opacity-40' : 'active:opacity-75'}`}
+      className={`min-h-12 items-center justify-center rounded-lg border px-3 py-3 ${primary || selected ? 'border-ink bg-ink' : 'border-line bg-card'} ${disabled ? 'opacity-40' : 'active:opacity-75'}`}
     >
       <Text
-        className={`text-center text-sm font-semibold ${primary || selected ? 'text-white' : 'text-slate-900'}`}
+        className={`text-center font-sans text-sm font-semibold ${primary || selected ? 'text-white' : 'text-ink'}`}
       >
         {label}
       </Text>

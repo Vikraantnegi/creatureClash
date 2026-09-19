@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><style>body{margin:0;background:#E7E1D5;font-family:Helvetica,Arial,sans-serif;color:#1F1B18}a{color:#1F1B18}a:hover{color:#8A3A22}button{font-family:inherit;cursor:pointer}button:disabled{cursor:default}@keyframes ccpulse{0%,100%{opacity:1}50%{opacity:.35}}</style></helmet>
+<div style="display:flex;flex-wrap:wrap;gap:36px;padding:32px;align-items:flex-start;justify-content:center">
+
+<div style="width:390px;height:844px;flex:none;border-radius:44px;background:#F3EEE4;border:1px solid rgba(0,0,0,.14);box-shadow:0 18px 50px rgba(0,0,0,.16);position:relative;overflow:hidden;display:flex;flex-direction:column">
+  <div style="height:50px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font:600 13px Helvetica,Arial,sans-serif"><span>9:41</span><span style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">CREATURE CLASH</span></div>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:24px 22px 32px;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:20px"><div style="font:500 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">TRAINER JOURNAL · DAY 12</div><h1 style="margin:0;font:700 32px/1.05 Helvetica,Arial,sans-serif;letter-spacing:-.01em">Pick a fight.</h1></div>
+      <div style="flex:1;display:flex;justify-content:center;align-items:center"><div style="width:230px;height:230px">{{ homeSprite }}</div></div>
+      <button onClick="{{ goPick }}" style="height:64px;border-radius:16px;background:#1F1B18;color:#fff;border:none;display:flex;justify-content:space-between;align-items:center;padding:0 20px;text-align:left"><span style="display:flex;flex-direction:column;gap:2px"><span style="font:700 16px Helvetica,Arial,sans-serif">Standalone duel</span><span style="font:12px Helvetica,Arial,sans-serif;opacity:.75">One creature each · best of three exchanges</span></span><span style="font-size:20px">→</span></button>
+      <button onClick="{{ goGym }}" style="height:64px;border-radius:16px;background:#FBF9F4;color:#1F1B18;border:1.5px solid #1F1B18;display:flex;justify-content:space-between;align-items:center;padding:0 20px;text-align:left"><span style="display:flex;flex-direction:column;gap:2px"><span style="font:700 16px Helvetica,Arial,sans-serif">Gym · 3 v 3</span><span style="font:12px Helvetica,Arial,sans-serif;color:#6A635C">Lock three of six · three duels · a trade if you win</span></span><span style="font-size:20px">→</span></button>
+      <div style="font:11px ui-monospace,Menlo,monospace;color:#6A635C;text-align:center">Roster: {{ rosterNames }}</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isPick }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+      <div style="display:flex;align-items:center;gap:10px;padding:4px 16px 10px"><button onClick="{{ goHome }}" style="width:44px;height:44px;border-radius:12px;border:1.5px solid #1F1B18;background:transparent;font-size:18px">←</button><div style="font:700 18px Helvetica,Arial,sans-serif">Choose the matchup</div></div>
+      <div style="flex:1;overflow:auto;padding:0 20px 12px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">YOUR CREATURE · exact values</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ myPickTiles }}" as="t" hint-placeholder-count="6">
+            <button onClick="{{ t.pick }}" style="border-radius:14px;padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;background:{{ t.bg }};border:{{ t.border }};color:{{ t.fg }}"><div style="width:64px;height:64px">{{ t.sprite }}</div><div style="font:700 13px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.type }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.statsTxt }}</div></button>
+          </sc-for></div></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">OPPONENT · species clues only</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ oppPickTiles }}" as="t" hint-placeholder-count="6">
+            <button onClick="{{ t.pick }}" style="border-radius:14px;padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;background:{{ t.bg }};border:{{ t.border }};color:{{ t.fg }}"><div style="width:64px;height:64px;transform:scaleX(-1)">{{ t.sprite }}</div><div style="font:700 13px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.type }}</div></button>
+          </sc-for></div></div>
+      </div>
+      <div style="padding:12px 20px 28px;border-top:1px solid rgba(0,0,0,.1);background:#FBF9F4"><button onClick="{{ goMatchup }}" style="width:100%;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Review matchup</button></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isMatchup }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+      <div style="display:flex;align-items:center;gap:10px;padding:4px 16px 6px"><button onClick="{{ goPick }}" style="width:44px;height:44px;border-radius:12px;border:1.5px solid #1F1B18;background:transparent;font-size:18px">←</button><div style="font:700 18px Helvetica,Arial,sans-serif">Matchup</div></div>
+      <div style="flex:1;overflow:auto;padding:0 20px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;height:150px"><div style="width:150px;height:150px">{{ mu.mySprite }}</div><div style="font:700 13px ui-monospace,Menlo,monospace;color:#6A635C;padding-bottom:24px">VS</div><div style="width:130px;height:130px">{{ mu.oppSprite }}</div></div>
+        <div style="background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:14px;padding:12px 14px;font:13px/1.45 Helvetica,Arial,sans-serif">{{ mu.typeNote }}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="font:700 14px Helvetica,Arial,sans-serif">{{ mu.myName }} <span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ mu.myType }}</span></div>
+            <sc-for list="{{ mu.myRows }}" as="r" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;align-items:baseline;padding:8px 10px;background:#FBF9F4;border:1px solid rgba(0,0,0,.14);border-radius:10px"><span style="font:600 12px Helvetica,Arial,sans-serif">{{ r.name }}</span><span style="font:700 13px ui-monospace,Menlo,monospace">{{ r.val }}</span></div></sc-for>
+            <div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">base → effective here</div></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="font:700 14px Helvetica,Arial,sans-serif">{{ mu.oppName }} <span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ mu.oppType }}</span></div>
+            <sc-for list="{{ mu.oppRows }}" as="r" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:6px;padding:8px 10px;background:#FBF9F4;border:1px dashed rgba(0,0,0,.3);border-radius:10px"><span style="font:600 12px Helvetica,Arial,sans-serif">{{ r.name }}</span><span style="font:11px Helvetica,Arial,sans-serif;color:#4A443F;text-align:right">{{ r.val }}</span></div></sc-for>
+            <div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">species tendency, not this individual</div></div>
+        </div>
+        <div style="font:12px/1.45 Helvetica,Arial,sans-serif;color:#4A443F;padding-bottom:12px">2 HP each. Both sides pick a category in secret; the lower effective value loses 1 HP. Each category can be used once. Three exchanges, then HP decides — if tied, the last unused categories are compared automatically.</div>
+      </div>
+      <div style="padding:12px 20px 28px;border-top:1px solid rgba(0,0,0,.1);background:#FBF9F4"><button onClick="{{ startA }}" style="width:100%;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Start duel</button></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isDuel }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0;position:relative">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 16px 6px;height:44px">
+        <button onClick="{{ quitDuel }}" style="width:44px;height:44px;border-radius:12px;border:1.5px solid #1F1B18;background:transparent;font-size:16px">✕</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font:700 14px Helvetica,Arial,sans-serif">{{ d.exLabel }}</div><div style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#6A635C">{{ d.subLabel }}</div></div>
+        <div style="width:44px"></div>
+      </div>
+      <div style="height:296px;flex:none;position:relative;background:linear-gradient(#F3EEE4 0,#F3EEE4 150px,#E2DACA 150px)">
+        <div style="position:absolute;left:16px;top:8px;width:180px;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 13px Helvetica,Arial,sans-serif">{{ d.oppName }}</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px;text-transform:uppercase">{{ d.oppType }}</span></div>
+          <div style="display:flex;gap:4px;align-items:center"><sc-for list="{{ d.oppPips }}" as="p" hint-placeholder-count="2"><div style="width:22px;height:10px;border-radius:3px;border:1.5px solid #1F1B18;background:{{ p.bg }}"></div></sc-for><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C;margin-left:4px">{{ d.oppHpTxt }}</span></div>
+        </div>
+        <div style="position:absolute;right:18px;top:24px;width:150px;height:150px">{{ d.oppSprite }}</div>
+        <div style="position:absolute;left:14px;top:116px;width:180px;height:180px">{{ d.mySprite }}</div>
+        <div style="position:absolute;right:16px;bottom:10px;width:180px;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 13px Helvetica,Arial,sans-serif">{{ d.myName }}</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px;text-transform:uppercase">{{ d.myType }}</span></div>
+          <div style="display:flex;gap:4px;align-items:center"><sc-for list="{{ d.myPips }}" as="p" hint-placeholder-count="2"><div style="width:22px;height:10px;border-radius:3px;border:1.5px solid #1F1B18;background:{{ p.bg }}"></div></sc-for><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C;margin-left:4px">{{ d.myHpTxt }}</span></div>
+        </div>
+      </div>
+      <div style="flex:1;background:#FBF9F4;border-top:1.5px solid #1F1B18;display:flex;flex-direction:column;min-height:0">
+        <sc-if value="{{ d.showRows }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;flex:1;padding:12px 16px 24px;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 13px Helvetica,Arial,sans-serif">{{ d.prompt }}</span><span style="font:700 13px ui-monospace,Menlo,monospace;padding:4px 10px;border:1.5px solid #1F1B18;border-radius:999px;background:{{ d.timerBg }};color:{{ d.timerFg }}">{{ d.timerTxt }}</span></div>
+            <div style="height:4px;border-radius:2px;background:#E2DACA;overflow:hidden"><div style="height:100%;width:{{ d.timerPct }};background:#1F1B18;transition:width .1s linear"></div></div>
+            <div style="display:flex;justify-content:space-between;font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#6A635C;padding:2px 12px 0"><span>YOU · base → effective</span><span>{{ d.oppName }}</span></div>
+            <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+              <sc-for list="{{ d.rows }}" as="r" hint-placeholder-count="4">
+                <button onClick="{{ r.pick }}" disabled="{{ r.disabled }}" style="min-height:46px;border-radius:12px;padding:6px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;background:{{ r.bg }};border:{{ r.border }};color:{{ r.fg }};opacity:{{ r.opacity }}">
+                  <span style="display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Helvetica,Arial,sans-serif;text-decoration:{{ r.deco }}">{{ r.name }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.75">{{ r.tag }}</span></span>
+                  <span style="font:700 15px ui-monospace,Menlo,monospace">{{ r.mine }}</span>
+                  <span style="font:11px Helvetica,Arial,sans-serif;opacity:.85;text-align:right;width:104px;flex:none">{{ r.opp }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ d.isSelect }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ lockIn }}" disabled="{{ d.lockDisabled }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif;opacity:{{ d.lockOpacity }}">{{ d.lockLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ d.isLocked }}" hint-placeholder-val="{{ false }}">
+              <div style="height:52px;border-radius:14px;border:1.5px dashed #1F1B18;display:flex;align-items:center;justify-content:center;gap:10px;font:600 14px Helvetica,Arial,sans-serif"><span style="width:10px;height:10px;border-radius:50%;background:#1F1B18;animation:ccpulse 1s infinite"></span>{{ d.lockedMsg }}</div>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ d.showReveal }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;flex:1;padding:12px 16px 24px;gap:10px">
+            <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">{{ rv.kicker }}</div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch">
+              <div style="border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:{{ rv.myBg }};color:{{ rv.myFg }};border:1.5px solid #1F1B18"><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">YOU · {{ rv.myName }}</span><span style="font:700 15px Helvetica,Arial,sans-serif">{{ rv.myCat }}</span><span style="font:700 26px ui-monospace,Menlo,monospace">{{ rv.myEff }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ rv.myCalc }}</span></div>
+              <div style="display:flex;align-items:center;font:700 12px ui-monospace,Menlo,monospace;color:#6A635C">vs</div>
+              <div style="border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:{{ rv.oppBg }};color:{{ rv.oppFg }};border:1.5px solid #1F1B18"><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ rv.oppName }}</span><span style="font:700 15px Helvetica,Arial,sans-serif">{{ rv.oppCat }}</span><span style="font:700 26px ui-monospace,Menlo,monospace">{{ rv.oppEff }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ rv.oppCalc }}</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:2px;flex:1"><div style="font:700 20px Helvetica,Arial,sans-serif">{{ rv.title }}</div><div style="font:13px/1.4 Helvetica,Arial,sans-serif;color:#4A443F">{{ rv.sub }}</div></div>
+            <button onClick="{{ continueDuel }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">{{ rv.cta }}</button>
+          </div>
+        </sc-if>
+      </div>
+      <sc-if value="{{ paused }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:rgba(31,27,24,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;padding:32px;text-align:center">
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.1em;opacity:.7">PAUSED</div>
+          <div style="font:700 28px Helvetica,Arial,sans-serif">{{ pauseTitle }}</div>
+          <div style="font:14px/1.45 Helvetica,Arial,sans-serif;opacity:.8">{{ pauseSub }}</div>
+          <button onClick="{{ resume }}" style="margin-top:8px;height:52px;padding:0 28px;border-radius:14px;background:#fff;color:#1F1B18;border:none;font:700 15px Helvetica,Arial,sans-serif">Resume</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0">
+      <div style="padding:8px 22px 0;display:flex;flex-direction:column;gap:2px"><div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">{{ res.kicker }}</div><div style="font:700 32px/1.05 Helvetica,Arial,sans-serif">{{ res.title }}</div><div style="font:13px Helvetica,Arial,sans-serif;color:#4A443F">{{ res.sub }}</div></div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;padding:0 18px;height:170px"><div style="width:170px;height:170px">{{ res.mySprite }}</div><div style="width:130px;height:130px">{{ res.oppSprite }}</div></div>
+      <div style="flex:1;overflow:auto;padding:8px 20px;display:flex;flex-direction:column;gap:6px">
+        <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">EXCHANGE HISTORY</div>
+        <sc-for list="{{ res.history }}" as="h" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:28px 1fr auto 1fr;gap:8px;align-items:center;padding:8px 10px;background:#FBF9F4;border:1px solid rgba(0,0,0,.14);border-radius:10px"><span style="font:700 12px ui-monospace,Menlo,monospace;color:#6A635C">{{ h.n }}</span><span style="font:12px Helvetica,Arial,sans-serif"><b>{{ h.mine }}</b> {{ h.myVal }}</span><span style="font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:3px 7px;border-radius:999px;background:{{ h.bg }};color:{{ h.fg }};border:1.5px solid #1F1B18">{{ h.res }}</span><span style="font:12px Helvetica,Arial,sans-serif;text-align:right">{{ h.oppVal }} <b>{{ h.opp }}</b></span></div>
+        </sc-for>
+        <div style="font:11px Helvetica,Arial,sans-serif;color:#6A635C">{{ res.note }}</div>
+      </div>
+      <div style="padding:12px 20px 28px;border-top:1px solid rgba(0,0,0,.1);background:#FBF9F4;display:flex;gap:10px"><button onClick="{{ res.secondary }}" style="flex:1;height:52px;border-radius:14px;background:transparent;color:#1F1B18;border:1.5px solid #1F1B18;font:700 15px Helvetica,Arial,sans-serif">{{ res.secondaryLabel }}</button><button onClick="{{ res.primary }}" style="flex:1;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">{{ res.primaryLabel }}</button></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isGym }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;min-height:0;position:relative">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 16px 6px;height:44px">
+        <button onClick="{{ goHome }}" style="width:44px;height:44px;border-radius:12px;border:1.5px solid #1F1B18;background:transparent;font-size:16px">✕</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font:700 14px Helvetica,Arial,sans-serif">{{ g.title }}</div><div style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#6A635C">{{ g.sub }}</div></div>
+        <div style="width:44px"></div>
+      </div>
+
+      <sc-if value="{{ g.isPreview }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;overflow:auto;padding:4px 20px 12px;display:flex;flex-direction:column;gap:14px">
+          <div style="font:13px/1.45 Helvetica,Arial,sans-serif;color:#4A443F">{{ g.trainer }} brings six. Their species and types are public; their individual values are not. You'll lock three in private, then send one at a time.</div>
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">{{ g.trainerUpper }}'S SIX · values hidden</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ g.oppSix }}" as="t" hint-placeholder-count="6"><div style="border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:#FBF9F4;border:1px dashed rgba(0,0,0,.35)"><div style="width:56px;height:56px;transform:scaleX(-1)">{{ t.sprite }}</div><div style="font:700 12px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ t.type }}</div></div></sc-for></div>
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">YOUR SIX</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ g.mySix }}" as="t" hint-placeholder-count="6"><div style="border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:#FBF9F4;border:1px solid rgba(0,0,0,.14)"><div style="width:56px;height:56px">{{ t.sprite }}</div><div style="font:700 12px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ t.statsTxt }}</div></div></sc-for></div>
+        </div>
+        <div style="padding:12px 20px 28px;border-top:1px solid rgba(0,0,0,.1);background:#FBF9F4"><button onClick="{{ gymToLock }}" style="width:100%;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Choose my three · 30 s</button></div>
+      </sc-if>
+
+      <sc-if value="{{ g.isLock }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:4px 20px 12px;gap:10px;min-height:0">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 13px Helvetica,Arial,sans-serif">{{ g.lockPrompt }}</span><span style="font:700 13px ui-monospace,Menlo,monospace;padding:4px 10px;border:1.5px solid #1F1B18;border-radius:999px;background:{{ g.timerBg }};color:{{ g.timerFg }}">{{ g.timerTxt }}</span></div>
+          <div style="height:4px;border-radius:2px;background:#E2DACA;overflow:hidden"><div style="height:100%;width:{{ g.timerPct }};background:#1F1B18;transition:width .1s linear"></div></div>
+          <div style="font:12px/1.4 Helvetica,Arial,sans-serif;color:#4A443F">{{ g.trainer }} can't see this screen. Each of the three fights exactly once, in the order you send them.</div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;flex:1;align-content:start"><sc-for list="{{ g.mySix }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.toggle }}" disabled="{{ t.disabled }}" style="border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:8px;text-align:left;background:{{ t.bg }};border:{{ t.border }};color:{{ t.fg }};opacity:{{ t.opacity }}"><div style="width:52px;height:52px;flex:none">{{ t.sprite }}</div><div style="display:flex;flex-direction:column;gap:1px"><div style="font:700 13px Helvetica,Arial,sans-serif">{{ t.name }} <span style="font:10px ui-monospace,Menlo,monospace;opacity:.75">{{ t.badge }}</span></div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.type }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.statsTxt }}</div></div></button></sc-for></div>
+          <sc-if value="{{ g.lockWaiting }}" hint-placeholder-val="{{ false }}"><div style="height:52px;border-radius:14px;border:1.5px dashed #1F1B18;display:flex;align-items:center;justify-content:center;gap:10px;font:600 14px Helvetica,Arial,sans-serif"><span style="width:10px;height:10px;border-radius:50%;background:#1F1B18;animation:ccpulse 1s infinite"></span>Locked · {{ g.trainer }} is choosing…</div></sc-if>
+          <sc-if value="{{ g.lockReady }}" hint-placeholder-val="{{ true }}"><button onClick="{{ lockThree }}" disabled="{{ g.lockDisabled }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif;opacity:{{ g.lockOpacity }}">{{ g.lockLabel }}</button></sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isPickPhase }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:4px 20px 12px;gap:10px;min-height:0">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 13px Helvetica,Arial,sans-serif">{{ g.pickPrompt }}</span><span style="font:700 13px ui-monospace,Menlo,monospace;padding:4px 10px;border:1.5px solid #1F1B18;border-radius:999px;background:{{ g.timerBg }};color:{{ g.timerFg }}">{{ g.timerTxt }}</span></div>
+          <div style="height:4px;border-radius:2px;background:#E2DACA;overflow:hidden"><div style="height:100%;width:{{ g.timerPct }};background:#1F1B18;transition:width .1s linear"></div></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">{{ g.trainerUpper }}'S THREE · revealed as they fight</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ g.oppThreeSlots }}" as="t" hint-placeholder-count="3"><div style="border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:{{ t.bg }};border:{{ t.border }};opacity:{{ t.opacity }}"><div style="width:52px;height:52px;transform:scaleX(-1);display:flex;align-items:center;justify-content:center;font:700 22px ui-monospace,Menlo,monospace;color:#6A635C">{{ t.sprite }}</div><div style="font:700 12px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ t.type }}</div></div></sc-for></div></div>
+          <div style="display:flex;flex-direction:column;gap:6px;flex:1"><div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">YOUR THREE · pick one in secret</div><sc-for list="{{ g.myThree }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.pick }}" disabled="{{ t.disabled }}" style="border-radius:14px;padding:6px 12px;display:flex;align-items:center;gap:10px;text-align:left;min-height:56px;background:{{ t.bg }};border:{{ t.border }};color:{{ t.fg }};opacity:{{ t.opacity }}"><div style="width:48px;height:48px;flex:none">{{ t.sprite }}</div><div style="display:flex;flex-direction:column;gap:1px;flex:1"><div style="font:700 14px Helvetica,Arial,sans-serif">{{ t.name }} <span style="font:10px ui-monospace,Menlo,monospace;opacity:.75">{{ t.type }}</span></div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.statsTxt }}</div></div><span style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.06em">{{ t.badge }}</span></button></sc-for></div>
+          <sc-if value="{{ g.pickWaiting }}" hint-placeholder-val="{{ false }}"><div style="height:52px;border-radius:14px;border:1.5px dashed #1F1B18;display:flex;align-items:center;justify-content:center;gap:10px;font:600 14px Helvetica,Arial,sans-serif"><span style="width:10px;height:10px;border-radius:50%;background:#1F1B18;animation:ccpulse 1s infinite"></span>{{ g.pickWaitMsg }}</div></sc-if>
+          <sc-if value="{{ g.pickReady }}" hint-placeholder-val="{{ true }}"><button onClick="{{ sendPick }}" disabled="{{ g.sendDisabled }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif;opacity:{{ g.sendOpacity }}">{{ g.sendLabel }}</button></sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isRevealPair }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:8px 20px 12px;gap:14px;min-height:0">
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">BOTH COMMITTED · {{ g.duelLabel }}</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;height:180px"><div style="width:180px;height:180px">{{ g.pairMe }}</div><div style="width:150px;height:150px">{{ g.pairOpp }}</div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:12px;padding:10px 12px"><div style="font:700 15px Helvetica,Arial,sans-serif">{{ g.pairMeName }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.pairMeType }} · yours</div><div style="font:11px ui-monospace,Menlo,monospace;margin-top:4px">{{ g.pairMeStats }}</div></div>
+            <div style="background:#FBF9F4;border:1.5px dashed #1F1B18;border-radius:12px;padding:10px 12px"><div style="font:700 15px Helvetica,Arial,sans-serif">{{ g.pairOppName }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.pairOppType }} · {{ g.trainer }}</div><div style="font:11px Helvetica,Arial,sans-serif;margin-top:4px;color:#4A443F">Values shown as they're played</div></div>
+          </div>
+          <div style="background:#FBF9F4;border:1px solid rgba(0,0,0,.14);border-radius:12px;padding:10px 12px;font:13px/1.45 Helvetica,Arial,sans-serif">{{ g.pairNote }}</div>
+          <div style="flex:1"></div>
+          <button onClick="{{ beginGymDuel }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Begin duel · fresh HP</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isDuelResult }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:8px 20px 12px;gap:12px;min-height:0">
+          <div style="display:flex;flex-direction:column;gap:2px"><div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">{{ g.drKicker }}</div><div style="font:700 30px/1.05 Helvetica,Arial,sans-serif">{{ g.drTitle }}</div><div style="font:13px Helvetica,Arial,sans-serif;color:#4A443F">{{ g.drSub }}</div></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;height:160px"><div style="width:160px;height:160px">{{ g.drMe }}</div><div style="width:130px;height:130px">{{ g.drOpp }}</div></div>
+          <div style="display:flex;justify-content:center;gap:14px;align-items:center;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:14px;padding:12px"><div style="display:flex;flex-direction:column;align-items:center"><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">YOU</span><span style="font:700 34px ui-monospace,Menlo,monospace">{{ g.scoreMe }}</span></div><span style="font:700 14px ui-monospace,Menlo,monospace;color:#6A635C">GYM SCORE</span><div style="display:flex;flex-direction:column;align-items:center"><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.trainerUpper }}</span><span style="font:700 34px ui-monospace,Menlo,monospace">{{ g.scoreOpp }}</span></div></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><sc-for list="{{ g.duelList }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:52px 1fr auto 1fr;gap:8px;align-items:center;padding:7px 10px;border-radius:10px;background:#FBF9F4;border:1px solid rgba(0,0,0,.14);opacity:{{ r.opacity }}"><span style="font:600 10px ui-monospace,Menlo,monospace;color:#6A635C">DUEL {{ r.n }}</span><span style="font:12px Helvetica,Arial,sans-serif;font-weight:700">{{ r.me }}</span><span style="font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:3px 7px;border-radius:999px;border:1.5px solid #1F1B18;background:{{ r.bg }};color:{{ r.fg }}">{{ r.res }}</span><span style="font:12px Helvetica,Arial,sans-serif;text-align:right;font-weight:700">{{ r.opp }}</span></div></sc-for></div>
+          <div style="flex:1"></div>
+          <button onClick="{{ nextGymDuel }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">{{ g.drCta }}</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isEncounter }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:8px 20px 12px;gap:12px;min-height:0">
+          <div style="display:flex;flex-direction:column;gap:2px"><div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">ENCOUNTER {{ g.encounterNo }} · {{ g.trainerUpper }}'S GYM</div><div style="font:700 32px/1.05 Helvetica,Arial,sans-serif">{{ g.encTitle }}</div><div style="font:13px/1.4 Helvetica,Arial,sans-serif;color:#4A443F">{{ g.encSub }}</div></div>
+          <div style="display:flex;justify-content:center;gap:14px;align-items:center;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:14px;padding:12px"><div style="display:flex;flex-direction:column;align-items:center"><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">YOU</span><span style="font:700 40px ui-monospace,Menlo,monospace">{{ g.scoreMe }}</span></div><span style="font:700 14px ui-monospace,Menlo,monospace;color:#6A635C">–</span><div style="display:flex;flex-direction:column;align-items:center"><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.trainerUpper }}</span><span style="font:700 40px ui-monospace,Menlo,monospace">{{ g.scoreOpp }}</span></div></div>
+          <div style="display:flex;flex-direction:column;gap:5px"><sc-for list="{{ g.duelList }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:52px 1fr auto 1fr;gap:8px;align-items:center;padding:7px 10px;border-radius:10px;background:#FBF9F4;border:1px solid rgba(0,0,0,.14)"><span style="font:600 10px ui-monospace,Menlo,monospace;color:#6A635C">DUEL {{ r.n }}</span><span style="font:12px Helvetica,Arial,sans-serif;font-weight:700">{{ r.me }}</span><span style="font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:3px 7px;border-radius:999px;border:1.5px solid #1F1B18;background:{{ r.bg }};color:{{ r.fg }}">{{ r.res }}</span><span style="font:12px Helvetica,Arial,sans-serif;text-align:right;font-weight:700">{{ r.opp }}</span></div></sc-for></div>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center"><div style="width:180px;height:180px">{{ g.encSprite }}</div></div>
+          <sc-if value="{{ g.encWon }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:10px"><button onClick="{{ declineExchange }}" style="flex:1;height:52px;border-radius:14px;background:transparent;border:1.5px solid #1F1B18;font:700 15px Helvetica,Arial,sans-serif">Keep my team</button><button onClick="{{ openExchange }}" style="flex:1;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Exchange a creature</button></div></sc-if>
+          <sc-if value="{{ g.encLost }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openAiExchange }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">See {{ g.trainer }}'s claim</button></sc-if>
+          <sc-if value="{{ g.encDraw }}" hint-placeholder-val="{{ false }}"><button onClick="{{ declineExchange }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Continue · no exchange on a draw</button></sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isExchange }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:4px 20px 12px;gap:10px;min-height:0">
+          <div style="font:13px/1.4 Helvetica,Arial,sans-serif;color:#4A443F">A real swap: the creature you give leaves your roster for good. Only the three that fought are eligible on either side.</div>
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">GIVE ONE OF YOURS</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ g.giveTiles }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.pick }}" style="border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:{{ t.bg }};border:{{ t.border }};color:{{ t.fg }}"><div style="width:56px;height:56px">{{ t.sprite }}</div><div style="font:700 12px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.statsTxt }}</div></button></sc-for></div>
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C;margin-top:4px">RECEIVE ONE OF {{ g.trainerUpper }}'S</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ g.takeTiles }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.pick }}" style="border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:{{ t.bg }};border:{{ t.border }};color:{{ t.fg }}"><div style="width:56px;height:56px;transform:scaleX(-1)">{{ t.sprite }}</div><div style="font:700 12px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.statsTxt }}</div></button></sc-for></div>
+          <div style="font:11px Helvetica,Arial,sans-serif;color:#6A635C">Values of {{ g.trainer }}'s creatures are the ones revealed during their duel.</div>
+          <div style="flex:1"></div>
+          <div style="display:flex;gap:10px"><button onClick="{{ declineExchange }}" style="flex:1;height:52px;border-radius:14px;background:transparent;border:1.5px solid #1F1B18;font:700 15px Helvetica,Arial,sans-serif">Decline</button><button onClick="{{ reviewExchange }}" disabled="{{ g.reviewDisabled }}" style="flex:1;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif;opacity:{{ g.reviewOpacity }}">Review swap</button></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isConfirm }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:8px 20px 12px;gap:14px;min-height:0">
+          <div style="font:700 26px/1.1 Helvetica,Arial,sans-serif">Confirm the swap</div>
+          <div style="display:grid;grid-template-columns:1fr 32px 1fr;gap:6px;align-items:center">
+            <div style="background:#FBF9F4;border:1.5px solid #8A3A22;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">LEAVES YOU</div><div style="width:110px;height:110px">{{ g.giveSprite }}</div><div style="font:700 16px Helvetica,Arial,sans-serif">{{ g.giveName }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.giveType }} · {{ g.giveStats }}</div></div>
+            <div style="text-align:center;font:700 20px Helvetica,Arial,sans-serif">⇄</div>
+            <div style="background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em">JOINS YOU</div><div style="width:110px;height:110px">{{ g.takeSprite }}</div><div style="font:700 16px Helvetica,Arial,sans-serif">{{ g.takeName }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.takeType }} · {{ g.takeStats }}</div></div>
+          </div>
+          <div style="background:#FBF9F4;border:1px solid rgba(0,0,0,.14);border-radius:12px;padding:10px 12px;font:13px/1.45 Helvetica,Arial,sans-serif">This can't be reversed. {{ g.giveName }} goes to {{ g.trainer }}; {{ g.takeName }} keeps the values it showed in its duel.</div>
+          <div style="flex:1"></div>
+          <div style="display:flex;gap:10px"><button onClick="{{ openExchange }}" style="flex:1;height:52px;border-radius:14px;background:transparent;border:1.5px solid #1F1B18;font:700 15px Helvetica,Arial,sans-serif">Change picks</button><button onClick="{{ confirmExchange }}" style="flex:1;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Confirm swap</button></div>
+          <button onClick="{{ declineExchange }}" style="height:44px;border-radius:14px;background:transparent;border:none;font:600 13px Helvetica,Arial,sans-serif;color:#6A635C;text-decoration:underline">Decline the exchange entirely</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isAiExchange }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:8px 20px 12px;gap:14px;min-height:0">
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">GYM RULE · PROVISIONAL</div>
+          <div style="font:700 26px/1.1 Helvetica,Arial,sans-serif">{{ g.trainer }} claims a creature</div>
+          <div style="font:13px/1.45 Helvetica,Arial,sans-serif;color:#4A443F">The winning trainer may take one participant and give one back. {{ g.trainer }} takes your first fighter and hands over their first. This is a swap, not a loss of a slot — your roster stays at six.</div>
+          <div style="display:grid;grid-template-columns:1fr 32px 1fr;gap:6px;align-items:center">
+            <div style="background:#FBF9F4;border:1.5px solid #8A3A22;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">LEAVES YOU</div><div style="width:110px;height:110px">{{ g.giveSprite }}</div><div style="font:700 16px Helvetica,Arial,sans-serif">{{ g.giveName }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.giveType }} · {{ g.giveStats }}</div></div>
+            <div style="text-align:center;font:700 20px Helvetica,Arial,sans-serif">⇄</div>
+            <div style="background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em">JOINS YOU</div><div style="width:110px;height:110px">{{ g.takeSprite }}</div><div style="font:700 16px Helvetica,Arial,sans-serif">{{ g.takeName }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ g.takeType }} · {{ g.takeStats }}</div></div>
+          </div>
+          <div style="flex:1"></div>
+          <button onClick="{{ confirmExchange }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Understood</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ g.isRoster }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;padding:8px 20px 12px;gap:14px;min-height:0">
+          <div style="display:flex;flex-direction:column;gap:2px"><div style="font:700 26px/1.1 Helvetica,Arial,sans-serif">Your roster</div><div style="font:13px/1.4 Helvetica,Arial,sans-serif;color:#4A443F">{{ g.rosterNote }}</div></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><sc-for list="{{ g.rosterTiles }}" as="t" hint-placeholder-count="6"><div style="border-radius:14px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:3px;background:{{ t.bg }};border:{{ t.border }};color:{{ t.fg }}"><div style="width:60px;height:60px">{{ t.sprite }}</div><div style="font:700 12px Helvetica,Arial,sans-serif">{{ t.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.type }}</div><div style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ t.statsTxt }}</div><div style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.08em">{{ t.badge }}</div></div></sc-for></div>
+          <div style="flex:1"></div>
+          <div style="display:flex;gap:10px"><button onClick="{{ goHome }}" style="flex:1;height:52px;border-radius:14px;background:transparent;border:1.5px solid #1F1B18;font:700 15px Helvetica,Arial,sans-serif">Home</button><button onClick="{{ nextEncounter }}" style="flex:1;height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">Next encounter</button></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ paused }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:rgba(31,27,24,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;padding:32px;text-align:center">
+          <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.1em;opacity:.7">PAUSED</div>
+          <div style="font:700 28px Helvetica,Arial,sans-serif">{{ pauseTitle }}</div>
+          <div style="font:14px/1.45 Helvetica,Arial,sans-serif;opacity:.8">{{ pauseSub }}</div>
+          <button onClick="{{ resume }}" style="margin-top:8px;height:52px;padding:0 28px;border-radius:14px;background:#fff;color:#1F1B18;border:none;font:700 15px Helvetica,Arial,sans-serif">Resume</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+
+<div style="flex:1 1 420px;max-width:600px;min-width:0;display:flex;flex-direction:column;gap:22px;font-size:13px;line-height:1.5;color:#2E2926">
+  <div style="display:flex;flex-direction:column;gap:6px"><div style="font:500 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">CREATURE CLASH · INTERACTIVE PROTOTYPE</div><h1 style="margin:0;font:700 28px/1.1 Helvetica,Arial,sans-serif;letter-spacing:-.01em">Both flows, every state</h1><p style="margin:0;color:#4A443F">Click through the phone. Timers are real; the pause state triggers when this tab is backgrounded, or with the button below. Creature art is the pass-2 set.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"><button onClick="{{ simulateBackground }}" style="height:36px;padding:0 14px;border-radius:10px;border:1.5px solid #1F1B18;background:#FBF9F4;font:600 12px Helvetica,Arial,sans-serif">Simulate app backgrounded</button><button onClick="{{ goHome }}" style="height:36px;padding:0 14px;border-radius:10px;border:1.5px solid #1F1B18;background:#FBF9F4;font:600 12px Helvetica,Arial,sans-serif">Restart prototype</button><span style="font:11px ui-monospace,Menlo,monospace;color:#6A635C;align-self:center">Tweaks: timer speed · opponent behaviour</span></div></div>
+
+  <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="font:700 14px Helvetica,Arial,sans-serif">1 · Flow map</div>
+    <div style="font:11px/1.65 ui-monospace,Menlo,monospace;white-space:pre;overflow-x:auto">Home
+ ├ A  Pick (you: exact · opp: clues) → Matchup → DUEL → Result → Rematch | Change picks
+ └ B  Preview six → Lock three [30 s] → ┐
+      ┌────────────────────────────────┘
+      │ Secret pick [15 s] → Waiting → Pair reveal → DUEL → Duel result ─┐ ×3
+      └──────────────────────────────────────────────────────────────────┘
+      Encounter result ─ win  → Exchange (give / receive) → Confirm | Decline → Roster
+                       ─ loss → Trainer's claim (explain → acknowledge) → Roster
+                       ─ draw → Roster
+      Roster → Next encounter | Home
+
+DUEL  Select [10 s] → Locked (waiting) → Reveal → Continue
+      ↳ ×3 · HP 0 ends early · tie after 3 → Exchange 4 (automatic, separate reveal)
+      ↳ Timeout → first unused of ATK · DEF · SPD · SPC, marked on the reveal
+      ↳ Backgrounded → Paused (time preserved) → Resume</div>
+  </div>
+
+  <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="font:700 14px Helvetica,Arial,sans-serif">2 · Visual direction</div>
+    <div>Paper and ink. Warm parchment ground (#F3EEE4), one ink (#1F1B18) for all chrome, rust (#8A3A22) only for kickers and the outgoing side of a swap. Type is Helvetica for reading and monospace for game data, so numbers always look like numbers. Creatures are the only saturated colour on screen.</div>
+    <div>Meaning never rides on colour alone: solid border = yours / known, dashed = theirs / hidden, strikethrough + "USED" = spent, filled pill = HP, outline pill = lost HP. Every result is a word (WON · LOST · TIE) as well as a fill.</div>
+  </div>
+
+  <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+    <div style="font:700 14px Helvetica,Arial,sans-serif">3 · Component inventory</div>
+    <div style="display:grid;grid-template-columns:150px 1fr;gap:4px 12px;font-size:12.5px">
+      <b>CreatureTile</b><span>portrait sprite, name, type, optional exact stats; states: default · selected · disabled · used · hidden (dashed, "?")</span>
+      <b>HpCard</b><span>name, type pill, 2 HP pips + text; sides: yours (solid) / theirs (dashed values)</span>
+      <b>CategoryRow</b><span>name, base → effective, opponent clue or played value; states: available · selected · locked · used-by-you · used-by-them · disabled</span>
+      <b>CommitBar</b><span>primary "Lock in X" → dashed "Locked · waiting…" (never re-enables)</span>
+      <b>TimerPill + Bar</b><span>mm:ss, turns filled at ≤ 3 s; bar drains linearly; freezes on pause</span>
+      <b>RevealPanel</b><span>kicker, two value cards (winner filled), title, explanation, single CTA; variant: automatic 4th exchange</span>
+      <b>ResultSheet</b><span>title, sprites in mood, exchange history rows, two actions</span>
+      <b>ScoreBlock</b><span>gym score, never mixed with exchange or duel counters</span>
+      <b>SwapCard pair</b><span>LEAVES YOU (rust) ⇄ JOINS YOU (ink)</span>
+      <b>PauseScrim</b><span>full-screen, remaining time, single Resume</span>
+      <b>Header</b><span>close · primary counter (Exchange n of 3) · secondary line (Duel n of 3 · Gym a–b)</span>
+    </div>
+  </div>
+
+  <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:6px">
+    <div style="font:700 14px Helvetica,Arial,sans-serif">4 · Assumptions</div>
+    <div>· Type chart: each type beats exactly one other (Fire→Grass, Grass→Water, Water→Fire, Electric→Water, Rock→Electric) and adjustment is ±2 on every category. Replace with the engine's real table; the UI only ever shows "base → effective" and a one-line reason.</div>
+    <div>· Individuals vary ±1 from species values, so a clue can be wrong for a given creature — the copy says "species tendency" everywhere.</div>
+    <div>· On a 30 s lock timeout, the first unselected roster members fill the empty slots; on a 15 s pick timeout, the first unused of your three is sent.</div>
+    <div>· "Waiting for opponent" lasts ~1 s against the local AI; against a remote player it would hold until their commit.</div>
+    <div>· The opponent's exchange picks the first participants on both sides, as in the current local prototype — flagged provisional in-UI.</div>
+    <div>· Opponent values revealed during a duel are the ones shown on a received creature after a swap.</div>
+    <div>· No back navigation once a commit exists; ✕ abandons the duel (counts as nothing) — a confirm dialog is out of scope here.</div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;timers&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;real&quot;,&quot;options&quot;:[&quot;real&quot;,&quot;relaxed&quot;],&quot;tsType&quot;:&quot;'real' | 'relaxed'&quot;,&quot;section&quot;:&quot;Prototype&quot;,&quot;description&quot;:&quot;relaxed = 3× longer timers for review&quot;},&quot;opponent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;scripted&quot;,&quot;options&quot;:[&quot;scripted&quot;,&quot;random&quot;],&quot;tsType&quot;:&quot;'scripted' | 'random'&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+class Component extends DCLogic {
+  state = { screen: 'home', pickMe: 'ashkit', pickOpp: 'brookfin', duel: null, gym: null, paused: false, roster: null, nextId: 100, trainerIdx: 0, encounterNo: 1, mods: null };
+  componentDidMount() {
+    const base = location.href;
+    Promise.all([import(new URL('./clash-engine.js', base).href), import(new URL('./creatures-v2.js', base).href)]).then(([E, A]) => {
+      this.setState({ mods: { E, A }, roster: E.KEYS.map((k, i) => E.makeCreature(k, i + 1)) });
+    }).catch(e => console.error('modules', e));
+    this._iv = setInterval(() => this.tick(), 100);
+    this._vis = () => { if (document.hidden) this.pause(); };
+    document.addEventListener('visibilitychange', this._vis);
+  }
+  componentWillUnmount() { clearInterval(this._iv); document.removeEventListener('visibilitychange', this._vis); }
+  T() { return (this.props.timers ?? 'real') === 'relaxed' ? 3 : 1; }
+  ai() { return this.props.opponent ?? 'scripted'; }
+  // ---- timers
+  timerActive() { const { duel, gym, screen } = this.state; if (screen === 'duel' && duel && duel.phase === 'select') return 'duel'; if (screen === 'gym' && gym && (gym.phase === 'lock' || gym.phase === 'pick')) return 'gym'; return null; }
+  pause() { if (this.timerActive() && !this.state.paused) this.setState({ paused: true }); }
+  tick() {
+    if (this.state.paused) return; const which = this.timerActive(); if (!which) return;
+    if (which === 'duel') { const d = Object.assign({}, this.state.duel, { remaining: this.state.duel.remaining - 100 }); if (d.remaining <= 0) { d.remaining = 0; this.setState({ duel: d }, () => this.commit(this.state.mods.E.firstUnused(d.used[0]), true)); } else this.setState({ duel: d }); }
+    else { const g = Object.assign({}, this.state.gym, { remaining: this.state.gym.remaining - 100 }); if (g.remaining <= 0) { g.remaining = 0; this.setState({ gym: g }, () => g.phase === 'lock' ? this.lockThree(true) : this.sendPick(true)); } else this.setState({ gym: g }); }
+  }
+  // ---- duel
+  startDuel(me, opp, mode) { this.setState({ duel: { me, opp, mode, hp: [2, 2], used: [[], []], exchanges: [], phase: 'select', remaining: 10000 * this.T(), total: 10000 * this.T(), choice: null, timedOut: false, result: null }, screen: 'duel', paused: false }); }
+  selectCat(c) { const d = this.state.duel; if (d.phase !== 'select' || d.used[0].includes(c)) return; this.setState({ duel: Object.assign({}, d, { choice: c }) }); }
+  commit(c, timedOut) { const d = this.state.duel; if (!d || d.phase !== 'select') return; this.setState({ duel: Object.assign({}, d, { phase: 'locked', choice: c, timedOut }) }); setTimeout(() => this.reveal(), 900); }
+  reveal() {
+    const E = this.state.mods.E, d = Object.assign({}, this.state.duel); if (d.phase !== 'locked') return;
+    const n = d.exchanges.length + 1, oc = E.aiCategory(d.opp, d.me, d.used[1], this.ai(), n), r = E.resolve(d.me, d.opp, d.choice, oc);
+    d.hp = d.hp.slice(); if (r.outcome === 'lose') d.hp[0]--; if (r.outcome === 'win') d.hp[1]--;
+    d.used = [d.used[0].concat(d.choice), d.used[1].concat(oc)];
+    d.exchanges = d.exchanges.concat([Object.assign({ n, timedOut: d.timedOut, auto: false }, r)]);
+    d.result = E.duelWinner(d.hp, n); d.phase = 'reveal'; this.setState({ duel: d });
+  }
+  continueDuel() {
+    const E = this.state.mods.E, d = Object.assign({}, this.state.duel);
+    if (d.result) return this.finishDuel(d);
+    if (d.phase === 'reveal' && d.exchanges.length >= 3) {
+      const mc = E.firstUnused(d.used[0]), oc = E.firstUnused(d.used[1]), r = E.resolve(d.me, d.opp, mc, oc);
+      d.hp = d.hp.slice(); if (r.outcome === 'lose') d.hp[0]--; if (r.outcome === 'win') d.hp[1]--;
+      d.used = [d.used[0].concat(mc), d.used[1].concat(oc)]; d.exchanges = d.exchanges.concat([Object.assign({ n: 4, auto: true, timedOut: false }, r)]);
+      d.result = d.hp[0] > d.hp[1] ? 'win' : d.hp[1] > d.hp[0] ? 'lose' : 'draw'; d.phase = 'auto'; return this.setState({ duel: d });
+    }
+    d.phase = 'select'; d.choice = null; d.timedOut = false; d.remaining = d.total; this.setState({ duel: d });
+  }
+  finishDuel(d) {
+    if (d.mode === 'A') return this.setState({ screen: 'result' });
+    const g = Object.assign({}, this.state.gym); g.results = g.results.concat([{ me: d.me, opp: d.opp, result: d.result, exchanges: d.exchanges }]);
+    g.score = [g.score[0] + (d.result === 'win' ? 1 : 0), g.score[1] + (d.result === 'lose' ? 1 : 0)]; g.phase = 'duelResult'; g.lastDuel = d;
+    this.setState({ gym: g, screen: 'gym' });
+  }
+  // ---- gym
+  startGym() {
+    const E = this.state.mods.E, t = E.TRAINERS[this.state.trainerIdx % E.TRAINERS.length];
+    this.setState({ screen: 'gym', paused: false, gym: { trainer: t.name, oppSix: t.six.map((k, i) => E.makeCreature(k, 50 + this.state.trainerIdx * 10 + i)), myThree: [], oppThree: [], score: [0, 0], results: [], usedMine: [], usedOpp: [], phase: 'preview', remaining: 0, total: 1, pickId: null, oppPick: null, give: null, take: null, swapped: null } });
+  }
+  gymSet(patch, cb) { this.setState({ gym: Object.assign({}, this.state.gym, patch) }, cb); }
+  gymToLock() { const t = 30000 * this.T(); this.gymSet({ phase: 'lock', remaining: t, total: t }); }
+  toggleThree(id) { const g = this.state.gym; if (g.phase !== 'lock') return; const has = g.myThree.includes(id); if (!has && g.myThree.length >= 3) return; this.gymSet({ myThree: has ? g.myThree.filter(x => x !== id) : g.myThree.concat(id) }); }
+  lockThree(timedOut) {
+    const g = this.state.gym; if (g.phase !== 'lock') return; let three = g.myThree.slice();
+    if (three.length < 3) this.state.roster.forEach(c => { if (three.length < 3 && !three.includes(c.id)) three.push(c.id); });
+    const oppThree = g.oppSix.slice().sort((a, b) => sum(b) - sum(a)).slice(0, 3);
+    function sum(c) { return c.stats.atk + c.stats.def + c.stats.spd + c.stats.spc; }
+    this.gymSet({ myThree: three, oppThree, phase: 'locked3', lockTimedOut: !!timedOut }, () => setTimeout(() => { const t = 15000 * this.T(); this.gymSet({ phase: 'pick', remaining: t, total: t, pickId: null }); }, 1000));
+  }
+  choosePick(id) { const g = this.state.gym; if (g.phase !== 'pick' || g.usedMine.includes(id)) return; this.gymSet({ pickId: id }); }
+  sendPick(timedOut) {
+    const g = this.state.gym; if (g.phase !== 'pick') return; let id = g.pickId; if (id == null) id = g.myThree.find(x => !g.usedMine.includes(x));
+    const avail = g.oppThree.filter(c => !g.usedOpp.includes(c.id)), oppPick = this.ai() === 'random' ? avail[Math.floor(Math.random() * avail.length)] : avail[0];
+    this.gymSet({ pickId: id, phase: 'wait', pickTimedOut: !!timedOut }, () => setTimeout(() => this.gymSet({ phase: 'revealPair', oppPick }), 900));
+  }
+  beginGymDuel() { const g = this.state.gym, me = this.state.roster.find(c => c.id === g.pickId); this.gymSet({ usedMine: g.usedMine.concat(g.pickId), usedOpp: g.usedOpp.concat(g.oppPick.id) }, () => this.startDuel(me, g.oppPick, 'B')); }
+  nextGymDuel() { const g = this.state.gym; if (g.results.length < 3) { const t = 15000 * this.T(); this.gymSet({ phase: 'pick', remaining: t, total: t, pickId: null }); } else this.gymSet({ phase: 'encounter' }); }
+  encOutcome(g) { return g.score[0] > g.score[1] ? 'win' : g.score[0] < g.score[1] ? 'lose' : 'draw'; }
+  openExchange() { this.gymSet({ phase: 'exchange' }); }
+  openAiExchange() { const g = this.state.gym; this.gymSet({ phase: 'aiExchange', give: g.myThree[0], take: g.oppThree[0].id }); }
+  reviewExchange() { this.gymSet({ phase: 'confirm' }); }
+  confirmExchange() {
+    const g = this.state.gym, E = this.state.mods.E, incoming = g.oppThree.find(c => c.id === g.take), newId = this.state.nextId;
+    const outgoing = this.state.roster.find(c => c.id === g.give);
+    const roster = this.state.roster.map(c => c.id === g.give ? Object.assign({}, incoming, { id: newId }) : c);
+    this.setState({ roster, nextId: newId + 1, gym: Object.assign({}, g, { phase: 'roster', swapped: newId, outgoing, myThree: g.myThree.map(id => id === g.give ? newId : id) }) });
+  }
+  declineExchange() { this.gymSet({ phase: 'roster', swapped: null }); }
+  nextEncounter() { this.setState({ trainerIdx: this.state.trainerIdx + 1, encounterNo: this.state.encounterNo + 1, gym: null }, () => this.startGym()); }
+
+  renderVals() {
+    const M = this.state.mods; if (!M) return { isHome: true, paused: false };
+    const { E, A } = M, R = React.createElement, s = this.state, roster = s.roster;
+    const sp = (key, o) => A.draw(R, key, o || {});
+    const statsTxt = c => `A${c.stats.atk} D${c.stats.def} S${c.stats.spd} X${c.stats.spc}`;
+    const INK = '#1F1B18', PANEL = '#FBF9F4';
+    const tile = (sel, dis) => ({ bg: sel ? INK : PANEL, fg: sel ? '#fff' : INK, border: sel ? `1.5px solid ${INK}` : dis ? '1.5px dashed rgba(0,0,0,.3)' : '1px solid rgba(0,0,0,.14)', opacity: dis ? .45 : 1 });
+    const fmt = ms => { const t = Math.ceil(ms / 1000); return `0:${String(t).padStart(2, '0')}`; };
+    const timer = (rem, total) => ({ timerTxt: fmt(rem), timerPct: `${Math.max(0, rem / total * 100)}%`, timerBg: rem <= 3000 ? INK : 'transparent', timerFg: rem <= 3000 ? '#fff' : INK });
+    const modTxt = (mine, theirs) => { const m = E.typeMod(mine, theirs); return m > 0 ? `+2 · ${mine} beats ${theirs}` : m < 0 ? `−2 · ${theirs} beats ${mine}` : 'no type effect'; };
+    const resPill = r => r === 'win' ? { res: 'WON', bg: INK, fg: '#fff' } : r === 'lose' ? { res: 'LOST', bg: '#8A3A22', fg: '#fff' } : { res: 'TIE', bg: 'transparent', fg: INK };
+    const v = { paused: s.paused, isHome: s.screen === 'home', isPick: s.screen === 'pick', isMatchup: s.screen === 'matchup', isDuel: s.screen === 'duel', isResult: s.screen === 'result', isGym: s.screen === 'gym',
+      goHome: () => this.setState({ screen: 'home', duel: null, gym: null, paused: false }), goPick: () => this.setState({ screen: 'pick' }), goMatchup: () => this.setState({ screen: 'matchup' }), goGym: () => this.startGym(),
+      resume: () => this.setState({ paused: false }), simulateBackground: () => this.pause(),
+      lockIn: () => this.commit(s.duel && s.duel.choice, false), continueDuel: () => this.continueDuel(), quitDuel: () => this.setState({ screen: 'home', duel: null, gym: null, paused: false }),
+      gymToLock: () => this.gymToLock(), lockThree: () => this.lockThree(false), sendPick: () => this.sendPick(false), beginGymDuel: () => this.beginGymDuel(), nextGymDuel: () => this.nextGymDuel(),
+      openExchange: () => this.openExchange(), openAiExchange: () => this.openAiExchange(), reviewExchange: () => this.reviewExchange(), confirmExchange: () => this.confirmExchange(), declineExchange: () => this.declineExchange(), nextEncounter: () => this.nextEncounter(),
+      homeSprite: sp(roster[0].key, { mood: 'confident' }), rosterNames: roster.map(c => c.name).join(' · '),
+      d: {}, rv: {}, res: {}, g: {}, mu: {} };
+    const rem = s.duel ? s.duel.remaining : s.gym ? s.gym.remaining : 0;
+    v.pauseTitle = fmt(rem) + ' left'; v.pauseSub = 'Selection paused while the app was in the background. Your remaining time is kept; nothing was chosen for you.';
+    // pick
+    const meC = roster.find(c => c.key === s.pickMe) || roster[0], oppC = E.makeCreature(s.pickOpp, 40 + E.KEYS.indexOf(s.pickOpp));
+    v.myPickTiles = roster.map(c => Object.assign({ name: c.name, type: c.type, statsTxt: statsTxt(c), sprite: sp(c.key, { ground: false }), pick: () => this.setState({ pickMe: c.key }) }, tile(c.id === meC.id)));
+    v.oppPickTiles = E.KEYS.map(k => Object.assign({ name: E.SPECIES[k].name, type: E.SPECIES[k].type, sprite: sp(k, { ground: false }), pick: () => this.setState({ pickOpp: k }) }, tile(k === s.pickOpp)));
+    v.startA = () => this.startDuel(meC, oppC, 'A');
+    const mm = E.typeMod(meC.type, oppC.type);
+    v.mu = { mySprite: sp(meC.key, {}), oppSprite: sp(oppC.key, { mirror: true }), myName: meC.name, myType: meC.type, oppName: oppC.name, oppType: oppC.type,
+      typeNote: mm > 0 ? `${meC.type} beats ${oppC.type}: every one of your categories plays at +2 and every one of theirs at −2.` : mm < 0 ? `${oppC.type} beats ${meC.type}: every one of your categories plays at −2 and every one of theirs at +2.` : `${meC.type} and ${oppC.type} are neutral: values play as shown.`,
+      myRows: E.CATS.map(c => ({ name: E.CAT_NAME[c], val: mm ? `${meC.stats[c]} → ${E.effective(meC, oppC, c)}` : `${meC.stats[c]}` })),
+      oppRows: E.CATS.map(c => ({ name: E.CAT_NAME[c], val: E.clue(E.SPECIES[oppC.key].base[c]) })) };
+    // duel
+    const d = s.duel;
+    if (d && s.screen === 'duel') {
+      const n = d.exchanges.length + (d.phase === 'select' || d.phase === 'locked' ? 1 : 0), shownN = d.phase === 'auto' ? 4 : Math.min(3, Math.max(1, n));
+      const g = s.gym, last = d.exchanges[d.exchanges.length - 1];
+      const pips = hp => [0, 1].map(i => ({ bg: i < hp ? INK : 'transparent' }));
+      const isSel = d.phase === 'select', isLocked = d.phase === 'locked', showReveal = d.phase === 'reveal' || d.phase === 'auto';
+      const rows = E.CATS.map(c => {
+        const usedMe = d.used[0].includes(c), usedOpp = d.used[1].includes(c), sel = d.choice === c, played = d.exchanges.find(e => e.oc === c);
+        const eff = E.effective(d.me, d.opp, c), base = d.me.stats[c], modv = eff - base;
+        const st = usedMe ? { bg: '#EFEAE0', fg: INK, border: '1.5px dashed rgba(0,0,0,.35)', opacity: .55, deco: 'line-through' } : sel ? { bg: INK, fg: '#fff', border: `1.5px solid ${INK}`, opacity: 1, deco: 'none' } : { bg: PANEL, fg: INK, border: `1.5px solid ${isSel ? INK : 'rgba(0,0,0,.25)'}`, opacity: isLocked && !sel ? .5 : 1, deco: 'none' };
+        return Object.assign({ name: E.CAT_NAME[c], mine: modv ? `${base} → ${eff}` : `${base}`, tag: usedMe ? `USED · exchange ${d.exchanges.find(e => e.mc === c).n}` : sel && isLocked ? 'LOCKED' : modv > 0 ? `+2 ${d.me.type} vs ${d.opp.type}` : modv < 0 ? `−2 vs ${d.opp.type}` : 'no type effect',
+          opp: usedOpp ? `played ${played.ov} (ex. ${played.n})` : E.clue(E.SPECIES[d.opp.key].base[c]), disabled: !isSel || usedMe, pick: () => this.selectCat(c) }, st);
+      });
+      v.d = Object.assign({ exLabel: `Exchange ${shownN} of 3${d.phase === 'auto' ? ' · +1 automatic' : ''}`, subLabel: d.mode === 'B' && g ? `Duel ${g.results.length + 1} of 3 · Gym ${g.score[0]}–${g.score[1]}` : 'Standalone duel',
+        oppName: d.opp.name, oppType: d.opp.type, myName: d.me.name, myType: d.me.type, oppPips: pips(d.hp[1]), myPips: pips(d.hp[0]), oppHpTxt: `${d.hp[1]} HP`, myHpTxt: `${d.hp[0]} HP`,
+        oppSprite: sp(d.opp.key, { mirror: true, mood: d.hp[1] === 0 ? 'defeated' : showReveal && last && last.outcome === 'lose' ? 'confident' : 'neutral' }),
+        mySprite: sp(d.me.key, { mood: d.hp[0] === 0 ? 'defeated' : showReveal && last && last.outcome === 'win' ? 'confident' : 'neutral' }),
+        showRows: !showReveal, showReveal, isSelect: isSel, isLocked, rows, prompt: isSel ? 'Choose a category' : 'Committed',
+        lockDisabled: !d.choice, lockOpacity: d.choice ? 1 : .35, lockLabel: d.choice ? `Lock in ${E.CAT_NAME[d.choice]}` : 'Tap a category, then lock it in', lockedMsg: `Locked in ${E.CAT_NAME[d.choice]} · waiting for ${d.opp.name}…` }, timer(d.remaining, d.total));
+      if (showReveal && last) {
+        const won = last.outcome === 'win', lost = last.outcome === 'lose';
+        const calc = (cr, other, cat, eff) => { const m = eff - cr.stats[cat]; return m ? `${cr.stats[cat]} ${m > 0 ? '+' : '−'} 2 type` : 'no type effect'; };
+        v.rv = { kicker: last.auto ? 'EXCHANGE 4 · AUTOMATIC · HP TIED AFTER THREE' : `EXCHANGE ${last.n} REVEALED${last.timedOut ? ' · TIMED OUT, FIRST UNUSED CHOSEN' : ''}`,
+          myName: d.me.name, oppName: d.opp.name, myCat: E.CAT_NAME[last.mc], oppCat: E.CAT_NAME[last.oc], myEff: String(last.mv), oppEff: String(last.ov), myCalc: calc(d.me, d.opp, last.mc, last.mv), oppCalc: calc(d.opp, d.me, last.oc, last.ov),
+          myBg: won ? INK : PANEL, myFg: won ? '#fff' : INK, oppBg: lost ? INK : PANEL, oppFg: lost ? '#fff' : INK,
+          title: won ? `${d.opp.name} loses 1 HP` : lost ? `${d.me.name} loses 1 HP` : 'Equal values — no damage',
+          sub: last.auto ? `Last unused categories compared. ${d.result === 'draw' ? 'Still level: the duel is a draw.' : d.result === 'win' ? 'You take the duel.' : `${d.opp.name} takes the duel.`}` : d.result === 'win' ? `${d.opp.name} is out of HP. You win the duel.` : d.result === 'lose' ? `${d.me.name} is out of HP. ${d.opp.name} wins the duel.` : last.n === 3 ? 'Three exchanges done. HP is level, so the last unused categories decide.' : `${E.CAT_NAME[last.mc]} is spent for you; ${E.CAT_NAME[last.oc]} for ${d.opp.name}. ${3 - last.n} exchange${3 - last.n === 1 ? '' : 's'} left.`,
+          cta: d.result ? 'See result' : last.n === 3 ? 'Run the automatic exchange' : `Exchange ${last.n + 1}` };
+      }
+    }
+    // result (A)
+    if (d && s.screen === 'result') {
+      const w = d.result;
+      v.res = { kicker: 'STANDALONE DUEL', title: w === 'win' ? 'Victory' : w === 'lose' ? 'Defeat' : 'Draw', sub: w === 'draw' ? 'Level on HP and on the final categories.' : `${w === 'win' ? d.me.name : d.opp.name} finishes with ${w === 'win' ? d.hp[0] : d.hp[1]} HP to ${w === 'win' ? d.hp[1] : d.hp[0]}.`,
+        mySprite: sp(d.me.key, { mood: w === 'win' ? 'confident' : w === 'lose' ? 'defeated' : 'neutral' }), oppSprite: sp(d.opp.key, { mirror: true, mood: w === 'lose' ? 'confident' : w === 'win' ? 'defeated' : 'neutral' }),
+        history: d.exchanges.map(e => Object.assign({ n: e.auto ? '4*' : String(e.n), mine: E.CAT_NAME[e.mc], myVal: String(e.mv), opp: E.CAT_NAME[e.oc], oppVal: String(e.ov) }, resPill(e.outcome))),
+        note: d.exchanges.some(e => e.auto) ? '* automatic — last unused categories.' : d.exchanges.some(e => e.timedOut) ? 'A timed-out pick used the first unused category.' : '',
+        primary: () => this.startDuel(d.me, d.opp, 'A'), primaryLabel: 'Rematch', secondary: () => this.setState({ screen: 'pick', duel: null }), secondaryLabel: 'Change creatures' };
+    }
+    // gym
+    const g = s.gym;
+    if (g && s.screen === 'gym') {
+      const ph = g.phase, byId = id => roster.find(c => c.id === id), enc = this.encOutcome(g);
+      const duelLabel = `Duel ${Math.min(3, g.results.length + 1)} of 3`;
+      const three = g.myThree.map(byId).filter(Boolean), tiles3 = three.map(c => { const used = g.usedMine.includes(c.id), sel = g.pickId === c.id; return Object.assign({ name: c.name, type: c.type, statsTxt: statsTxt(c), sprite: sp(c.key, { ground: false }), badge: used ? 'FOUGHT' : sel ? (ph === 'pick' ? 'SELECTED' : 'SENT') : '', disabled: used || ph !== 'pick', pick: () => this.choosePick(c.id) }, tile(sel, used)); });
+      const gv = { title: ph === 'preview' ? `${g.trainer}'s gym` : ph === 'lock' || ph === 'locked3' ? 'Lock your three' : ph === 'pick' || ph === 'wait' ? duelLabel : ph === 'revealPair' ? duelLabel : ph === 'duelResult' ? `${duelLabel.replace(/\d of/, m => (g.results.length) + ' of')}` : ph === 'encounter' ? 'Encounter result' : ph === 'roster' ? 'Roster' : 'Exchange',
+        sub: ph === 'preview' || ph === 'lock' || ph === 'locked3' ? `Encounter ${s.encounterNo} · 3 v 3` : `Gym ${g.score[0]}–${g.score[1]} · Encounter ${s.encounterNo}`,
+        trainer: g.trainer, trainerUpper: g.trainer.toUpperCase(), encounterNo: s.encounterNo, duelLabel,
+        isPreview: ph === 'preview', isLock: ph === 'lock' || ph === 'locked3', isPickPhase: ph === 'pick' || ph === 'wait', isRevealPair: ph === 'revealPair', isDuelResult: ph === 'duelResult', isEncounter: ph === 'encounter', isExchange: ph === 'exchange', isConfirm: ph === 'confirm', isAiExchange: ph === 'aiExchange', isRoster: ph === 'roster',
+        oppSix: g.oppSix.map(c => ({ name: c.name, type: c.type, sprite: sp(c.key, { ground: false }) })),
+        mySix: roster.map(c => { const sel = g.myThree.includes(c.id), dis = ph !== 'lock' || (!sel && g.myThree.length >= 3); return Object.assign({ name: c.name, type: c.type, statsTxt: statsTxt(c), sprite: sp(c.key, { ground: false }), badge: sel ? `#${g.myThree.indexOf(c.id) + 1}` : '', disabled: ph !== 'lock', toggle: () => this.toggleThree(c.id) }, tile(sel, dis && !sel)); }),
+        lockPrompt: `${g.myThree.length} of 3 chosen`, lockWaiting: ph === 'locked3', lockReady: ph === 'lock', lockDisabled: g.myThree.length < 3, lockOpacity: g.myThree.length < 3 ? .35 : 1, lockLabel: g.myThree.length < 3 ? 'Choose three to lock' : 'Lock these three',
+        oppThreeSlots: g.oppThree.map(c => { const shown = g.usedOpp.includes(c.id); return { name: shown ? c.name : 'Hidden', type: shown ? c.type : 'until sent', sprite: shown ? sp(c.key, { ground: false }) : '?', bg: shown ? PANEL : 'transparent', border: shown ? '1px solid rgba(0,0,0,.14)' : '1.5px dashed rgba(0,0,0,.35)', opacity: 1 }; }),
+        myThree: tiles3, pickPrompt: ph === 'pick' ? 'Send one · in secret' : 'Committed', pickWaiting: ph === 'wait', pickReady: ph === 'pick', pickWaitMsg: `${(byId(g.pickId) || {}).name} sent · waiting for ${g.trainer}…`,
+        sendDisabled: g.pickId == null, sendOpacity: g.pickId == null ? .35 : 1, sendLabel: g.pickId == null ? 'Tap a creature to send' : `Send ${(byId(g.pickId) || {}).name}`,
+        scoreMe: String(g.score[0]), scoreOpp: String(g.score[1]),
+        duelList: [0, 1, 2].map(i => { const r = g.results[i]; return r ? Object.assign({ n: String(i + 1), me: r.me.name, opp: r.opp.name, opacity: 1 }, resPill(r.result)) : { n: String(i + 1), me: '—', opp: '—', res: 'NEXT', bg: 'transparent', fg: INK, opacity: .5 }; }) };
+      Object.assign(gv, timer(g.remaining, g.total || 1));
+      if (ph === 'revealPair' && byId(g.pickId) && g.oppPick) { const me = byId(g.pickId), o = g.oppPick, m = E.typeMod(me.type, o.type); Object.assign(gv, { pairMe: sp(me.key, { mood: 'confident' }), pairOpp: sp(o.key, { mirror: true }), pairMeName: me.name, pairMeType: me.type, pairMeStats: statsTxt(me), pairOppName: o.name, pairOppType: o.type, pairNote: m > 0 ? `${me.type} beats ${o.type}: your categories play at +2, theirs at −2.` : m < 0 ? `${o.type} beats ${me.type}: your categories play at −2, theirs at +2.` : 'Neutral types: values play as shown.' }); }
+      if (ph === 'duelResult' && g.lastDuel) { const ld = g.lastDuel, w = ld.result; Object.assign(gv, { drKicker: `DUEL ${g.results.length} OF 3 · ${ld.me.name.toUpperCase()} VS ${ld.opp.name.toUpperCase()}`, drTitle: w === 'win' ? 'Duel won' : w === 'lose' ? 'Duel lost' : 'Duel drawn', drSub: w === 'draw' ? 'No point awarded to either side.' : `One point to ${w === 'win' ? 'you' : g.trainer}. ${ld.me.name} has fought and sits out the rest.`, drMe: sp(ld.me.key, { mood: w === 'win' ? 'confident' : w === 'lose' ? 'defeated' : 'neutral' }), drOpp: sp(ld.opp.key, { mirror: true, mood: w === 'lose' ? 'confident' : w === 'win' ? 'defeated' : 'neutral' }), drCta: g.results.length < 3 ? `Send your next creature · ${duelLabel}` : 'See encounter result' }); }
+      if (ph === 'encounter') Object.assign(gv, { encTitle: enc === 'win' ? 'Gym won' : enc === 'lose' ? 'Gym lost' : 'Encounter drawn', encSub: enc === 'win' ? 'You may exchange one of your three participants for one of theirs, or keep your team.' : enc === 'lose' ? `${g.trainer} takes the encounter and, by gym rule, an exchange.` : 'Equal scores. No exchange either way.', encWon: enc === 'win', encLost: enc === 'lose', encDraw: enc === 'draw', encSprite: sp(three[0] ? three[0].key : roster[0].key, { mood: enc === 'win' ? 'confident' : enc === 'lose' ? 'defeated' : 'neutral' }) });
+      if (ph === 'exchange' || ph === 'confirm' || ph === 'aiExchange' || ph === 'roster') {
+        const give = g.outgoing || byId(g.give), take = g.oppThree.find(c => c.id === g.take);
+        Object.assign(gv, { giveTiles: three.filter(c => c.id !== g.swapped).map(c => Object.assign({ name: c.name, statsTxt: statsTxt(c), sprite: sp(c.key, { ground: false }), pick: () => this.gymSet({ give: c.id }) }, tile(g.give === c.id))),
+          takeTiles: g.oppThree.map(c => Object.assign({ name: c.name, statsTxt: statsTxt(c), sprite: sp(c.key, { ground: false }), pick: () => this.gymSet({ take: c.id }) }, tile(g.take === c.id))),
+          reviewDisabled: g.give == null || g.take == null, reviewOpacity: g.give == null || g.take == null ? .35 : 1 });
+        if (give && take) Object.assign(gv, { giveSprite: sp(give.key, { mood: 'neutral' }), giveName: give.name, giveType: give.type, giveStats: statsTxt(give), takeSprite: sp(take.key, { mood: 'neutral' }), takeName: take.name, takeType: take.type, takeStats: statsTxt(take) });
+        gv.rosterTiles = roster.map(c => Object.assign({ name: c.name, type: c.type, statsTxt: statsTxt(c), sprite: sp(c.key, { ground: false }), badge: c.id === g.swapped ? 'NEW' : '' }, tile(c.id === g.swapped)));
+        gv.rosterNote = g.swapped != null && give && take ? `${give.name} left; ${take.name} joined. Six creatures, ready for the next gym.` : enc === 'draw' ? 'Unchanged — draws carry no exchange.' : 'Unchanged. You kept your team.';
+      }
+      v.g = gv;
+    }
+    return v;
+  }
+}
+</script>
+</body>
+</html>

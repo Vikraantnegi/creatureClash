@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><style>body{margin:0;background:#EFEAE0;font-family:Helvetica,Arial,sans-serif;color:#1F1B18}a{color:#1F1B18}a:hover{color:#8A3A22}</style></helmet>
+<div style="width:1180px;padding:40px 44px 60px;display:flex;flex-direction:column;gap:44px">
+
+<div style="display:flex;flex-direction:column;gap:12px;max-width:760px">
+  <div style="font:500 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">CREATURE CLASH · CHARACTER DIRECTION · v1</div>
+  <h1 style="margin:0;font:700 34px/1.1 Helvetica,Arial,sans-serif;letter-spacing:-.01em">Six species, one world</h1>
+  <p style="margin:0;font-size:14px;line-height:1.5;color:#4A443F">Shape-language studies built from primitives (facets, slabs, triangles) so silhouettes can be judged honestly before any illustration. Personality is carried by proportion and posture only — no accessories. Each creature's exaggerated part matches its highest stat.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:12.5px;line-height:1.45;color:#4A443F;margin-top:4px">
+    <div><b style="color:#1F1B18">Assumption</b> — engine has exactly 5 types; type glyphs for UI are out of scope here.</div>
+    <div><b style="color:#1F1B18">Assumption</b> — art faces right (player side); opponent art is mirrored in code.</div>
+    <div><b style="color:#1F1B18">Assumption</b> — these are direction studies, not exported sprites; production briefs below replace exports.</div>
+    <div><b style="color:#1F1B18">Assumption</b> — one animator; poses are 4 stills + 1 idle loop per creature, no rigs.</div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:10px"><a href="#t1" style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px;text-decoration:none">1</a><span style="font:600 14px Helvetica,Arial,sans-serif">Two cohesive directions — same six shapes, different surface language</span></div>
+  <div style="display:flex;gap:24px;align-items:flex-start" id="t1">
+    <div id="1a" style="display:flex;flex-direction:column;gap:8px;width:558px">
+      <div style="display:flex;align-items:baseline;gap:8px;font-size:12px;color:#5F5852"><a href="#1a" style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1F1B18;border-radius:5px;text-decoration:none">1a</a><b style="color:#1F1B18">Faceted</b> — chamfered planes, hard offset shadow, diamond eyes, 3px ink</div>
+      <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:18px 14px 12px;display:flex;flex-direction:column;gap:12px">
+        <div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end">
+          <div style="position:absolute;left:0;right:0;top:calc(85% - 1px);height:2px;background:rgba(0,0,0,.1)"></div>
+          <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:86px;height:86px">{{ c.svgA }}</div></sc-for>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-end">
+          <div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C;width:70px">44 px · 28 px</div>
+          <div style="display:flex;gap:6px;align-items:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:44px;height:44px">{{ c.svgA }}</div></sc-for></div>
+          <div style="display:flex;gap:4px;align-items:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:28px;height:28px">{{ c.svgA }}</div></sc-for></div>
+        </div>
+      </div>
+      <p style="margin:0;font-size:12px;line-height:1.5;color:#4A443F">Reads as carved game pieces. Facets give every creature the same "material", so a Fire wedge and a Grass dome still feel like siblings. Easiest to animate: flat fills, one shadow offset, no gradients. Recommended.</p>
+    </div>
+    <div id="1b" style="display:flex;flex-direction:column;gap:8px;width:558px">
+      <div style="display:flex;align-items:baseline;gap:8px;font-size:12px;color:#5F5852"><a href="#1b" style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1F1B18;border-radius:5px;text-decoration:none">1b</a><b style="color:#1F1B18">Soft Ink</b> — rounded volumes, single highlight, round eyes, 2.4px ink</div>
+      <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:18px 14px 12px;display:flex;flex-direction:column;gap:12px">
+        <div style="position:relative;display:flex;justify-content:space-between;align-items:flex-end">
+          <div style="position:absolute;left:0;right:0;top:calc(85% - 1px);height:2px;background:rgba(0,0,0,.1)"></div>
+          <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:86px;height:86px">{{ c.svgB }}</div></sc-for>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-end">
+          <div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C;width:70px">44 px · 28 px</div>
+          <div style="display:flex;gap:6px;align-items:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:44px;height:44px">{{ c.svgB }}</div></sc-for></div>
+          <div style="display:flex;gap:4px;align-items:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:28px;height:28px">{{ c.svgB }}</div></sc-for></div>
+        </div>
+      </div>
+      <p style="margin:0;font-size:12px;line-height:1.5;color:#4A443F">Friendlier, plush. Better for very young audiences; weaker at 28 px where rounded forms merge (Slate and Fernlet blur together). Needs a highlight pass per frame.</p>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">2</span><span style="font:600 14px Helvetica,Arial,sans-serif">Developed direction: {{ dirName }}</span><span style="font-size:12px;color:#8A837C">switch in Tweaks → Direction</span></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6">
+      <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-end">
+          <div style="width:220px;height:220px;flex:none">{{ c.dev }}</div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+            <div style="width:64px;height:64px">{{ c.sil }}</div>
+            <div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C">silhouette</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <div style="font:700 20px Helvetica,Arial,sans-serif">{{ c.name }}</div>
+          <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:3px 8px;border:1.5px solid #1F1B18;border-radius:999px">{{ c.type }}</div>
+        </div>
+        <div style="font:11px ui-monospace,Menlo,monospace;color:#4A443F">{{ c.stats }}</div>
+        <div style="font-size:12.5px;line-height:1.45"><b>{{ c.personality }}</b> {{ c.shape }}</div>
+        <div style="display:flex;gap:6px">
+          <sc-for list="{{ c.palette }}" as="p" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:3px;flex:1"><div style="height:22px;border-radius:4px;background:{{ p.hex }};border:1px solid rgba(0,0,0,.1)"></div><div style="font:9px ui-monospace,Menlo,monospace;color:#6A635C">{{ p.role }}<br>{{ p.hex }}</div></div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">3</span><span style="font:600 14px Helvetica,Arial,sans-serif">Pose concepts — neutral · ready · victory · defeated</span><span style="font-size:12px;color:#8A837C">each pose is a still; idle is a 2% vertical bob on neutral</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6">
+      <div style="display:grid;grid-template-columns:120px repeat(4,1fr);gap:12px;align-items:stretch;background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:12px 16px">
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:4px"><div style="font:700 16px Helvetica,Arial,sans-serif">{{ c.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C">{{ c.type }}</div></div>
+        <sc-for list="{{ c.poses }}" as="p" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+            <div style="width:150px;height:150px">{{ p.svg }}</div>
+            <div style="font:600 10.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase">{{ p.name }}</div>
+            <div style="font-size:11px;line-height:1.4;color:#4A443F;text-align:center;text-wrap:pretty">{{ p.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div style="display:flex;gap:24px;align-items:flex-start">
+  <div style="display:flex;flex-direction:column;gap:16px;width:560px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">4</span><span style="font:600 14px Helvetica,Arial,sans-serif">Portrait crops — 96 · 56 · 36 px</span></div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+      <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <div style="width:96px;height:96px;border-radius:50%;overflow:hidden;background:#E6E0D4;border:2px solid #1F1B18">{{ c.portrait }}</div>
+            <div style="width:56px;height:56px;border-radius:50%;overflow:hidden;background:#E6E0D4;border:2px solid #1F1B18">{{ c.portrait }}</div>
+            <div style="width:36px;height:36px;border-radius:50%;overflow:hidden;background:#E6E0D4;border:1.5px solid #1F1B18">{{ c.portrait }}</div>
+          </div>
+          <div style="font:11px ui-monospace,Menlo,monospace;color:#4A443F">{{ c.name }} · crop {{ c.crop }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:0;font-size:12px;line-height:1.5;color:#4A443F">Crops are square regions of the neutral pose, listed as x y w h in the 200-unit art space. Every crop includes the eye and the type mark (crest, fin, plate, cap, ear, horn) so portraits distinguish creatures without color.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;flex:1">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">5</span><span style="font:600 14px Helvetica,Arial,sans-serif">Lineup at UI scale</span></div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;flex-direction:column;gap:4px"><div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C">Roster row · 56 px</div><div style="display:flex;gap:10px;align-items:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:56px;height:56px;background:#fff;border-radius:8px;border:1px solid rgba(0,0,0,.1)">{{ c.dev }}</div></sc-for></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C">Bench chips · 36 px</div><div style="display:flex;gap:8px;align-items:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:36px;height:36px">{{ c.dev }}</div></sc-for></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C">Silhouette test · 32 px</div><div style="display:flex;gap:8px;align-items:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:32px;height:32px">{{ c.sil }}</div></sc-for></div></div>
+      <div style="display:flex;flex-direction:column;gap:4px"><div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C">Opponent side · mirrored</div><div style="display:flex;gap:8px;align-items:flex-end;transform:scaleX(-1);justify-content:flex-end"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:36px;height:36px">{{ c.dev }}</div></sc-for></div></div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;gap:24px;align-items:flex-start">
+  <div style="display:flex;flex-direction:column;gap:16px;flex:1">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">6</span><span style="font:600 14px Helvetica,Arial,sans-serif">Palette &amp; silhouette guidance</span></div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px 18px;font-size:12.5px;line-height:1.55;color:#2E2926;display:flex;flex-direction:column;gap:10px">
+      <div><b>Shared ink.</b> One outline colour <span style="font-family:ui-monospace,Menlo,monospace">#26201D</span> on every creature; weight 3 units of 200 (Faceted) or 2.4 (Soft Ink). Never coloured outlines.</div>
+      <div><b>Three values per creature</b> — base, shade, light — plus one accent for the type mark. Shade is always the base at ~60% lightness, same hue; light at ~130%. Keeps all six in one lighting world.</div>
+      <div><b>Type is a shape, colour is a reminder.</b> Fire = flame triangles (tall crest on Ashkit, stubby back ridge on Emberhorn). Water = fin triangles + skirt. Rock = chamfered slabs and spine plates. Grass = leaf cap + hanging fringe. Electric = bolt ears + zigzag limbs.</div>
+      <div><b>Silhouette family.</b> Ashkit diagonal wedge · Brookfin vertical column · Slate horizontal slab · Fernlet dome · Voltik thin zigzag · Emberhorn low anvil. No two share a bounding-box aspect ratio; all six pass a 32 px black-fill test.</div>
+      <div><b>The two Fire creatures.</b> Ashkit is small, tall-crested, legs longer than body, weight forward on toes. Emberhorn is wide, horned, head below shoulder line, legs shorter than body depth. Their hues also sit apart (orange/yellow vs oxblood/charcoal) as a secondary cue.</div>
+      <div><b>Eyes.</b> One eye style per direction; pupil offset toward the opponent. Eye size scales with Speed: Voltik largest, Emberhorn smallest.</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;width:520px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">7</span><span style="font:600 14px Helvetica,Arial,sans-serif">Proposed asset specification</span></div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px 18px;font:11.5px/1.6 ui-monospace,Menlo,monospace;color:#2E2926;display:grid;grid-template-columns:130px 1fr;gap:4px 12px">
+      <div style="color:#8A837C">Art space</div><div>200 × 200 units, ground line y = 170 (85%), feet centred x = 100, faces right</div>
+      <div style="color:#8A837C">Export</div><div>PNG, transparent, square. 256 pt base → 256 / 512 / 768 px (@1x @2x @3x). SVG source kept.</div>
+      <div style="color:#8A837C">Max height</div><div>150 units (75%). Brookfin and Voltik hit the cap; Slate ≈ 80, Emberhorn ≈ 105</div>
+      <div style="color:#8A837C">Padding</div><div>≥ 10 units clear on all sides in every pose; defeated pose may not exceed the frame</div>
+      <div style="color:#8A837C">Poses</div><div>neutral · ready · victory · defeated — 4 stills × 6 = 24 sprites</div>
+      <div style="color:#8A837C">Idle</div><div>Code-driven: neutral sprite, translateY ±2%, 1.6 s ease-in-out loop. No extra frames</div>
+      <div style="color:#8A837C">Portrait</div><div>128 × 128 pt, transparent, cropped from neutral at the listed crop; 6 files</div>
+      <div style="color:#8A837C">Naming</div><div>creatures/ashkit/ashkit_ready@2x.png · portraits/ashkit_portrait@2x.png</div>
+      <div style="color:#8A837C">Mirroring</div><div>Never export mirrored files — opponent side uses scaleX(-1) in the view</div>
+      <div style="color:#8A837C">Outline</div><div>3 / 200 units → 3.84 px @1x. Scale with export, never fixed-pixel</div>
+      <div style="color:#8A837C">Layers (opt.)</div><div>tail · far limbs · body · near limbs · head · type mark — if later rigged, export as 6 PNG layers, same canvas</div>
+      <div style="color:#8A837C">QA</div><div>Black-fill silhouette must be identifiable at 32 px; each pose must differ from neutral in bounding box, not only in face</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">8</span><span style="font:600 14px Helvetica,Arial,sans-serif">Production briefs (in place of exported assets)</span></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+    <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6">
+      <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;font-size:12px;line-height:1.5;color:#2E2926">
+        <div style="display:flex;gap:10px;align-items:center"><div style="width:40px;height:40px;flex:none">{{ c.dev }}</div><b style="font-size:14px">{{ c.name }}</b></div>
+        <div>{{ c.brief }}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;direction&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;Faceted&quot;,&quot;options&quot;:[&quot;Faceted&quot;,&quot;Soft Ink&quot;],&quot;tsType&quot;:&quot;'Faceted' | 'Soft Ink'&quot;,&quot;section&quot;:&quot;Art direction&quot;},&quot;groundShadow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Art direction&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const dirName = this.props.direction ?? 'Faceted';
+    const faceted = dirName === 'Faceted';
+    const ground = this.props.groundShadow ?? true;
+    const OUT = '#26201D';
+    const jit = [1, .93, 1.04, .9, 1, .95, 1.03, .91, .98];
+    const norm = c => typeof c === 'string' ? { base: c, shade: c, light: c } : c;
+    const mk = st => {
+      const stroke = st.sil ? '#111' : OUT;
+      const sw = st.faceted ? 3 : 2.4;
+      const fillOf = c => st.sil ? '#111' : c;
+      const R = React.createElement;
+      const base = extra => Object.assign({ stroke, strokeWidth: sw, strokeLinejoin: 'round' }, extra);
+      const poly = (pts, fill, extra) => R('polygon', base(Object.assign({ points: pts.map(p => p.join(',')).join(' '), fill: fillOf(fill) }, extra)));
+      const ell = (cx, cy, rx, ry, fill, extra) => R('ellipse', base(Object.assign({ cx, cy, rx, ry, fill: fillOf(fill) }, extra)));
+      const facet = (cx, cy, rx, ry, n, rot) => { const pts = []; for (let i = 0; i < n; i++) { const a = rot + i * 2 * Math.PI / n; const f = jit[i % jit.length]; pts.push([+(cx + rx * f * Math.cos(a)).toFixed(1), +(cy + ry * f * Math.sin(a)).toFixed(1)]); } return pts; };
+      const blob = (cx, cy, rx, ry, col, opt = {}) => {
+        col = norm(col); const els = []; const tr = opt.tilt ? { transform: `rotate(${opt.tilt} ${cx} ${cy})` } : {};
+        if (st.faceted) {
+          const n = opt.n || 7, rot = opt.rot || .4;
+          if (!st.sil) els.push(poly(facet(cx + 2, cy + 4, rx, ry, n, rot), col.shade, Object.assign({ stroke: 'none' }, tr)));
+          els.push(poly(facet(cx, cy, rx, ry, n, rot), col.base, tr));
+        } else {
+          els.push(ell(cx, cy, rx, ry, col.base, tr));
+          if (!st.sil) els.push(ell(cx - rx * .3, cy - ry * .38, rx * .32, ry * .24, col.light, Object.assign({ stroke: 'none' }, tr)));
+        }
+        return els;
+      };
+      const slab = (x, y, w, h, col, ch) => {
+        col = norm(col); const els = [];
+        if (st.faceted) {
+          const pts = (dx, dy) => [[x + ch + dx, y + dy], [x + w - ch + dx, y + dy], [x + w + dx, y + ch + dy], [x + w + dx, y + h - ch + dy], [x + w - ch + dx, y + h + dy], [x + ch + dx, y + h + dy], [x + dx, y + h - ch + dy], [x + dx, y + ch + dy]];
+          if (!st.sil) els.push(poly(pts(2, 4), col.shade, { stroke: 'none' }));
+          els.push(poly(pts(0, 0), col.base));
+        } else {
+          els.push(R('rect', base({ x, y, width: w, height: h, rx: ch, fill: fillOf(col.base) })));
+          if (!st.sil) els.push(R('rect', { x: x + w * .12, y: y + h * .1, width: w * .3, height: h * .18, rx: ch / 2, fill: col.light }));
+        }
+        return els;
+      };
+      const tri = (pts, fill) => [poly(pts, fill)];
+      const limb = (x1, y1, x2, y2, w, fill) => { const dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, nx = -dy / L * w / 2, ny = dx / L * w / 2; return [poly([[x1 + nx, y1 + ny], [x2 + nx, y2 + ny], [x2 - nx, y2 - ny], [x1 - nx, y1 - ny]].map(p => [+p[0].toFixed(1), +p[1].toFixed(1)]), fill)]; };
+      const eye = (cx, cy, r, state) => {
+        if (st.sil) return [];
+        const dark = OUT;
+        if (state === 'x') return [R('rect', { x: cx - r, y: cy - r * .22, width: 2 * r, height: r * .44, fill: dark, transform: `rotate(45 ${cx} ${cy})` }), R('rect', { x: cx - r, y: cy - r * .22, width: 2 * r, height: r * .44, fill: dark, transform: `rotate(-45 ${cx} ${cy})` })];
+        if (state === 'happy') return [R('ellipse', { cx, cy, rx: r, ry: r * .32, fill: dark, transform: `rotate(-8 ${cx} ${cy})` })];
+        const ry = state === 'calm' ? r * .55 : r;
+        const white = st.faceted ? R('polygon', { points: `${cx - r},${cy} ${cx},${cy - ry} ${cx + r},${cy} ${cx},${cy + ry}`, fill: '#FFFDF7', stroke: dark, strokeWidth: 1.6, strokeLinejoin: 'round' }) : R('ellipse', { cx, cy, rx: r, ry, fill: '#FFFDF7', stroke: dark, strokeWidth: 1.6 });
+        return [white, R('circle', { cx: cx + r * .28, cy: cy + (state === 'calm' ? r * .1 : 0), r: r * .42, fill: dark })];
+      };
+      return { blob, slab, tri, limb, eye };
+    };
+
+    const POSE = { neutral: {}, ready: { rot: 8, sx: 1.04, sy: .94 }, victory: { dy: -14, sy: 1.06, sx: .98, eye: 'happy' }, defeated: { rot: -22, sy: .84, sx: 1.05, dy: 4, eye: 'x' } };
+    const P = ['neutral', 'ready', 'victory', 'defeated'];
+
+    const specs = [
+      { name: 'Ashkit', type: 'FIRE', stats: 'ATK High · DEF Low · SPD High · SPC Mod', personality: 'Impulsive, quick, physically aggressive.', shape: 'Forward wedge on long thin legs; tall flame crest; weight on toes. Diagonal silhouette, smallest body mass.', eye: 'open', foot: 34, crop: [104, 48, 66, 66],
+        col: { base: '#E8672C', shade: '#B5401A', light: '#F6A25B', accent: '#F9D24A' },
+        pal: [['base', '#E8672C'], ['shade', '#B5401A'], ['light', '#F6A25B'], ['flame', '#F9D24A']],
+        poses: { ready: { rot: 14, sy: .9, sx: 1.08 }, victory: { dy: -18, sy: 1.08 } },
+        notes: ['Weight on toes, crest up, tail flame trailing.', 'Deep crouch, lunge lean; crest flares wider.', 'Hop; spikes spread; eyes squint.', 'Sits back on tail; crest droops to two short spikes.'],
+        brief: 'Small quadruped, body a tilted wedge ~30 units long, legs longer than body height. Three tall flame triangles on the crown, tallest at back. Tail ends in a flame of two nested triangles. Snout short. Eye 4.5 r, pupil forward. Keep crest triangles as separate layer for flare in Ready.',
+        draw: (h, C, e) => [].concat(
+          h.tri([[62, 118], [30, 88], [74, 100]], C.accent), h.tri([[64, 116], [46, 100], [72, 106]], C.light),
+          h.limb(78, 140, 68, 170, 5, C.shade), h.limb(104, 142, 100, 170, 5, C.shade),
+          h.blob(92, 126, 32, 19, C, { tilt: -14 }),
+          h.limb(84, 142, 76, 170, 5, C.base), h.limb(110, 144, 118, 170, 5, C.base),
+          h.blob(128, 100, 20, 16, C, { n: 6 }),
+          h.tri([[116, 88], [122, 58], [132, 86]], C.accent), h.tri([[130, 84], [140, 52], [146, 86]], C.accent), h.tri([[144, 90], [158, 68], [156, 96]], C.accent),
+          h.tri([[146, 100], [162, 106], [146, 112]], C.shade),
+          h.eye(136, 98, 4.5, e)) },
+      { name: 'Brookfin', type: 'WATER', stats: 'ATK Mod · DEF Mod · SPD Low · SPC High', personality: 'Composed, deliberate, quietly confident.', shape: 'Vertical symmetric column with no legs; fin skirt as base; tall crest fin. Tallest still shape — nothing about it hurries.', eye: 'calm', foot: 42, crop: [64, 30, 72, 72],
+        col: { base: '#3D82B8', shade: '#25598A', light: '#9AD0EA', accent: '#6FC7CF' },
+        pal: [['base', '#3D82B8'], ['shade', '#25598A'], ['light', '#9AD0EA'], ['fin', '#6FC7CF']],
+        poses: { ready: { rot: 3, sy: 1.03, sx: 1.02 }, victory: { dy: -8, sy: 1.1, sx: .97 }, defeated: { rot: -16, sy: .82, sx: 1.08, dy: 4 } },
+        notes: ['Upright, half-lidded, skirt settled.', 'Rises 3%, side fins spread; almost no lean.', 'Slow lift; crest fin taller; eyes close happily.', 'Slumps into skirt; crest folds flat.'],
+        brief: 'Legless upright form ~140 units tall. Lower body wide (34 r) tapering to a 28 r head-body, no neck. Skirt ellipse touches ground. Two side fins as triangles at mid height; two crest fins, tallest first. Pale belly panel. Eyes half-lidded by default — full open is a tell for Ready.',
+        draw: (h, C, e) => [].concat(
+          h.tri([[70, 118], [42, 142], [76, 136]], C.accent), h.tri([[130, 116], [158, 140], [126, 134]], C.accent),
+          h.blob(100, 160, 40, 12, { base: C.shade, shade: C.shade, light: C.base }, { n: 8 }),
+          h.blob(100, 138, 34, 30, C, { n: 8 }), h.blob(100, 106, 28, 40, C, { n: 8 }),
+          h.blob(104, 122, 15, 26, { base: C.light, shade: C.light, light: '#FFFFFF' }, { n: 6 }),
+          h.tri([[94, 72], [100, 28], [108, 74]], C.accent), h.tri([[106, 74], [124, 44], [114, 80]], C.accent),
+          h.eye(92, 94, 4.5, e), h.eye(110, 94, 4.5, e)) },
+      { name: 'Slate', type: 'ROCK', stats: 'ATK Mod · DEF Mod · SPD Mod · SPC Mod', personality: 'Steady and dependable.', shape: 'Horizontal chamfered slab on four even legs; head a smaller slab. Balanced proportions — deliberately not a tank: no oversized shell, no armour.', eye: 'open', foot: 52, crop: [112, 78, 60, 60],
+        col: { base: '#8E8A85', shade: '#5E5A57', light: '#C4BFB8', accent: '#6E7C86' },
+        pal: [['base', '#8E8A85'], ['shade', '#5E5A57'], ['light', '#C4BFB8'], ['plate', '#6E7C86']],
+        poses: { ready: { rot: 4, sy: .96, sx: 1.06 }, victory: { dy: -10, sy: 1.04 }, defeated: { rot: -12, sy: .86, sx: 1.06, dy: 4 } },
+        notes: ['Four-square stance, head level.', 'Front legs plant; small forward lean; plates rise.', 'Brief hop — the only time Slate leaves the ground.', 'Sits on haunches, head lowered, eyes crossed out.'],
+        brief: 'Quadruped ~80 units tall, ~110 wide. Body a rounded/chamfered slab 84×50; head slab 40×36 set high-forward. Three modest spine plates, middle largest. Four stubby legs of equal length, tiny tail slab. Every corner chamfered the same 10 units. Avoid any bulk that suggests a defensive specialist.',
+        draw: (h, C, e) => [].concat(
+          h.slab(44, 116, 16, 12, C.shade, 3),
+          h.slab(64, 148, 16, 22, C.shade, 3), h.slab(112, 148, 16, 22, C.shade, 3),
+          h.tri([[70, 106], [78, 92], [86, 106]], C.accent), h.tri([[90, 106], [99, 86], [108, 106]], C.accent), h.tri([[112, 106], [120, 93], [128, 106]], C.accent),
+          h.slab(58, 104, 84, 50, C, 10),
+          h.slab(76, 150, 16, 20, C, 3), h.slab(126, 150, 16, 20, C, 3),
+          h.slab(122, 92, 40, 36, C, 8),
+          h.slab(150, 116, 12, 5, C.shade, 1),
+          h.eye(150, 106, 4, e)) },
+      { name: 'Fernlet', type: 'GRASS', stats: 'ATK Mod · DEF High · SPD Low · SPC High', personality: 'Patient, protective, resourceful.', shape: 'Wide leaf cap over a small low body; face peeks out under the rim; hanging leaf fringe. Mushroom silhouette — widest of the six.', eye: 'open', foot: 54, crop: [72, 100, 66, 66],
+        col: { base: '#8DBE62', shade: '#5E8F3F', light: '#C6E3A6', accent: '#3F7A30', cap: { base: '#4E8F3C', shade: '#2F6B2A', light: '#7CB35A' } },
+        pal: [['body', '#8DBE62'], ['shade', '#5E8F3F'], ['cap', '#4E8F3C'], ['fringe', '#3F7A30']],
+        poses: { ready: { rot: 0, sy: .9, sx: 1.08, dy: 2 }, victory: { dy: -8, sy: 1.06 }, defeated: { rot: -14, sy: .86, sx: 1.06, dy: 4 } },
+        notes: ['Cap level, sprout upright, feet tucked.', 'Hunkers: cap lowers over the face, fringe closes.', 'Sprout bounce; cap lifts to show the whole face.', 'Cap tips back exposing body; eyes shut.'],
+        brief: 'Low form ~120 units tall, ~115 wide. Cap is a wide dome (54×32 r) with a four-leaf hanging fringe along the rim and a single sprout + side leaf on top. Body a 30 r blob beneath; two stub feet. Face sits just under the rim — in Ready the cap covers the eyes entirely (protective), so cap and body must be separate layers.',
+        draw: (h, C, e) => [].concat(
+          h.blob(102, 150, 30, 20, C, { n: 8 }),
+          h.slab(80, 162, 14, 8, C.shade, 3), h.slab(108, 162, 14, 8, C.shade, 3),
+          h.eye(108, 146, 4, e), h.eye(122, 146, 4, e),
+          [50, 72, 94, 116].flatMap(x => h.tri([[x, 118], [x + 11, 136], [x + 22, 118]], C.accent)),
+          h.blob(100, 104, 54, 32, C.cap, { n: 9 }),
+          h.tri([[94, 76], [100, 48], [106, 78]], C.base), h.tri([[100, 66], [120, 56], [104, 74]], C.base)) },
+      { name: 'Voltik', type: 'ELECTRIC', stats: 'ATK Mod · DEF Low · SPD High · SPC Mod', personality: 'Alert, restless, evasive.', shape: 'Thin zigzag body on tiptoe; huge eyes; long bolt ears, one bent. Tallest-thinnest — reads as a lightning stroke.', eye: 'open', foot: 26, crop: [60, 12, 80, 80],
+        col: { base: '#F2C83B', shade: '#C99A1D', light: '#FBE58A', accent: '#6B4FBF' },
+        pal: [['base', '#F2C83B'], ['shade', '#C99A1D'], ['light', '#FBE58A'], ['tips', '#6B4FBF']],
+        poses: { ready: { rot: 12, sx: .96, sy: 1.04, dy: -6 }, victory: { dy: -24, sy: 1.08, sx: .96 }, defeated: { rot: -24, sy: .8, sx: 1.06, dy: 6 } },
+        notes: ['Tiptoe; ears twitch every 2 s in idle.', 'Higher on toes, leans in, ears pinned back.', 'Spring jump, highest of the six; ears straight up.', 'Knees fold; ears droop; eyes crossed out.'],
+        brief: 'Biped ~150 units tall, ~40 wide at body. Body 14×28 r, head 18×15 r with two 5.5 r eyes (largest eyes in the cast). Two long ear triangles reaching y=18, violet tips; right ear bent outward. Zigzag legs of two segments each, tiptoe contact; thin arms. Bolt-shaped tail. Only creature standing on points, not pads.',
+        draw: (h, C, e) => [].concat(
+          h.tri([[88, 132], [58, 148], [72, 126]], C.accent),
+          h.limb(94, 146, 80, 158, 4, C.shade), h.limb(80, 158, 90, 170, 4, C.shade),
+          h.limb(106, 146, 120, 158, 4, C.base), h.limb(120, 158, 112, 170, 4, C.base),
+          h.limb(90, 116, 70, 104, 3.5, C.base), h.limb(110, 116, 130, 100, 3.5, C.base),
+          h.blob(100, 122, 14, 28, C, { n: 6 }),
+          h.tri([[90, 66], [76, 18], [100, 68]], C.base), h.tri([[102, 68], [128, 24], [112, 66]], C.base),
+          h.tri([[82, 40], [76, 18], [91, 38]], C.accent), h.tri([[119, 40], [128, 24], [123, 38]], C.accent),
+          h.blob(100, 80, 18, 15, C, { n: 6 }),
+          h.eye(95, 80, 5.5, e), h.eye(109, 80, 5.5, e)) },
+      { name: 'Emberhorn', type: 'FIRE', stats: 'ATK High · DEF High · SPD Low · SPC Mod', personality: 'Stubborn, grounded, forceful.', shape: 'Low front-heavy anvil; head below the shoulder line; huge back-swept horns; stubby ember ridge instead of Ashkit\u2019s tall crest. Widest low silhouette.', eye: 'open', foot: 62, crop: [116, 58, 74, 74],
+        col: { base: '#A23E30', shade: '#6B231C', light: '#CC6E52', accent: '#F08A2E', horn: '#2E2624' },
+        pal: [['base', '#A23E30'], ['shade', '#6B231C'], ['ember', '#F08A2E'], ['horn', '#2E2624']],
+        poses: { ready: { rot: 10, sy: .94, sx: 1.06, dy: 2 }, victory: { dy: -8, sy: 1.05, rot: -6 }, defeated: { rot: -14, sy: .9, sx: 1.05, dy: 4 } },
+        notes: ['Planted, head low, all four feet flat.', 'Head lower, front legs brace; embers brighten.', 'Head lifts high for the first time; one stomp.', 'Front knees buckle; embers dim to shade colour.'],
+        brief: 'Quadruped ~105 units tall, ~140 wide. Shoulders larger than hips; head a low 24×18 r blob whose centre sits below shoulder top. Two large horn triangles from the crown sweeping back-and-up to y≈64, charcoal. Three stubby ember triangles along the spine (max 12 tall — must stay clearly shorter than Ashkit\u2019s crest). Small eye 3.5 r under a heavy brow slab. Front legs thicker than hind.',
+        draw: (h, C, e) => [].concat(
+          h.slab(42, 124, 16, 10, C.shade, 3),
+          h.slab(60, 152, 18, 18, C.shade, 4), h.slab(118, 148, 20, 22, C.shade, 4),
+          h.tri([[66, 112], [74, 98], [82, 112]], C.accent), h.tri([[86, 108], [94, 94], [102, 108]], C.accent), h.tri([[106, 106], [112, 96], [118, 106]], C.accent),
+          h.blob(92, 136, 48, 28, C, { n: 8 }), h.blob(124, 128, 34, 30, C, { n: 8 }),
+          h.slab(72, 154, 18, 16, C, 4), h.slab(140, 148, 20, 22, C, 4),
+          h.tri([[138, 112], [110, 62], [154, 110]], C.horn), h.tri([[156, 110], [184, 66], [168, 112]], C.horn),
+          h.blob(150, 128, 24, 18, C, { n: 6 }),
+          h.slab(164, 130, 14, 10, C.shade, 3),
+          h.slab(148, 114, 16, 4, C.shade, 1),
+          h.eye(156, 122, 3.5, e)) }
+    ];
+
+    const R = React.createElement;
+    const draw = (spec, st, poseName, view) => {
+      const h = mk(st);
+      const p = Object.assign({}, POSE[poseName] || {}, (spec.poses || {})[poseName] || {});
+      const e = p.eye || spec.eye;
+      const t = `translate(100 170) rotate(${p.rot || 0}) scale(${p.sx || 1} ${p.sy || 1}) translate(-100 ${-170 + (p.dy || 0)})`;
+      return R('svg', { viewBox: view || '0 0 200 200', width: '100%', height: '100%', style: { display: 'block', overflow: 'visible' } },
+        (!st.sil && ground && !view) ? R('ellipse', { cx: 100, cy: 172, rx: spec.foot * (p.sx || 1), ry: 5, fill: 'rgba(30,20,10,.14)' }) : null,
+        R('g', { transform: t }, ...spec.draw(h, spec.col, e)));
+    };
+    const creatures = specs.map(s => ({
+      name: s.name, type: s.type, stats: s.stats, personality: s.personality, shape: s.shape, brief: s.brief,
+      crop: s.crop.join(' '),
+      palette: s.pal.map(([role, hex]) => ({ role, hex })),
+      svgA: draw(s, { faceted: true }, 'neutral'),
+      svgB: draw(s, { faceted: false }, 'neutral'),
+      dev: draw(s, { faceted }, 'neutral'),
+      sil: draw(s, { faceted, sil: true }, 'neutral'),
+      portrait: draw(s, { faceted }, 'neutral', s.crop.join(' ')),
+      poses: P.map((n, i) => ({ name: n, note: s.notes[i], svg: draw(s, { faceted }, n) }))
+    }));
+    return { creatures, dirName };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,23 +1,21 @@
 import { Text, View } from 'react-native';
 import type { CreaturePreview } from '@creature-clash/battle-engine';
-import { creatureName } from '@creature-clash/battle-fixtures';
-import { typeLabel } from '../../battle/format';
+import { CreatureTile } from '../../components/CreatureTile';
 export function RosterPreview({ creatures }: { creatures: CreaturePreview[] }) {
   return (
     <View className="gap-2">
-      <Text className="font-semibold text-slate-900">Opponent’s active six</Text>
+      <Text className="text-muted font-mono text-xs font-semibold uppercase tracking-widest">
+        Opponent’s six · values hidden
+      </Text>
       <View className="flex-row flex-wrap gap-2">
-        {creatures.map((creature, i) => (
-          <Text
-            key={creature.instanceId}
-            className="rounded-lg border border-slate-300 bg-white p-2 text-sm text-slate-700"
-          >
-            {i + 1}. {creatureName(creature.speciesId)} · {typeLabel(creature.typeId)}
-          </Text>
+        {creatures.map((creature) => (
+          <View key={creature.instanceId} className="w-[31%]">
+            <CreatureTile creature={creature} />
+          </View>
         ))}
       </View>
-      <Text className="text-xs text-slate-600">
-        Their chosen three and next deployment stay hidden.
+      <Text className="text-muted font-sans text-xs">
+        Their chosen three and deployment order stay hidden.
       </Text>
     </View>
   );

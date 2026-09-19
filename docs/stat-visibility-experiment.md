@@ -29,7 +29,7 @@ The approved encounter direction is: six active creatures visible in team previe
 - `battle/useBattle.ts`: exposes projected self/opponent sheets to React.
 - `battle/controller.ts`: stores visibility and permits changes only between standalone duels.
 - `battle/components/StatVisibilityControls.tsx`: two pre-duel choices using the shared NativeWind button.
-- `battle/components/CreatureSheet.tsx`: renders projected values; never decides who wins.
+- `battle/components/MatchupTable.tsx` and `CategoryPicker.tsx`: render projected values; never decide who wins.
 
 ## Playtest
 

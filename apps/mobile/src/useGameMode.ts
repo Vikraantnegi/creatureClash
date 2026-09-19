@@ -1,6 +1,6 @@
 import { useState } from 'react';
-export type GameMode = 'duel' | 'gym';
+export type GameMode = 'home' | 'duel' | 'gym';
 export function useGameMode() {
-  const [mode, setMode] = useState<GameMode>('duel');
+  const [mode, setMode] = useState<GameMode>('home');
   return { mode, setMode };
 }

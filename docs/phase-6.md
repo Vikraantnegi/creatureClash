@@ -1,6 +1,6 @@
 # Phase 6 implementation
 
-> Historical checkpoint. The playable Swap run and fixed Paired 3v3 have been superseded by [Gym 3v3](gym-encounter.md). The rules below document the earlier experiment, not the current encounter flow.
+> Historical checkpoint. The playable Swap run and fixed Paired 3v3 have been superseded by [Gym 3v3](gym-encounter.md). The superseded mobile screens/hooks have been removed; the tested engine run/paired modules remain. The rules below document the earlier experiment, not the current encounter flow.
 
 ## Decisions
 

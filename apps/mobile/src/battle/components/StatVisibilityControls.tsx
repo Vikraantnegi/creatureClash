@@ -11,7 +11,7 @@ export function StatVisibilityControls({
 }) {
   return (
     <View className="gap-2">
-      <Text className="text-sm font-semibold text-slate-900">Opponent stats</Text>
+      <Text className="text-ink font-sans text-sm font-semibold">Opponent stats</Text>
       <View className="flex-row flex-wrap gap-2">
         <Button
           testID="stats-profile"
@@ -32,7 +32,7 @@ export function StatVisibilityControls({
           onPress={() => configure('approximate')}
         />
       </View>
-      <Text className="text-xs text-slate-600">
+      <Text className="text-muted font-sans text-xs">
         {visibility === 'profile'
           ? 'Species clues describe typical strengths, not individual numbers. Played values become exact on reveal.'
           : 'Exact values or ten-point ranges: comparison controls.'}{' '}

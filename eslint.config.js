@@ -14,6 +14,7 @@ module.exports = defineConfig([
       'apps/mobile/ios/**',
       'apps/mobile/android/**',
       'pnpm-lock.yaml',
+      'design/claude-source/**',
     ],
   },
 ]);

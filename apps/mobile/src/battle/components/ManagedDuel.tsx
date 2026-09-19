@@ -1,7 +1,7 @@
 import type { DuelState } from '@creature-clash/battle-engine';
-import { DuelPanel } from '../../battle/components/DuelPanel';
-import { useBattle } from '../../battle/useBattle';
-import type { StatVisibility } from '../../battle/types';
+import { DuelPanel } from './DuelPanel';
+import { useBattle } from '../useBattle';
+import type { StatVisibility } from '../types';
 export function ManagedDuel({
   duel,
   complete,

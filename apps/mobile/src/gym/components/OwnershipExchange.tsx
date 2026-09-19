@@ -1,3 +1,4 @@
+import { creatureName } from '@creature-clash/battle-fixtures';
 import { Text, View } from 'react-native';
 import { DUEL_WINNER, type GymView } from '@creature-clash/battle-engine';
 import { Button } from '../../atoms/Button';
@@ -18,8 +19,8 @@ export function OwnershipExchange({
   if (view.winner === DUEL_WINNER.B)
     return (
       <View className="gap-3">
-        <Text className="text-xl font-bold text-slate-900">Opponent won the encounter</Text>
-        <Text className="text-sm text-slate-700">
+        <Text className="text-ink font-sans text-xl font-bold">Opponent won the encounter</Text>
+        <Text className="text-muted font-sans text-sm">
           The winner may exchange one participant. This prototype opponent exchanges its first
           participant for yours.
         </Text>
@@ -33,12 +34,14 @@ export function OwnershipExchange({
     );
   return (
     <View className="gap-3">
-      <Text className="text-xl font-bold text-slate-900">You won · optional creature exchange</Text>
-      <Text className="text-sm text-slate-700">
+      <Text className="text-ink font-sans text-xl font-bold">
+        You won · optional creature exchange
+      </Text>
+      <Text className="text-muted font-sans text-sm">
         Choose one of your participants to give and one of theirs to receive. These creatures change
         owners, keeping their identity and stats.
       </Text>
-      <Text className="font-semibold text-slate-900">Give one of your three</Text>
+      <Text className="text-ink font-sans font-semibold">Give one of your three</Text>
       <CreatureChoices
         prefix="give"
         creatures={view.completed.map((duel) => duel.creatureA)}
@@ -46,7 +49,7 @@ export function OwnershipExchange({
         choose={selection.setGive}
         disabled={disabled}
       />
-      <Text className="font-semibold text-slate-900">Receive one of their three</Text>
+      <Text className="text-ink font-sans font-semibold">Receive one of their three</Text>
       <CreatureChoices
         prefix="receive"
         creatures={view.completed.map((duel) => duel.creatureB)}
@@ -56,7 +59,11 @@ export function OwnershipExchange({
       />
       <Button
         testID="confirm-exchange"
-        label="Exchange selected creatures"
+        label={
+          selection.swap
+            ? `Give ${creatureName(view.roster.find((c) => c.instanceId === selection.give)!.speciesId)} → receive ${creatureName(view.completed.find((d) => d.creatureB.instanceId === selection.receive)!.creatureB.speciesId)}`
+            : 'Select one to give and one to receive'
+        }
         primary
         disabled={disabled || !selection.swap}
         onPress={() => {

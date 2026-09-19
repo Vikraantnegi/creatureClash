@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><style>body{margin:0;background:#E7E1D5;font-family:Helvetica,Arial,sans-serif;color:#1F1B18}a{color:#1F1B18}a:hover{color:#8A3A22}button{font-family:inherit;cursor:pointer}button:disabled{cursor:default}@keyframes ccpulse{0%,100%{opacity:1}50%{opacity:.3}}@keyframes ccflip{from{transform:scaleX(.15);opacity:0}to{transform:none;opacity:1}}@keyframes ccrise{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}@keyframes ccfade{from{opacity:0}to{opacity:1}}</style></helmet>
+<div style="padding:36px 40px 60px;display:flex;flex-direction:column;gap:40px;width:max-content">
+
+<div style="display:flex;flex-direction:column;gap:8px;max-width:820px">
+  <div style="font:500 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">CREATURE CLASH · CORE INTERACTION · SELECT → COMMIT → REVEAL · <a href="Creature Clash Prototype.dc.html">full prototype</a></div>
+  <h1 style="margin:0;font:700 32px/1.1 Helvetica,Arial,sans-serif;letter-spacing:-.01em">One exchange, frame by frame</h1>
+  <p style="margin:0;font-size:14px;line-height:1.5;color:#4A443F">Voltik (Electric) vs Emberhorn (Fire), both types neutral ×1.00. The eight frames are the states; the live phone below them plays the same exchange with real motion and a real clock. Nothing on screen ever implies an attack landing — the only event is two numbers being compared.</p>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">1</span><span style="font:600 14px Helvetica,Arial,sans-serif">Storyboard · exchange 1 into exchange 2</span></div>
+  <div style="display:flex;gap:22px;align-items:flex-start">
+  <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+    <div style="display:flex;flex-direction:column;gap:10px;width:390px;flex:none">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 12px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">{{ f.step }}</span><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C">{{ f.time }}</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;background:#F3EEE4;border:1px solid rgba(0,0,0,.14);box-shadow:0 14px 40px rgba(0,0,0,.14);position:relative;overflow:hidden;display:flex;flex-direction:column">
+        <div style="height:48px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font:600 13px Helvetica,Arial,sans-serif"><span>9:41</span><span style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">CREATURE CLASH</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;flex:none">
+          <button style="width:44px;height:44px;border-radius:12px;border:1.5px solid #1F1B18;background:transparent;font-size:16px">✕</button>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font:700 14px Helvetica,Arial,sans-serif">{{ f.exLabel }}</div><div style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#6A635C">ELECTRIC vs FIRE · ×1.00 NEUTRAL</div></div>
+          <div style="width:44px"></div>
+        </div>
+        <div style="height:224px;flex:none;position:relative;background:linear-gradient(#F3EEE4 0,#F3EEE4 112px,#E2DACA 112px)">
+          <div style="position:absolute;left:16px;top:6px;width:172px;background:#FBF9F4;border:1.5px dashed #1F1B18;border-radius:12px;padding:7px 10px;display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 13px Helvetica,Arial,sans-serif">Emberhorn</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px">FIRE</span></div>
+            <div style="display:flex;gap:4px;align-items:center"><sc-for list="{{ f.oppPips }}" as="p" hint-placeholder-count="2"><div style="width:22px;height:10px;border-radius:3px;border:1.5px solid #1F1B18;background:{{ p.bg }};transition:background 300ms ease-out"></div></sc-for><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C;margin-left:4px">{{ f.oppHp }}</span></div>
+          </div>
+          <div style="position:absolute;right:20px;top:14px;width:132px;height:132px">{{ f.oppSprite }}</div>
+          <div style="position:absolute;left:14px;top:70px;width:156px;height:156px">{{ f.mySprite }}</div>
+          <div style="position:absolute;right:16px;bottom:8px;width:172px;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:12px;padding:7px 10px;display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 13px Helvetica,Arial,sans-serif">Voltik</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px">ELECTRIC</span></div>
+            <div style="display:flex;gap:4px;align-items:center"><sc-for list="{{ f.myPips }}" as="p" hint-placeholder-count="2"><div style="width:22px;height:10px;border-radius:3px;border:1.5px solid #1F1B18;background:{{ p.bg }};transition:background 300ms ease-out"></div></sc-for><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C;margin-left:4px">{{ f.myHp }}</span></div>
+          </div>
+        </div>
+        <div style="flex:1;background:#FBF9F4;border-top:1.5px solid #1F1B18;display:flex;flex-direction:column;min-height:0">
+          <sc-if value="{{ f.hasHistory }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:6px;padding:8px 16px 0;flex-wrap:wrap"><sc-for list="{{ f.history }}" as="h" hint-placeholder-count="1"><div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:8px;border:1px solid rgba(0,0,0,.2);font:10px ui-monospace,Menlo,monospace"><span style="color:#6A635C">EX {{ h.n }}</span><span><b>{{ h.mine }}</b> vs <b>{{ h.opp }}</b></span><span style="padding:1px 5px;border-radius:999px;border:1.5px solid #1F1B18;background:{{ h.bg }};color:{{ h.fg }};font-weight:700">{{ h.res }}</span></div></sc-for></div>
+          </sc-if>
+          <sc-if value="{{ f.showRows }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;flex:1;padding:10px 16px 22px;gap:7px">
+              <div style="display:flex;justify-content:space-between;align-items:center;height:28px"><span style="font:600 13px Helvetica,Arial,sans-serif">{{ f.prompt }}</span><sc-if value="{{ f.showTimer }}" hint-placeholder-val="{{ true }}"><span style="font:700 13px ui-monospace,Menlo,monospace;padding:4px 10px;border:1.5px solid #1F1B18;border-radius:999px;background:{{ f.timerBg }};color:{{ f.timerFg }};min-width:52px;text-align:center">{{ f.timerTxt }}</span></sc-if></div>
+              <div style="height:4px;border-radius:2px;background:#E2DACA;overflow:hidden"><div style="height:100%;width:{{ f.timerPct }};background:#1F1B18;transition:width 100ms linear"></div></div>
+              <div style="display:grid;grid-template-columns:1fr 64px 108px;gap:8px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#6A635C;padding:2px 12px 0"><span>CATEGORY</span><span style="text-align:right">YOU ×1.00</span><span style="text-align:right">EMBERHORN</span></div>
+              <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+                <sc-for list="{{ f.rows }}" as="r" hint-placeholder-count="4">
+                  <button onClick="{{ r.pick }}" disabled="{{ r.disabled }}" style="min-height:48px;border-radius:12px;padding:6px 12px;display:grid;grid-template-columns:1fr 64px 108px;gap:8px;align-items:center;text-align:left;background:{{ r.bg }};border:{{ r.border }};color:{{ r.fg }};opacity:{{ r.opacity }};transition:background 120ms,opacity 120ms">
+                    <span style="display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Helvetica,Arial,sans-serif;text-decoration:{{ r.deco }}">{{ r.name }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ r.tag }}</span></span>
+                    <span style="font:700 17px ui-monospace,Menlo,monospace;text-align:right;text-decoration:{{ r.deco }}">{{ r.mine }}</span>
+                    <span style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;text-align:right"><span style="font:{{ r.oppFont }}">{{ r.opp }}</span><span style="font:9px ui-monospace,Menlo,monospace;opacity:.75">{{ r.oppTag }}</span></span>
+                  </button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ true }}"><button onClick="{{ f.lock }}" disabled="{{ f.lockDisabled }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif;opacity:{{ f.lockOpacity }};transition:opacity 120ms">{{ f.lockLabel }}</button></sc-if>
+              <sc-if value="{{ f.isLocked }}" hint-placeholder-val="{{ false }}"><div style="height:52px;border-radius:14px;border:1.5px dashed #1F1B18;display:flex;align-items:center;justify-content:center;gap:10px;font:600 14px Helvetica,Arial,sans-serif;animation:{{ f.animFade }}"><span style="width:10px;height:10px;border-radius:50%;background:#1F1B18;animation:{{ f.animPulse }}"></span>{{ f.lockedMsg }}</div></sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ f.showReveal }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;flex:1;padding:12px 16px 22px;gap:10px">
+              <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">{{ f.kicker }}</div>
+              <div style="display:grid;grid-template-columns:1fr 28px 1fr;gap:6px;align-items:stretch">
+                <div style="border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:{{ f.myBg }};color:{{ f.myFg }};border:1.5px solid #1F1B18;animation:{{ f.animFlip }}"><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">YOU · VOLTIK</span><span style="font:700 15px Helvetica,Arial,sans-serif">{{ f.myCat }}</span><span style="font:700 30px ui-monospace,Menlo,monospace">{{ f.myVal }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">×1.00 neutral</span></div>
+                <div style="display:flex;align-items:center;justify-content:center;font:700 12px ui-monospace,Menlo,monospace;color:#6A635C">vs</div>
+                <div style="border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:{{ f.oppBg }};color:{{ f.oppFg }};border:1.5px dashed #1F1B18;animation:{{ f.animFlip }}"><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">EMBERHORN</span><span style="font:700 15px Helvetica,Arial,sans-serif">{{ f.oppCat }}</span><span style="font:700 30px ui-monospace,Menlo,monospace">{{ f.oppVal }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">×1.00 neutral</span></div>
+              </div>
+              <sc-if value="{{ f.showResult }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;flex:1;animation:{{ f.animRise }}">
+                  <div style="display:flex;flex-direction:column;gap:2px"><div style="font:700 22px Helvetica,Arial,sans-serif">{{ f.title }}</div><div style="font:13px/1.4 Helvetica,Arial,sans-serif;color:#4A443F">{{ f.sub }}</div></div>
+                  <div style="border:1px solid rgba(0,0,0,.14);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:#F3EEE4">
+                    <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">WHAT YOU NOW KNOW</div>
+                    <sc-for list="{{ f.learned }}" as="l" hint-placeholder-count="2"><div style="display:flex;gap:8px;font:12px/1.4 Helvetica,Arial,sans-serif"><span style="font:700 11px ui-monospace,Menlo,monospace;color:#8A3A22;flex:none;width:14px">{{ l.k }}</span><span>{{ l.t }}</span></div></sc-for>
+                  </div>
+                  <div style="flex:1"></div>
+                  <button onClick="{{ f.next }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">{{ f.cta }}</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ f.showResultPending }}" hint-placeholder-val="{{ false }}"><div style="flex:1;display:flex;align-items:flex-start;justify-content:center;padding-top:12px;font:11px ui-monospace,Menlo,monospace;color:#8A837C">comparing…</div></sc-if>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ f.paused }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;background:rgba(31,27,24,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;padding:32px;text-align:center;animation:{{ f.animFade }}">
+            <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.1em;opacity:.7">PAUSED · APP IN BACKGROUND</div>
+            <div style="font:700 44px ui-monospace,Menlo,monospace">{{ f.timerTxt }}</div>
+            <div style="font:14px/1.45 Helvetica,Arial,sans-serif;opacity:.85;max-width:280px">Your remaining time is kept. Nothing was chosen for you. Emberhorn cannot see your screen.</div>
+            <button onClick="{{ f.resume }}" style="margin-top:8px;height:52px;padding:0 28px;border-radius:14px;background:#fff;color:#1F1B18;border:none;font:700 15px Helvetica,Arial,sans-serif">Resume selection</button>
+          </div>
+        </sc-if>
+      </div>
+      <div style="font:12px/1.5 Helvetica,Arial,sans-serif;color:#4A443F;padding:0 4px">{{ f.caption }}</div>
+    </div>
+  </sc-for>
+  </div>
+</div>
+
+<div style="display:flex;gap:28px;align-items:flex-start">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">2</span><span style="font:600 14px Helvetica,Arial,sans-serif">Live · same exchange with motion and a real clock</span></div>
+    <div style="display:flex;gap:22px;align-items:flex-start">
+      <sc-for list="{{ live }}" as="f" hint-placeholder-count="1">
+        <div style="width:390px;height:844px;flex:none;border-radius:44px;background:#F3EEE4;border:1px solid rgba(0,0,0,.14);box-shadow:0 14px 40px rgba(0,0,0,.14);position:relative;overflow:hidden;display:flex;flex-direction:column">
+          <div style="height:48px;flex:none;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font:600 13px Helvetica,Arial,sans-serif"><span>9:41</span><span style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">CREATURE CLASH</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;flex:none">
+            <button onClick="{{ f.reset }}" style="width:44px;height:44px;border-radius:12px;border:1.5px solid #1F1B18;background:transparent;font-size:16px">✕</button>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font:700 14px Helvetica,Arial,sans-serif">{{ f.exLabel }}</div><div style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#6A635C">ELECTRIC vs FIRE · ×1.00 NEUTRAL</div></div>
+            <div style="width:44px"></div>
+          </div>
+          <div style="height:224px;flex:none;position:relative;background:linear-gradient(#F3EEE4 0,#F3EEE4 112px,#E2DACA 112px)">
+            <div style="position:absolute;left:16px;top:6px;width:172px;background:#FBF9F4;border:1.5px dashed #1F1B18;border-radius:12px;padding:7px 10px;display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 13px Helvetica,Arial,sans-serif">Emberhorn</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px">FIRE</span></div>
+              <div style="display:flex;gap:4px;align-items:center"><sc-for list="{{ f.oppPips }}" as="p" hint-placeholder-count="2"><div style="width:22px;height:10px;border-radius:3px;border:1.5px solid #1F1B18;background:{{ p.bg }};transition:background 300ms ease-out"></div></sc-for><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C;margin-left:4px">{{ f.oppHp }}</span></div>
+            </div>
+            <div style="position:absolute;right:20px;top:14px;width:132px;height:132px">{{ f.oppSprite }}</div>
+            <div style="position:absolute;left:14px;top:70px;width:156px;height:156px">{{ f.mySprite }}</div>
+            <div style="position:absolute;right:16px;bottom:8px;width:172px;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:12px;padding:7px 10px;display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 13px Helvetica,Arial,sans-serif">Voltik</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px">ELECTRIC</span></div>
+              <div style="display:flex;gap:4px;align-items:center"><sc-for list="{{ f.myPips }}" as="p" hint-placeholder-count="2"><div style="width:22px;height:10px;border-radius:3px;border:1.5px solid #1F1B18;background:{{ p.bg }};transition:background 300ms ease-out"></div></sc-for><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C;margin-left:4px">{{ f.myHp }}</span></div>
+            </div>
+          </div>
+          <div style="flex:1;background:#FBF9F4;border-top:1.5px solid #1F1B18;display:flex;flex-direction:column;min-height:0">
+            <sc-if value="{{ f.hasHistory }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:6px;padding:8px 16px 0;flex-wrap:wrap"><sc-for list="{{ f.history }}" as="h" hint-placeholder-count="1"><div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:8px;border:1px solid rgba(0,0,0,.2);font:10px ui-monospace,Menlo,monospace"><span style="color:#6A635C">EX {{ h.n }}</span><span><b>{{ h.mine }}</b> vs <b>{{ h.opp }}</b></span><span style="padding:1px 5px;border-radius:999px;border:1.5px solid #1F1B18;background:{{ h.bg }};color:{{ h.fg }};font-weight:700">{{ h.res }}</span></div></sc-for></div>
+            </sc-if>
+            <sc-if value="{{ f.showRows }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;flex:1;padding:10px 16px 22px;gap:7px">
+                <div style="display:flex;justify-content:space-between;align-items:center;height:28px"><span style="font:600 13px Helvetica,Arial,sans-serif">{{ f.prompt }}</span><sc-if value="{{ f.showTimer }}" hint-placeholder-val="{{ true }}"><span style="font:700 13px ui-monospace,Menlo,monospace;padding:4px 10px;border:1.5px solid #1F1B18;border-radius:999px;background:{{ f.timerBg }};color:{{ f.timerFg }};min-width:52px;text-align:center">{{ f.timerTxt }}</span></sc-if></div>
+                <div style="height:4px;border-radius:2px;background:#E2DACA;overflow:hidden"><div style="height:100%;width:{{ f.timerPct }};background:#1F1B18;transition:width 100ms linear"></div></div>
+                <div style="display:grid;grid-template-columns:1fr 64px 108px;gap:8px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em;color:#6A635C;padding:2px 12px 0"><span>CATEGORY</span><span style="text-align:right">YOU ×1.00</span><span style="text-align:right">EMBERHORN</span></div>
+                <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+                  <sc-for list="{{ f.rows }}" as="r" hint-placeholder-count="4">
+                    <button onClick="{{ r.pick }}" disabled="{{ r.disabled }}" style="min-height:48px;border-radius:12px;padding:6px 12px;display:grid;grid-template-columns:1fr 64px 108px;gap:8px;align-items:center;text-align:left;background:{{ r.bg }};border:{{ r.border }};color:{{ r.fg }};opacity:{{ r.opacity }};transition:background 120ms,opacity 120ms">
+                      <span style="display:flex;flex-direction:column;gap:1px"><span style="font:700 14px Helvetica,Arial,sans-serif;text-decoration:{{ r.deco }}">{{ r.name }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">{{ r.tag }}</span></span>
+                      <span style="font:700 17px ui-monospace,Menlo,monospace;text-align:right;text-decoration:{{ r.deco }}">{{ r.mine }}</span>
+                      <span style="display:flex;flex-direction:column;align-items:flex-end;gap:1px;text-align:right"><span style="font:{{ r.oppFont }}">{{ r.opp }}</span><span style="font:9px ui-monospace,Menlo,monospace;opacity:.75">{{ r.oppTag }}</span></span>
+                    </button>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ true }}"><button onClick="{{ f.lock }}" disabled="{{ f.lockDisabled }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif;opacity:{{ f.lockOpacity }};transition:opacity 120ms">{{ f.lockLabel }}</button></sc-if>
+                <sc-if value="{{ f.isLocked }}" hint-placeholder-val="{{ false }}"><div style="height:52px;border-radius:14px;border:1.5px dashed #1F1B18;display:flex;align-items:center;justify-content:center;gap:10px;font:600 14px Helvetica,Arial,sans-serif;animation:{{ f.animFade }}"><span style="width:10px;height:10px;border-radius:50%;background:#1F1B18;animation:{{ f.animPulse }}"></span>{{ f.lockedMsg }}</div></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ f.showReveal }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;flex:1;padding:12px 16px 22px;gap:10px">
+                <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">{{ f.kicker }}</div>
+                <div style="display:grid;grid-template-columns:1fr 28px 1fr;gap:6px;align-items:stretch">
+                  <div style="border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:{{ f.myBg }};color:{{ f.myFg }};border:1.5px solid #1F1B18;animation:{{ f.animFlip }}"><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">YOU · VOLTIK</span><span style="font:700 15px Helvetica,Arial,sans-serif">{{ f.myCat }}</span><span style="font:700 30px ui-monospace,Menlo,monospace">{{ f.myVal }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">×1.00 neutral</span></div>
+                  <div style="display:flex;align-items:center;justify-content:center;font:700 12px ui-monospace,Menlo,monospace;color:#6A635C">vs</div>
+                  <div style="border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:{{ f.oppBg }};color:{{ f.oppFg }};border:1.5px dashed #1F1B18;animation:{{ f.animFlip }}"><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">EMBERHORN</span><span style="font:700 15px Helvetica,Arial,sans-serif">{{ f.oppCat }}</span><span style="font:700 30px ui-monospace,Menlo,monospace">{{ f.oppVal }}</span><span style="font:10px ui-monospace,Menlo,monospace;opacity:.8">×1.00 neutral</span></div>
+                </div>
+                <sc-if value="{{ f.showResult }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:10px;flex:1;animation:{{ f.animRise }}">
+                    <div style="display:flex;flex-direction:column;gap:2px"><div style="font:700 22px Helvetica,Arial,sans-serif">{{ f.title }}</div><div style="font:13px/1.4 Helvetica,Arial,sans-serif;color:#4A443F">{{ f.sub }}</div></div>
+                    <div style="border:1px solid rgba(0,0,0,.14);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:#F3EEE4">
+                      <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">WHAT YOU NOW KNOW</div>
+                      <sc-for list="{{ f.learned }}" as="l" hint-placeholder-count="2"><div style="display:flex;gap:8px;font:12px/1.4 Helvetica,Arial,sans-serif"><span style="font:700 11px ui-monospace,Menlo,monospace;color:#8A3A22;flex:none;width:14px">{{ l.k }}</span><span>{{ l.t }}</span></div></sc-for>
+                    </div>
+                    <div style="flex:1"></div>
+                    <button onClick="{{ f.next }}" style="height:52px;border-radius:14px;background:#1F1B18;color:#fff;border:none;font:700 15px Helvetica,Arial,sans-serif">{{ f.cta }}</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ f.showResultPending }}" hint-placeholder-val="{{ false }}"><div style="flex:1;display:flex;align-items:flex-start;justify-content:center;padding-top:12px;font:11px ui-monospace,Menlo,monospace;color:#8A837C">comparing…</div></sc-if>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ f.paused }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:rgba(31,27,24,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff;padding:32px;text-align:center;animation:{{ f.animFade }}">
+              <div style="font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.1em;opacity:.7">PAUSED · APP IN BACKGROUND</div>
+              <div style="font:700 44px ui-monospace,Menlo,monospace">{{ f.timerTxt }}</div>
+              <div style="font:14px/1.45 Helvetica,Arial,sans-serif;opacity:.85;max-width:280px">Your remaining time is kept. Nothing was chosen for you. Emberhorn cannot see your screen.</div>
+              <button onClick="{{ f.resume }}" style="margin-top:8px;height:52px;padding:0 28px;border-radius:14px;background:#fff;color:#1F1B18;border:none;font:700 15px Helvetica,Arial,sans-serif">Resume selection</button>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+      <div style="width:300px;display:flex;flex-direction:column;gap:10px;background:#EDE7DB;border:1px dashed rgba(0,0,0,.3);border-radius:12px;padding:14px 16px;margin-top:40px">
+        <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.1em;color:#6A635C">PLAYTEST CONTROLS · NOT PART OF THE GAME UI</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button onClick="{{ ptTimeout }}" style="height:40px;border-radius:10px;border:1.5px solid #1F1B18;background:#FBF9F4;font:600 12px Helvetica,Arial,sans-serif;text-align:left;padding:0 12px">Force timeout (auto-pick first unused)</button>
+          <button onClick="{{ ptBackground }}" style="height:40px;border-radius:10px;border:1.5px solid #1F1B18;background:#FBF9F4;font:600 12px Helvetica,Arial,sans-serif;text-align:left;padding:0 12px">Send app to background (pause)</button>
+          <button onClick="{{ ptReset }}" style="height:40px;border-radius:10px;border:1.5px solid #1F1B18;background:#FBF9F4;font:600 12px Helvetica,Arial,sans-serif;text-align:left;padding:0 12px">Reset duel</button>
+        </div>
+        <div style="height:1px;background:rgba(0,0,0,.14)"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;font:12px Helvetica,Arial,sans-serif">
+          <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#6A635C">EXPERIMENTAL</div>
+          <button onClick="{{ ptToggleAi }}" style="height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.25);background:transparent;font:12px Helvetica,Arial,sans-serif;text-align:left;padding:0 12px;display:flex;justify-content:space-between"><span>Opponent behaviour</span><b>{{ ptAi }}</b></button>
+          <button onClick="{{ ptToggleDebug }}" style="height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.25);background:transparent;font:12px Helvetica,Arial,sans-serif;text-align:left;padding:0 12px;display:flex;justify-content:space-between"><span>Debug: show hidden values</span><b>{{ ptDebug }}</b></button>
+          <button onClick="{{ ptToggleMotion }}" style="height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.25);background:transparent;font:12px Helvetica,Arial,sans-serif;text-align:left;padding:0 12px;display:flex;justify-content:space-between"><span>Reduced motion</span><b>{{ ptMotion }}</b></button>
+        </div>
+        <div style="font:11px/1.45 Helvetica,Arial,sans-serif;color:#6A635C">Debug values render in grey mono with a DEBUG tag so a screenshot can never be mistaken for the shipped state.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px;max-width:1240px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">3</span><span style="font:600 14px Helvetica,Arial,sans-serif">Component states · React Native + NativeWind</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12.5px;line-height:1.5;color:#2E2926">
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+      <div style="font:700 13px Helvetica,Arial,sans-serif">CategoryRow</div>
+      <div style="font:11px ui-monospace,Menlo,monospace;color:#6A635C">props: category · mine{base, factor, effective} · theirs{kind:'clue'|'played', text|value, exchange} · state · onPress</div>
+      <div style="display:grid;grid-template-columns:120px 1fr;gap:3px 10px">
+        <b>available</b><span><span style="font:11px ui-monospace,Menlo,monospace">bg-paper border-ink/25</span> — tappable, min-h-12</span>
+        <b>selected</b><span><span style="font:11px ui-monospace,Menlo,monospace">bg-ink text-paper</span> — one at a time; tapping another moves the selection (pre-commit only)</span>
+        <b>locked</b><span>selected + tag LOCKED; siblings <span style="font:11px ui-monospace,Menlo,monospace">opacity-50</span>, all rows <span style="font:11px ui-monospace,Menlo,monospace">disabled</span></span>
+        <b>autoPicked</b><span>locked + tag AUTO · TIMED OUT; rust tag colour</span>
+        <b>spentMine</b><span><span style="font:11px ui-monospace,Menlo,monospace">bg-sand border-dashed opacity-55 line-through</span>, tag SPENT · EX n, disabled; stays in list, never removed</span>
+        <b>theirs.clue</b><span>sans 11px "Usually high" + tag SPECIES CLUE</span>
+        <b>theirs.played</b><span>mono 700 15px exact value + tag PLAYED · EX n; independent of my column</span>
+      </div>
+    </div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+      <div style="font:700 13px Helvetica,Arial,sans-serif">CommitBar · TimerPill · HpPips · HistoryChip</div>
+      <div style="display:grid;grid-template-columns:120px 1fr;gap:3px 10px">
+        <b>CommitBar.idle</b><span>disabled, <span style="font:11px ui-monospace,Menlo,monospace">opacity-35</span>, copy "Tap a category, then lock it in"</span>
+        <b>CommitBar.armed</b><span>"Lock in Special" — names the choice so the tap is deliberate</span>
+        <b>CommitBar.locked</b><span>dashed container, pulsing dot, "Locked in Special · waiting for Emberhorn…"; no button, no back — commitment is final</span>
+        <b>TimerPill</b><span>mono 0:10 → 0:00; ≤ 3 s inverts to <span style="font:11px ui-monospace,Menlo,monospace">bg-ink text-paper</span> (shape change, not only colour); hidden once locked; frozen while paused</span>
+        <b>TimerBar</b><span>4 px, drains linearly from a deadline timestamp (Date.now based) — never a decrementing counter</span>
+        <b>HpPips</b><span>2 filled slabs; losing one animates fill → transparent over 300 ms; text "1 HP" alongside</span>
+        <b>HistoryChip</b><span>EX n · SPC 55 vs ATK 75 · LOST; appears above the rows from exchange 2; tap opens full history (out of scope here)</span>
+        <b>RevealCards</b><span>yours solid border, theirs dashed; loser's card fills ink; both mount in the same frame — never sequentially</span>
+      </div>
+    </div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+      <div style="font:700 13px Helvetica,Arial,sans-serif">Transitions · trigger → motion → duration</div>
+      <div style="display:grid;grid-template-columns:150px 1fr 70px;gap:3px 10px">
+        <b>tap row</b><span>row bg ink, CommitBar re-labels</span><span style="font:11px ui-monospace,Menlo,monospace">120 ms</span>
+        <b>tap Lock in</b><span>haptic light; bar → locked; timer pill fades out; siblings dim</span><span style="font:11px ui-monospace,Menlo,monospace">160 ms</span>
+        <b>opponent commit received</b><span>rows panel cross-fades to RevealCards; both cards scale-in from x 0.15 simultaneously</span><span style="font:11px ui-monospace,Menlo,monospace">240 ms</span>
+        <b>reveal + 400 ms</b><span>loser's card fills; HP pip drains; result block rises in; haptic medium on HP loss</span><span style="font:11px ui-monospace,Menlo,monospace">300 ms</span>
+        <b>tap Exchange n</b><span>rows return with spent/played states already applied; timer restarts at 0:10 from a fresh deadline</span><span style="font:11px ui-monospace,Menlo,monospace">160 ms</span>
+        <b>timer hits 0</b><span>first unused of ATK · DEF · SPD · SPC is selected and locked in one step; row tag AUTO · TIMED OUT; reveal kicker repeats it</span><span style="font:11px ui-monospace,Menlo,monospace">0 ms</span>
+        <b>AppState → background</b><span>deadline stored; scrim shown on return with the kept time; only the select phase pauses — a locked commit resolves as normal</span><span style="font:11px ui-monospace,Menlo,monospace">160 ms</span>
+        <b>tap Resume</b><span>new deadline = now + kept remaining; scrim fades</span><span style="font:11px ui-monospace,Menlo,monospace">160 ms</span>
+        <b>any tap during reveal motion</b><span>skips to end state; the CTA is enabled from frame one</span><span style="font:11px ui-monospace,Menlo,monospace">—</span>
+      </div>
+    </div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.1);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">
+      <div style="font:700 13px Helvetica,Arial,sans-serif">Reduced motion · implementation notes</div>
+      <div>· <b>Reduced motion</b> (<span style="font:11px ui-monospace,Menlo,monospace">useReducedMotion()</span>): all scale/translate become opacity-only at 120 ms; the 400 ms result delay drops to 0 so cards and verdict land together; the pulsing dot becomes a static dot with "waiting…"; the HP pip switches instantly. Timer bar keeps draining — it is information, not decoration.</div>
+      <div>· Total time from opponent commit to actionable CTA: 640 ms normal, 120 ms reduced. Nothing else is gated on animation.</div>
+      <div>· No creature motion on hit. Sprites only change expression (confident / defeated) when HP changes; no lunges, flashes or shakes that would imply an attack resolved against a defence.</div>
+      <div>· Timer: store <span style="font:11px ui-monospace,Menlo,monospace">deadline</span> in state; render with a 100 ms interval; on <span style="font:11px ui-monospace,Menlo,monospace">AppState</span> inactive/background persist <span style="font:11px ui-monospace,Menlo,monospace">remaining = deadline − now</span>; on active show the scrim and only rebuild the deadline on Resume.</div>
+      <div>· Timeout is decided by the engine, not the UI: the client sends the auto-pick with a <span style="font:11px ui-monospace,Menlo,monospace">reason:'timeout'</span> flag so the reveal can label it.</div>
+      <div>· Opponent's value is never in client state before both commits; the row shows <span style="font:11px ui-monospace,Menlo,monospace">theirs.kind</span> only. The Debug toggle above reads a separate dev-only payload.</div>
+      <div>· NativeWind tokens: <span style="font:11px ui-monospace,Menlo,monospace">ink #1F1B18 · paper #FBF9F4 · parchment #F3EEE4 · sand #E2DACA · rust #8A3A22</span>; radius-xl 12, radius-2xl 14; mono for every number.</div>
+    </div>
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;reducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Accessibility&quot;}}">
+class Component extends DCLogic {
+  state = { A: null, live: this.fresh(), ai: 'scripted', debug: false, motion: 'full' };
+  fresh() { return { phase: 'select', choice: null, used: [[], []], hp: [2, 2], ex: [], deadline: Date.now() + 10000, remaining: 10000, timedOut: false, paused: false, showResult: false, result: null }; }
+  componentDidMount() {
+    import(new URL('./creatures-v2.js', location.href).href).then(A => this.setState({ A })).catch(e => console.error('creatures', e));
+    this._iv = setInterval(() => this.tick(), 100);
+    this._vis = () => { if (document.hidden) this.pause(); }; document.addEventListener('visibilitychange', this._vis);
+  }
+  componentWillUnmount() { clearInterval(this._iv); document.removeEventListener('visibilitychange', this._vis); }
+  V() { return { atk: 65, def: 40, spd: 90, spc: 55 }; } O() { return { atk: 75, def: 80, spd: 30, spc: 50 }; }
+  reduced() { return (this.props.reducedMotion ?? false) || this.state.motion === 'reduced'; }
+  L(patch, cb) { this.setState({ live: Object.assign({}, this.state.live, patch) }, cb); }
+  tick() { const l = this.state.live; if (l.phase !== 'select' || l.paused) return; const rem = Math.max(0, l.deadline - Date.now()); if (rem <= 0) this.commit(true); else if (Math.ceil(rem / 100) !== Math.ceil(l.remaining / 100)) this.L({ remaining: rem }); }
+  pause() { const l = this.state.live; if (l.phase === 'select' && !l.paused) this.L({ paused: true, remaining: Math.max(0, l.deadline - Date.now()) }); }
+  resume() { const l = this.state.live; this.L({ paused: false, deadline: Date.now() + l.remaining }); }
+  select(c) { const l = this.state.live; if (l.phase !== 'select' || l.used[0].includes(c) || l.paused) return; this.L({ choice: c }); }
+  commit(timedOut) {
+    const l = this.state.live; if (l.phase !== 'select') return;
+    const CATS = ['atk', 'def', 'spd', 'spc'], choice = timedOut ? CATS.find(c => !l.used[0].includes(c)) : l.choice; if (!choice) return;
+    this.L({ phase: 'locked', choice, timedOut: !!timedOut, remaining: 0, paused: false }, () => setTimeout(() => this.reveal(), 900));
+  }
+  oppPick(l) { const CATS = ['atk', 'def', 'spd', 'spc'], avail = CATS.filter(c => !l.used[1].includes(c)), O = this.O(); if (this.state.ai === 'random') return avail[Math.floor(Math.random() * avail.length)]; if (l.ex.length === 0) return 'atk'; return avail.slice().sort((a, b) => O[b] - O[a])[0]; }
+  reveal(auto) {
+    const l = Object.assign({}, this.state.live), V = this.V(), O = this.O(), CATS = ['atk', 'def', 'spd', 'spc'];
+    const mc = auto ? CATS.find(c => !l.used[0].includes(c)) : l.choice, oc = auto ? CATS.find(c => !l.used[1].includes(c)) : this.oppPick(l);
+    const mv = V[mc], ov = O[oc], outcome = mv > ov ? 'win' : mv < ov ? 'lose' : 'tie';
+    l.hp = l.hp.slice(); if (outcome === 'lose') l.hp[0]--; if (outcome === 'win') l.hp[1]--;
+    l.used = [l.used[0].concat(mc), l.used[1].concat(oc)]; l.ex = l.ex.concat([{ n: l.ex.length + 1, mc, oc, mv, ov, outcome, timedOut: l.timedOut, auto: !!auto }]);
+    l.result = l.hp[0] <= 0 ? 'lose' : l.hp[1] <= 0 ? 'win' : l.ex.length >= 3 && l.hp[0] !== l.hp[1] ? (l.hp[0] > l.hp[1] ? 'win' : 'lose') : auto ? 'draw' : null;
+    l.phase = 'reveal'; l.showResult = this.reduced(); this.setState({ live: l }, () => { if (!this.reduced()) setTimeout(() => this.L({ showResult: true }), 400); });
+  }
+  next() { const l = this.state.live; if (l.result) return this.setState({ live: this.fresh() }); if (l.ex.length >= 3) return this.reveal(true); this.L({ phase: 'select', choice: null, timedOut: false, deadline: Date.now() + 10000, remaining: 10000, showResult: false }); }
+  frame(cfg) {
+    const A = this.state.A, R = React.createElement, V = this.V(), O = this.O(), INK = '#1F1B18', PAPER = '#FBF9F4';
+    const NAME = { atk: 'Attack', def: 'Defense', spd: 'Speed', spc: 'Special' }, SH = { atk: 'ATK', def: 'DEF', spd: 'SPD', spc: 'SPC' }, CLUE = { atk: 'Usually high', def: 'Usually high', spd: 'Usually low', spc: 'Usually moderate' };
+    const red = this.reduced(), anim = (n, d, delay) => red ? (n === 'ccpulse' ? 'none' : 'ccfade 120ms ease-out both') : `${n} ${d}ms ease-out ${delay || 0}ms ${n === 'ccpulse' ? 'infinite' : 'both'}`;
+    const sp = (k, o) => A ? A.draw(R, k, o) : null;
+    const isSel = cfg.phase === 'select', isLocked = cfg.phase === 'locked', showReveal = cfg.phase === 'reveal';
+    const last = cfg.ex[cfg.ex.length - 1], rem = cfg.remaining, tsec = Math.ceil(rem / 1000);
+    const rows = ['atk', 'def', 'spd', 'spc'].map(c => {
+      const spentEx = cfg.ex.find(e => e.mc === c), playedEx = cfg.ex.find(e => e.oc === c), sel = cfg.choice === c;
+      let st;
+      if (spentEx) st = { bg: '#EFEAE0', fg: INK, border: '1.5px dashed rgba(0,0,0,.35)', opacity: .55, deco: 'line-through', tag: `SPENT · EX ${spentEx.n}` };
+      else if (sel) st = { bg: INK, fg: '#fff', border: `1.5px solid ${INK}`, opacity: 1, deco: 'none', tag: isLocked ? (cfg.timedOut ? 'AUTO · TIMED OUT' : 'LOCKED') : 'SELECTED · tap Lock in' };
+      else st = { bg: PAPER, fg: INK, border: `1.5px solid ${isSel ? 'rgba(0,0,0,.35)' : 'rgba(0,0,0,.18)'}`, opacity: isLocked ? .5 : 1, deco: 'none', tag: 'available' };
+      const dbg = this.state.debug && !playedEx && cfg.live;
+      return Object.assign(st, { name: NAME[c], mine: String(V[c]), opp: playedEx ? String(playedEx.ov) : dbg ? `${CLUE[c]} · ${O[c]}` : CLUE[c], oppTag: playedEx ? `PLAYED · EX ${playedEx.n}` : dbg ? 'DEBUG' : 'SPECIES CLUE', oppFont: playedEx ? '700 15px ui-monospace,Menlo,monospace' : dbg ? '11px ui-monospace,Menlo,monospace' : '11px Helvetica,Arial,sans-serif', disabled: !isSel || !!spentEx || cfg.paused, pick: cfg.live ? () => this.select(c) : () => {} });
+    });
+    const pips = hp => [0, 1].map(i => ({ bg: i < hp ? INK : 'transparent' }));
+    const resPill = o => o === 'win' ? { res: 'WON', bg: INK, fg: '#fff' } : o === 'lose' ? { res: 'LOST', bg: '#8A3A22', fg: '#fff' } : { res: 'TIE', bg: 'transparent', fg: INK };
+    const nShown = cfg.ex.length + (showReveal ? 0 : 1), f = {
+      step: cfg.step || '', time: cfg.time || '', caption: cfg.caption || '', live: !!cfg.live,
+      exLabel: last && last.auto && showReveal ? 'Exchange 4 · automatic' : `Exchange ${Math.min(3, Math.max(1, nShown))} of 3`,
+      oppPips: pips(cfg.hp[1]), myPips: pips(cfg.hp[0]), oppHp: `${cfg.hp[1]} HP`, myHp: `${cfg.hp[0]} HP`,
+      oppSprite: sp('emberhorn', { mirror: true, mood: cfg.hp[1] === 0 ? 'defeated' : showReveal && cfg.showResult && last.outcome === 'lose' ? 'confident' : 'neutral' }),
+      mySprite: sp('voltik', { mood: cfg.hp[0] === 0 ? 'defeated' : showReveal && cfg.showResult && last.outcome === 'win' ? 'confident' : 'neutral' }),
+      hasHistory: cfg.ex.length > 0 && !showReveal, history: cfg.ex.map(e => Object.assign({ n: String(e.n), mine: `${SH[e.mc]} ${e.mv}`, opp: `${SH[e.oc]} ${e.ov}` }, resPill(e.outcome))),
+      showRows: !showReveal, showReveal, isSelect: isSel, isLocked, paused: !!cfg.paused, rows,
+      prompt: isSel ? 'Choose a category' : 'Committed', showTimer: isSel, timerTxt: `0:${String(tsec).padStart(2, '0')}`, timerPct: `${isSel ? rem / 100 : 0}%`, timerBg: isSel && rem <= 3000 ? INK : 'transparent', timerFg: isSel && rem <= 3000 ? '#fff' : INK,
+      lockDisabled: !cfg.choice || cfg.paused, lockOpacity: cfg.choice ? 1 : .35, lockLabel: cfg.choice ? `Lock in ${NAME[cfg.choice]}` : 'Tap a category, then lock it in',
+      lockedMsg: cfg.choice ? `Locked in ${NAME[cfg.choice]} · waiting for Emberhorn…` : '',
+      lock: cfg.live ? () => this.commit(false) : () => {}, next: cfg.live ? () => this.next() : () => {}, resume: cfg.live ? () => this.resume() : () => {}, reset: cfg.live ? () => this.setState({ live: this.fresh() }) : () => {},
+      animFade: anim('ccfade', 160), animPulse: anim('ccpulse', 1000), animFlip: anim('ccflip', 240), animRise: anim('ccrise', 200)
+    };
+    if (showReveal && last) {
+      const won = last.outcome === 'win', lost = last.outcome === 'lose', left = 3 - last.n;
+      Object.assign(f, { kicker: last.auto ? 'EXCHANGE 4 · AUTOMATIC · HP LEVEL AFTER THREE' : `EXCHANGE ${last.n} · BOTH REVEALED${last.timedOut ? ' · YOURS AUTO-PICKED ON TIMEOUT' : ''}`,
+        myCat: NAME[last.mc], oppCat: NAME[last.oc], myVal: String(last.mv), oppVal: String(last.ov),
+        myBg: cfg.showResult && lost ? '#8A3A22' : PAPER, myFg: cfg.showResult && lost ? '#fff' : INK, oppBg: cfg.showResult && won ? '#8A3A22' : PAPER, oppFg: cfg.showResult && won ? '#fff' : INK,
+        showResult: !!cfg.showResult, showResultPending: !cfg.showResult,
+        title: won ? `${last.mv} beats ${last.ov} · Emberhorn −1 HP` : lost ? `${last.mv} loses to ${last.ov} · Voltik −1 HP` : `${last.mv} equals ${last.ov} · no damage`,
+        sub: lost ? `Your ${NAME[last.mc]} ${last.mv} was compared with Emberhorn's ${NAME[last.oc]} ${last.ov}. Types were neutral, so nothing was adjusted.` : won ? `Your ${NAME[last.mc]} ${last.mv} was compared with Emberhorn's ${NAME[last.oc]} ${last.ov}. Types were neutral, so nothing was adjusted.` : 'Equal effective values: neither creature loses HP.',
+        learned: [{ k: '01', t: `Emberhorn's ${NAME[last.oc]} is exactly ${last.ov}. It is spent — it can't be played again this duel.` }, { k: '02', t: `Your ${NAME[last.mc]} is spent. ${last.n < 3 ? `${['Attack', 'Defense', 'Speed', 'Special'].filter(n => !cfg.used[0].map(c => NAME[c]).includes(n)).join(', ')} remain.` : 'No categories remain.'}` }, { k: '03', t: cfg.result ? (cfg.result === 'win' ? 'Emberhorn is out of HP — you win the duel.' : cfg.result === 'lose' ? 'Voltik is out of HP — Emberhorn wins the duel.' : 'Level on HP and on the last categories — a draw.') : `Its other categories stay species clues. ${left ? `${left} exchange${left === 1 ? '' : 's'} left.` : 'HP is level — the last unused categories will be compared automatically.'}` }],
+        cta: cfg.result ? 'See duel result' : last.n >= 3 ? 'Run the automatic exchange' : `Exchange ${last.n + 1}` });
+    }
+    return f;
+  }
+  renderVals() {
+    const ex1 = { n: 1, mc: 'spc', oc: 'atk', mv: 55, ov: 75, outcome: 'lose', timedOut: false, auto: false };
+    const base = { hp: [2, 2], used: [[], []], ex: [], choice: null, remaining: 10000, timedOut: false, paused: false, showResult: false, result: null, live: false };
+    const S = (o) => this.frame(Object.assign({}, base, o));
+    const frames = [
+      S({ step: '01 · SELECTION', time: 't = 0 s', phase: 'select', caption: 'Four rows, always the same order. Your column is exact; Emberhorn\u2019s column is a species clue, labelled as such. Timer pill and drain bar start together at 0:10.' }),
+      S({ step: '02 · SELECTED', time: 't = 4 s', phase: 'select', choice: 'spc', remaining: 6000, caption: 'Tapping Special inverts the row and arms the bar with the choice in words. Tapping another row moves the selection — nothing is committed yet.' }),
+      S({ step: '03 · COMMITTED', time: 't = 5 s', phase: 'locked', choice: 'spc', remaining: 5000, caption: 'Lock in replaces the button with a dashed status: the timer disappears, siblings dim, and there is no control that suggests undo. Emberhorn\u2019s Attack is still a clue.' }),
+      S({ step: '04 · REVEAL', time: 'commit + 0 ms', phase: 'reveal', choice: 'spc', hp: [2, 2], used: [['spc'], ['atk']], ex: [ex1], caption: 'Both cards scale in during the same 240 ms. Their exact values are the whole event: Special 55 against Attack 75. No sprite moves.' }),
+      S({ step: '05 · COMPARISON + HP', time: 'commit + 400 ms', phase: 'reveal', choice: 'spc', hp: [1, 2], used: [['spc'], ['atk']], ex: [ex1], showResult: true, caption: 'The losing side fills rust, one pip drains, and the verdict explains itself: 55 loses to 75, types neutral. The learned box carries the information forward.' }),
+      S({ step: '06 · NEXT SELECTION', time: 'exchange 2 · t = 0 s', phase: 'select', hp: [1, 2], used: [['spc'], ['atk']], ex: [ex1], caption: 'Exchange 2. Special is struck through for you; Emberhorn\u2019s Attack now shows 75 as a played value while its Defense, Speed and Special remain clues. Your Attack is still playable. History chip above the rows.' }),
+      S({ step: '07 · TIMEOUT', time: 'exchange 2 · t = 10 s', phase: 'locked', choice: 'atk', hp: [1, 2], used: [['spc'], ['atk']], ex: [ex1], timedOut: true, remaining: 0, caption: 'No tap by 0:00: the first unused category in Attack → Defense → Speed → Special order (here Attack) is selected and locked in one step, tagged AUTO · TIMED OUT. The reveal kicker repeats it.' }),
+      S({ step: '08 · PAUSED', time: 'exchange 2 · t = 3 s, backgrounded', phase: 'select', hp: [1, 2], used: [['spc'], ['atk']], ex: [ex1], remaining: 7000, paused: true, caption: 'App goes to background during selection: the deadline is frozen at 0:07 and a scrim shows the kept time on return. Only the select phase pauses; a locked commit resolves regardless.' })
+    ];
+    const l = this.state.live;
+    const live = [this.frame(Object.assign({}, l, { live: true, remaining: l.phase === 'select' && !l.paused ? Math.max(0, l.deadline - Date.now()) : l.remaining }))];
+    return { frames, live, ptTimeout: () => { if (this.state.live.phase === 'select') { this.L({ paused: false }); this.commit(true); } }, ptBackground: () => this.pause(), ptReset: () => this.setState({ live: this.fresh() }),
+      ptToggleAi: () => this.setState({ ai: this.state.ai === 'scripted' ? 'random' : 'scripted' }), ptToggleDebug: () => this.setState({ debug: !this.state.debug }), ptToggleMotion: () => this.setState({ motion: this.state.motion === 'full' ? 'reduced' : 'full' }),
+      ptAi: this.state.ai, ptDebug: this.state.debug ? 'on' : 'off', ptMotion: this.reduced() ? 'on' : 'off' };
+  }
+}
+</script>
+</body>
+</html>

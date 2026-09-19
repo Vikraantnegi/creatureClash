@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><style>body{margin:0;background:#EFEAE0;font-family:Helvetica,Arial,sans-serif;color:#1F1B18}a{color:#1F1B18}a:hover{color:#8A3A22}</style></helmet>
+<div style="width:1260px;padding:40px 44px 60px;display:flex;flex-direction:column;gap:44px">
+
+<div style="display:flex;flex-direction:column;gap:12px;max-width:800px">
+  <div style="font:500 11px ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#8A3A22">CREATURE CLASH · CHARACTER DEVELOPMENT · PASS 2 · <a href="Creature Direction.dc.html" style="color:#8A3A22">pass 1 kept as silhouette study</a></div>
+  <h1 style="margin:0;font:700 34px/1.1 Helvetica,Arial,sans-serif;letter-spacing:-.01em">Faces, limbs, and two rebuilds</h1>
+  <p style="margin:0;font-size:14px;line-height:1.5;color:#4A443F">Same six silhouettes where they worked; Voltik and Slate rebuilt. Every creature now shares one construction: 3-unit ink, top-left light with a hard shade wedge, and a three-part face kit (eye · brow slab · mouth line) that carries every expression. Nothing added but faces and feet.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:12.5px;line-height:1.45;color:#4A443F;margin-top:4px">
+    <div><b style="color:#1F1B18">Voltik</b> — now a pale stilt-runner: long indigo legs, static ruff at the neck, rod tail with a spark tip. No ears, no zigzag, no yellow.</div>
+    <div><b style="color:#1F1B18">Slate</b> — spine plates and block body removed; longer legs, balance tail, two flank pebbles. Body ≈ leg ≈ head length.</div>
+    <div><b style="color:#1F1B18">Limbs</b> — minimum 8 units (was 4–5), every leg ends in a foot pad, tail rods 6+.</div>
+    <div><b style="color:#1F1B18">Faces</b> — one kit, six settings: eye shape, eye size, pupil size, brow pitch, brow weight, mouth length.</div>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">1</span><span style="font:600 14px Helvetica,Arial,sans-serif">Six characters — full body · portrait 96 · roster icon 64 · silhouette 40</span></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6">
+      <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-end">
+          <div style="width:200px;height:200px;flex:none">{{ c.full }}</div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:center;flex:1">
+            <div style="width:96px;height:96px;border-radius:50%;overflow:hidden;background:#E6E0D4;border:2px solid #1F1B18">{{ c.portrait }}</div>
+            <div style="display:flex;gap:10px;align-items:flex-end">
+              <div style="width:64px;height:64px;background:#fff;border-radius:10px;border:1px solid rgba(0,0,0,.1)">{{ c.icon }}</div>
+              <div style="width:40px;height:40px">{{ c.sil }}</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <div style="font:700 20px Helvetica,Arial,sans-serif">{{ c.name }}</div>
+          <div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:3px 8px;border:1.5px solid #1F1B18;border-radius:999px;text-transform:uppercase">{{ c.type }}</div>
+        </div>
+        <div style="font-size:12.5px;line-height:1.45"><b>Face:</b> {{ c.face }}</div>
+        <div style="font-size:12.5px;line-height:1.45;color:#4A443F">{{ c.change }}</div>
+        <div style="display:flex;gap:6px">
+          <sc-for list="{{ c.palette }}" as="p" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:3px;flex:1"><div style="height:20px;border-radius:4px;background:{{ p.hex }};border:1px solid rgba(0,0,0,.1)"></div><div style="font:9px ui-monospace,Menlo,monospace;color:#6A635C">{{ p.role }}<br>{{ p.hex }}</div></div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">2</span><span style="font:600 14px Helvetica,Arial,sans-serif">Expressions — neutral · confident · defeated</span><span style="font-size:12px;color:#8A837C">brow pitch does most of the work; eyes shut and mouth drops only on defeat</span></div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+    <sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6">
+      <div style="display:grid;grid-template-columns:96px repeat(3,1fr);gap:10px;align-items:center;background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:12px 16px">
+        <div style="display:flex;flex-direction:column;gap:4px"><div style="font:700 15px Helvetica,Arial,sans-serif">{{ c.name }}</div><div style="font:10px ui-monospace,Menlo,monospace;color:#8A837C;text-transform:uppercase">{{ c.type }}</div></div>
+        <sc-for list="{{ c.moods }}" as="p" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+            <div style="width:140px;height:140px">{{ p.svg }}</div>
+            <div style="display:flex;gap:6px;align-items:center"><div style="width:44px;height:44px;border-radius:50%;overflow:hidden;background:#E6E0D4;border:1.5px solid #1F1B18">{{ p.portrait }}</div><div style="font:600 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase">{{ p.name }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">3</span><span style="font:600 14px Helvetica,Arial,sans-serif">In battle — 390 × 844, art at 1:1</span><span style="font-size:12px;color:#8A837C">player faces right, opponent mirrored in code · Tweaks → Player mood</span></div>
+  <div style="display:flex;gap:24px">
+    <sc-for list="{{ battles }}" as="b" hint-placeholder-count="3">
+      <div style="width:390px;height:844px;flex:none;border-radius:44px;background:#EAE4D6;border:1px solid rgba(0,0,0,.12);box-shadow:0 12px 40px rgba(0,0,0,.12);position:relative;overflow:hidden">
+        <div style="position:absolute;left:0;right:0;top:0;height:560px;background:linear-gradient(#EFEBE2 0,#EFEBE2 300px,#DCD3C0 300px)"></div>
+        <div style="position:absolute;left:0;right:0;top:0;height:54px;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font:600 13px Helvetica,Arial,sans-serif"><span>9:41</span><span style="font:10px ui-monospace,Menlo,monospace;letter-spacing:.06em">ROUND 3</span></div>
+        <div style="position:absolute;left:20px;top:76px;width:196px;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 14px Helvetica,Arial,sans-serif">{{ b.opp.name }}</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px;text-transform:uppercase">{{ b.opp.type }}</span></div>
+          <div style="height:8px;border-radius:4px;background:#DDD6C8;overflow:hidden"><div style="height:100%;width:{{ b.opp.hp }};background:#1F1B18"></div></div>
+        </div>
+        <div style="position:absolute;right:24px;top:110px;width:170px;height:170px">{{ b.opp.svg }}</div>
+        <div style="position:absolute;left:20px;top:340px;width:210px;height:210px">{{ b.player.svg }}</div>
+        <div style="position:absolute;right:20px;top:304px;width:196px;background:#FBF9F4;border:1.5px solid #1F1B18;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font:700 14px Helvetica,Arial,sans-serif">{{ b.player.name }}</span><span style="font:600 9px ui-monospace,Menlo,monospace;letter-spacing:.06em;padding:2px 6px;border:1.5px solid #1F1B18;border-radius:999px;text-transform:uppercase">{{ b.player.type }}</span></div>
+          <div style="height:8px;border-radius:4px;background:#DDD6C8;overflow:hidden"><div style="height:100%;width:{{ b.player.hp }};background:#1F1B18"></div></div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:284px;background:#FBF9F4;border-top:1.5px solid #1F1B18;padding:16px 20px 28px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 12px Helvetica,Arial,sans-serif;color:#4A443F">Choose a move</span><span style="font:600 12px ui-monospace,Menlo,monospace;padding:4px 10px;border:1.5px solid #1F1B18;border-radius:999px">0:08</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1">
+            <sc-for list="{{ b.moves }}" as="mv" hint-placeholder-count="4">
+              <div style="border:1.5px solid #1F1B18;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between;gap:6px;min-height:64px"><span style="font:700 14px Helvetica,Arial,sans-serif">{{ mv.name }}</span><span style="font:10px ui-monospace,Menlo,monospace;color:#6A635C;text-transform:uppercase;letter-spacing:.05em">{{ mv.meta }}</span></div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center"><span style="font:10px ui-monospace,Menlo,monospace;color:#8A837C;width:44px">BENCH</span><sc-for list="{{ b.bench }}" as="bc" hint-placeholder-count="3"><div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:#E6E0D4;border:1.5px solid #1F1B18">{{ bc }}</div></sc-for></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+
+<div style="display:flex;gap:24px;align-items:flex-start">
+  <div style="display:flex;flex-direction:column;gap:16px;width:600px">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">4</span><span style="font:600 14px Helvetica,Arial,sans-serif">Roster at 64 px and bench at 40 px</span></div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;gap:10px"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="display:flex;flex-direction:column;gap:4px;align-items:center;width:80px"><div style="width:64px;height:64px;background:#fff;border-radius:10px;border:1px solid rgba(0,0,0,.1)">{{ c.icon }}</div><div style="font:600 10px ui-monospace,Menlo,monospace">{{ c.name }}</div></div></sc-for></div>
+      <div style="display:flex;gap:10px;align-items:center"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:80px;display:flex;justify-content:center"><div style="width:40px;height:40px;border-radius:50%;overflow:hidden;background:#E6E0D4;border:1.5px solid #1F1B18">{{ c.portrait }}</div></div></sc-for></div>
+      <div style="display:flex;gap:10px;align-items:center"><sc-for list="{{ creatures }}" as="c" hint-placeholder-count="6"><div style="width:80px;display:flex;justify-content:center"><div style="width:32px;height:32px">{{ c.sil }}</div></div></sc-for></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;flex:1">
+    <div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1F1B18;color:#fff;border-radius:4px">5</span><span style="font:600 14px Helvetica,Arial,sans-serif">Faceted style rules</span></div>
+    <div style="background:#F8F5EE;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px 18px;font-size:12.5px;line-height:1.55;color:#2E2926;display:flex;flex-direction:column;gap:8px">
+      <div><b>Volumes.</b> Every mass is a 6–9-point facet polygon. Legs are straight 4-point rods; type marks (flame, fin, leaf, spark, horn) are flat triangles. No curves anywhere.</div>
+      <div><b>Light.</b> Fixed top-left. Each volume gets one shade wedge (lower-right, inset 8%) and one light wedge (upper-left, 55%). Triangles stay flat — they are the only un-lit shapes, which makes type marks pop.</div>
+      <div><b>Ink.</b> 3 units of 200 on all volumes, #26201D, never coloured. Eyes 1.8. Wedges have no ink.</div>
+      <div><b>Face kit.</b> Eye = white facet + diamond pupil offset toward the opponent. Brow = one slab, 8–16 long; confident pitches it +14°, defeated −18°. Mouth = one line; confident lifts 42%, defeated drops 45%. Defeated eyes become a single slanted bar.</div>
+      <div><b>Density.</b> 14–22 shapes per creature. Voltik and Ashkit at the top (thin parts need more pieces), Fernlet and Brookfin at the bottom.</div>
+      <div><b>Minimums.</b> Limb 8 units, foot pad 15 × 7, smallest triangle 10 tall, eye radius ≥ 3.8. All survive a 64 px roster tile and a 40 px portrait.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;playerMood&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;neutral&quot;,&quot;options&quot;:[&quot;neutral&quot;,&quot;confident&quot;,&quot;defeated&quot;],&quot;tsType&quot;:&quot;'neutral' | 'confident' | 'defeated'&quot;,&quot;section&quot;:&quot;Battle preview&quot;},&quot;groundShadow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Art&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const mod = window.__creaturesV2;
+    if (!mod) {
+      if (!window.__creaturesV2Loading) { window.__creaturesV2Loading = import(new URL('./creatures-v2.js', location.href).href).then(m => { window.__creaturesV2 = m; this.forceUpdate(); }).catch(e => console.error('creature module', e)); }
+      else window.__creaturesV2Loading.then(() => this.forceUpdate());
+      return { creatures: [], battles: [] };
+    }
+    const R = React.createElement, { SPECIES, draw } = mod;
+    const ground = this.props.groundShadow ?? true;
+    const pm = this.props.playerMood ?? 'neutral';
+    const om = pm === 'confident' ? 'defeated' : pm === 'defeated' ? 'confident' : 'neutral';
+    const keys = ['ashkit', 'brookfin', 'slate', 'fernlet', 'voltik', 'emberhorn'];
+    const change = {
+      ashkit: 'Kept. Legs 5→8 units with pads; jaw now opens on the snout wedge so the aggression reads at 64 px.',
+      brookfin: 'Kept. Side fins widened 4 units; lids now drawn as a body-colour panel with an ink edge instead of a squashed eye.',
+      slate: 'Rebuilt. No plates, no block body. Longer legs, neck, balance tail; two flank pebbles carry the Rock type at small size.',
+      fernlet: 'Kept. Eyes 4→5 r and moved apart; brows added under the rim so it can look worried or pleased, not just blink.',
+      voltik: 'Rebuilt. Pale body on tall indigo legs, spark ruff at the neck, rod tail. Reads as a lightning-rod runner, tallest-narrowest of the six.',
+      emberhorn: 'Kept. Brow slab thickened to 4.5, nostril added; the mouth sits low so the whole face weighs forward.'
+    };
+    const pal = {
+      ashkit: [['base', '#E8672C'], ['shade', '#B5401A'], ['light', '#F6A25B'], ['flame', '#F9D24A']],
+      brookfin: [['base', '#3D82B8'], ['shade', '#25598A'], ['light', '#9AD0EA'], ['fin', '#6FC7CF']],
+      slate: [['base', '#8E8A85'], ['shade', '#5E5A57'], ['light', '#C4BFB8'], ['pebble', '#6E7C86']],
+      fernlet: [['body', '#8DBE62'], ['shade', '#5E8F3F'], ['cap', '#4E8F3C'], ['fringe', '#3F7A30']],
+      voltik: [['body', '#E6EDF1'], ['shade', '#A9B9C6'], ['legs', '#2F3568'], ['spark', '#2FC9DC']],
+      emberhorn: [['base', '#A23E30'], ['shade', '#6B231C'], ['ember', '#F08A2E'], ['horn', '#2E2624']]
+    };
+    const creatures = keys.map(k => { const s = SPECIES[k]; return {
+      name: s.name, type: s.type, face: s.eyeStyle, change: change[k], palette: pal[k].map(([role, hex]) => ({ role, hex })),
+      full: draw(R, k, { ground }), icon: draw(R, k, { ground }), sil: draw(R, k, { sil: true }), portrait: draw(R, k, { portrait: true }),
+      moods: ['neutral', 'confident', 'defeated'].map(m => ({ name: m, svg: draw(R, k, { mood: m, ground }), portrait: draw(R, k, { mood: m, portrait: true }) }))
+    }; });
+    const moves = {
+      ashkit: [['Cinder Dash', 'fire · 10 · fast'], ['Scratch', 'normal · 8'], ['Flare Up', 'fire · 14 · special'], ['Feint', 'normal · evade']],
+      voltik: [['Static Ruff', 'electric · 9 · special'], ['Dart', 'normal · 7 · fast'], ['Arc Jump', 'electric · 12'], ['Sidestep', 'normal · evade']],
+      slate: [['Pebble Toss', 'rock · 9'], ['Shoulder', 'normal · 10'], ['Grit', 'rock · 8 · special'], ['Brace', 'normal · guard']]
+    };
+    const mk = (k, m, opts) => ({ name: SPECIES[k].name, type: SPECIES[k].type, svg: draw(R, k, Object.assign({ mood: m, ground }, opts)) });
+    const battles = [['ashkit', 'emberhorn', '74%', '52%'], ['voltik', 'brookfin', '61%', '88%'], ['slate', 'fernlet', '90%', '45%']].map(([p, o, php, ohp]) => ({
+      player: Object.assign(mk(p, pm), { hp: php }), opp: Object.assign(mk(o, om, { mirror: true }), { hp: ohp }),
+      moves: moves[p].map(([name, meta]) => ({ name, meta })),
+      bench: keys.filter(k => k !== p && k !== o).slice(0, 3).map(k => draw(R, k, { portrait: true }))
+    }));
+    return { creatures, battles };
+  }
+}
+</script>
+</body>
+</html>

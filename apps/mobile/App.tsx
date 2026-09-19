@@ -7,39 +7,38 @@ import { GymScreen } from './src/gym/GymScreen';
 import { useGym } from './src/gym/useGym';
 import { Button } from './src/atoms/Button';
 import { useGameMode } from './src/useGameMode';
+import { HomeScreen } from './src/home/HomeScreen';
 export default function App() {
   const { mode, setMode } = useGameMode();
   const gym = useGym(mode === 'gym');
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 bg-slate-100">
-        <View className="gap-3 px-4 pt-3">
-          <Text className="text-2xl font-bold text-slate-900">Creature Clash</Text>
-          <View className="flex-row gap-2">
-            <Button
-              testID="mode-duel"
-              label="Duel"
-              disabled={mode === 'gym' && !gym.canLeave}
-              selected={mode === 'duel'}
-              onPress={() => setMode('duel')}
-            />
-            <Button
-              testID="mode-gym"
-              label="Gym 3v3"
-              selected={mode === 'gym'}
-              onPress={() => setMode('gym')}
-            />
-          </View>
-          <Text className="text-xs text-slate-500">
-            {mode === 'gym' && !gym.canLeave
-              ? 'Finish the encounter before changing modes.'
-              : 'Duel: no exchange. Gym: winner may exchange a participant.'}
+      <SafeAreaView className="bg-paper flex-1">
+        <View className="flex-row items-center justify-between px-5 py-2">
+          <Text className="text-ink font-mono text-xs font-semibold uppercase tracking-widest">
+            Creature Clash
+          </Text>
+          <Text className="text-muted font-sans text-xs">
+            {mode === 'home'
+              ? 'Trainer journal'
+              : mode === 'gym'
+                ? 'Gym · 3 v 3'
+                : 'Standalone duel'}
           </Text>
         </View>
-        {mode === 'duel' ? (
-          <BattleScreen />
+        {mode === 'home' ? (
+          <HomeScreen open={setMode} roster={gym.display.view.roster} />
+        ) : mode === 'duel' ? (
+          <BattleScreen leave={() => setMode('home')} />
         ) : (
-          <GymScreen controller={gym.controller} display={gym.display} />
+          <View className="flex-1">
+            {gym.canLeave && (
+              <View className="px-4">
+                <Button label="← Trainer journal" onPress={() => setMode('home')} />
+              </View>
+            )}
+            <GymScreen controller={gym.controller} display={gym.display} />
+          </View>
         )}
         <StatusBar style="dark" />
       </SafeAreaView>

@@ -2,6 +2,8 @@ import { Text, View } from 'react-native';
 import { Button } from '../../atoms/Button';
 import { FIXTURES } from '../fixtures';
 import { BATTLE_MODES, type Matchup } from '../types';
+import { CreatureTile } from '../../components/CreatureTile';
+import { Disclosure } from '../../components/Disclosure';
 export function MatchupControls({
   matchup,
   configure,
@@ -10,46 +12,42 @@ export function MatchupControls({
   configure: (value: Matchup) => void;
 }) {
   return (
-    <View className="gap-3">
+    <View className="gap-4">
       {(['yours', 'opponent'] as const).map((role) => (
         <View key={role} className="gap-2">
-          <Text className="text-xs font-semibold text-slate-600">
-            {role === 'yours' ? 'Your creature' : 'Opponent'}
+          <Text className="text-muted font-mono text-xs font-semibold uppercase tracking-widest">
+            {role === 'yours' ? 'Your creature · exact values' : 'Opponent · species and type'}
           </Text>
           <View className="flex-row flex-wrap gap-2">
-            {FIXTURES.map((fixture) => (
-              <Button
-                key={fixture.id}
-                testID={`${role}-${fixture.id}`}
-                label={fixture.name}
-                selected={matchup[role] === fixture.id}
-                onPress={() => configure({ ...matchup, [role]: fixture.id })}
-              />
+            {FIXTURES.map((f) => (
+              <View className="w-[31%]" key={f.id}>
+                <CreatureTile
+                  creature={{ speciesId: f.id, typeId: f.typeId, stats: f.stats }}
+                  selected={matchup[role] === f.id}
+                  showStats={role === 'yours'}
+                  onPress={() => configure({ ...matchup, [role]: f.id })}
+                  testID={`${role}-${f.id}`}
+                />
+              </View>
             ))}
           </View>
         </View>
       ))}
-      <View className="flex-row flex-wrap gap-2">
-        <Button
-          label="AI: Tactical"
-          selected={matchup.ai === BATTLE_MODES.TACTICAL}
-          onPress={() => configure({ ...matchup, ai: BATTLE_MODES.TACTICAL })}
-        />
-        <Button
-          label="AI: Greedy"
-          selected={matchup.ai === BATTLE_MODES.GREEDY}
-          onPress={() => configure({ ...matchup, ai: BATTLE_MODES.GREEDY })}
-        />
-        <Button
-          label="AI: Random"
-          selected={matchup.ai === BATTLE_MODES.RANDOM}
-          onPress={() => configure({ ...matchup, ai: BATTLE_MODES.RANDOM })}
-        />
-      </View>
-      <Text className="text-xs text-slate-600">
-        Tactical plans with visible clues and can save strong categories. Greedy spends its highest
-        score.
-      </Text>
+      <Disclosure label="Playtest opponent">
+        <View className="flex-row flex-wrap gap-2">
+          {Object.values(BATTLE_MODES).map((ai) => (
+            <Button
+              key={ai}
+              label={ai}
+              selected={matchup.ai === ai}
+              onPress={() => configure({ ...matchup, ai })}
+            />
+          ))}
+        </View>
+        <Text className="text-muted font-sans text-xs">
+          Tactical plans with visible clues. Greedy spends its strongest category.
+        </Text>
+      </Disclosure>
     </View>
   );
 }

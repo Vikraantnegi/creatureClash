@@ -8,3 +8,6 @@ apps/mobile/android
 apps/mobile/dist
 coverage
 *.tsbuildinfo
+
+design/claude-source
+apps/mobile/src/creatures/art.json

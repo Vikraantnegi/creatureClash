@@ -7,15 +7,15 @@ export function ExchangeHistory({ events }: { events: ExchangeResultEvent[] }) {
   if (!events.length) return null;
   return (
     <View className="gap-2">
-      <Text className="text-lg font-semibold text-slate-900">Exchange history</Text>
+      <Text className="text-ink font-sans text-lg font-semibold">Exchange history</Text>
       {events.map((event) => (
-        <View key={event.exchangeId} className="gap-1 border-b border-slate-300 py-2">
-          <Text className="text-sm text-slate-700">
+        <View key={event.exchangeId} className="border-line gap-1 border-b py-2">
+          <Text className="text-muted font-sans text-sm">
             {event.exchangeNumber}
             {event.isAutomaticFourth ? ' · Auto' : ''}: {CATEGORY_LABEL[event.aPick]}{' '}
             {score(event.aEffective)} vs {CATEGORY_LABEL[event.bPick]} {score(event.bEffective)}
           </Text>
-          <Text className="text-xs text-slate-600">{exchangeSummary(event)}</Text>
+          <Text className="text-muted font-sans text-xs">{exchangeSummary(event)}</Text>
         </View>
       ))}
     </View>
