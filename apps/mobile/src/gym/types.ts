@@ -18,6 +18,8 @@ export type GymDisplay = {
   notice: string | null;
   error: string | null;
   visibility: StatVisibility;
+  saving: boolean;
+  saveError: string | null;
 };
 export type GymOptions = {
   rosters?: TrainerRosters;
@@ -25,4 +27,5 @@ export type GymOptions = {
   rng?: () => number;
   nextId?: () => string;
   initiallyActive?: boolean;
+  persistRosters?: (rosters: TrainerRosters) => Promise<unknown>;
 };

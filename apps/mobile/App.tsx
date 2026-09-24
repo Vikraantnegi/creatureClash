@@ -8,37 +8,50 @@ import { useGym } from './src/gym/useGym';
 import { Button } from './src/atoms/Button';
 import { useGameMode } from './src/useGameMode';
 import { HomeScreen } from './src/home/HomeScreen';
-export default function App() {
+import { useTrainerSave } from './src/trainer/useTrainerSave';
+import { TrainerLoading } from './src/trainer/TrainerLoading';
+import type { TrainerSave } from './src/trainer/types';
+
+function Game({ save }: { save: TrainerSave }) {
   const { mode, setMode } = useGameMode();
-  const gym = useGym(mode === 'gym');
+  const gym = useGym(mode === 'gym', save);
+  return (
+    <>
+      <View className="flex-row items-center justify-between px-5 py-2">
+        <Text className="text-ink font-mono text-xs font-semibold uppercase tracking-widest">
+          Creature Clash
+        </Text>
+        <Text className="text-muted font-sans text-xs">
+          {mode === 'home' ? 'Trainer journal' : mode === 'gym' ? 'Gym · 3 v 3' : 'Standalone duel'}
+        </Text>
+      </View>
+      {mode === 'home' ? (
+        <HomeScreen open={setMode} roster={gym.display.view.roster} />
+      ) : mode === 'duel' ? (
+        <BattleScreen leave={() => setMode('home')} />
+      ) : (
+        <View className="flex-1">
+          {gym.canLeave && (
+            <View className="px-4">
+              <Button label="← Trainer journal" onPress={() => setMode('home')} />
+            </View>
+          )}
+          <GymScreen controller={gym.controller} display={gym.display} />
+        </View>
+      )}
+    </>
+  );
+}
+
+export default function App() {
+  const { state, retry } = useTrainerSave();
   return (
     <SafeAreaProvider>
       <SafeAreaView className="bg-paper flex-1">
-        <View className="flex-row items-center justify-between px-5 py-2">
-          <Text className="text-ink font-mono text-xs font-semibold uppercase tracking-widest">
-            Creature Clash
-          </Text>
-          <Text className="text-muted font-sans text-xs">
-            {mode === 'home'
-              ? 'Trainer journal'
-              : mode === 'gym'
-                ? 'Gym · 3 v 3'
-                : 'Standalone duel'}
-          </Text>
-        </View>
-        {mode === 'home' ? (
-          <HomeScreen open={setMode} roster={gym.display.view.roster} />
-        ) : mode === 'duel' ? (
-          <BattleScreen leave={() => setMode('home')} />
+        {state.status === 'ready' ? (
+          <Game save={state.save} />
         ) : (
-          <View className="flex-1">
-            {gym.canLeave && (
-              <View className="px-4">
-                <Button label="← Trainer journal" onPress={() => setMode('home')} />
-              </View>
-            )}
-            <GymScreen controller={gym.controller} display={gym.display} />
-          </View>
+          <TrainerLoading state={state} retry={retry} />
         )}
         <StatusBar style="dark" />
       </SafeAreaView>

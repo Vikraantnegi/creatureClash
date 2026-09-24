@@ -11,6 +11,7 @@ import {
   TEAM_SIZE,
   type DuelState,
   type Result,
+  type GymState,
 } from '@creature-clash/battle-engine';
 import type { BattleClock, StatVisibility } from '../battle/types';
 import { initialTrainerRosters } from './fixtures';
@@ -55,6 +56,8 @@ export function createGymController(options: GymOptions = {}) {
     error: null,
     notice: null,
     visibility: 'profile',
+    saving: false,
+    saveError: null,
   };
 
   function publish(patch: Partial<GymDisplay>) {
@@ -88,7 +91,29 @@ export function createGymController(options: GymOptions = {}) {
     }
   }
   function allowed(stage: GymStage, key: string) {
-    return active && !display.error && display.stage === stage && key === display.actionKey;
+    return (
+      active &&
+      !display.error &&
+      !display.saving &&
+      display.stage === stage &&
+      key === display.actionKey
+    );
+  }
+  async function finishExchange(next: GymState) {
+    publish({ saving: true, saveError: null });
+    try {
+      // Commit both owners durably before publishing the new roster or allowing another gym.
+      if (options.persistRosters) await options.persistRosters(next.rosters);
+      state = next;
+      publish({ saving: false });
+      move('finished');
+    } catch {
+      // The old state still owns both creatures. The same exchange can safely be retried.
+      publish({
+        saving: false,
+        saveError: 'Could not save the exchange. Your rosters have not changed. Try again.',
+      });
+    }
   }
   function sendTeam(ids: string[], timedOut = false) {
     state = unwrap(
@@ -241,30 +266,28 @@ export function createGymController(options: GymOptions = {}) {
     },
     exchange(swap: { give: string; receive: string } | null, key: string) {
       if (!allowed('exchange', key) || state.winner !== DUEL_WINNER.A) return;
-      protect(() => {
-        state = unwrap(
-          exchangeGymCreatures(state, { encounterId: state.encounterId, side: PLAYER.A, swap }),
-        );
-        move('finished');
+      const result = exchangeGymCreatures(state, {
+        encounterId: state.encounterId,
+        side: PLAYER.A,
+        swap,
       });
+      if (!result.ok) return;
+      return finishExchange(result.value);
     },
     resolveOpponentExchange(key: string) {
       if (!allowed('exchange', key) || state.winner !== DUEL_WINNER.B) return;
-      protect(() => {
-        // Prototype opponent always exchanges its first participant for your first participant.
-        // Only completed, publicly revealed participants are considered.
-        state = unwrap(
-          exchangeGymCreatures(state, {
-            encounterId: state.encounterId,
-            side: PLAYER.B,
-            swap: {
-              give: state.completed[0]!.creatureB.instanceId,
-              receive: state.completed[0]!.creatureA.instanceId,
-            },
-          }),
-        );
-        move('finished');
+      // Prototype opponent always exchanges its first participant for your first participant.
+      // Only completed, publicly revealed participants are considered.
+      const result = exchangeGymCreatures(state, {
+        encounterId: state.encounterId,
+        side: PLAYER.B,
+        swap: {
+          give: state.completed[0]!.creatureB.instanceId,
+          receive: state.completed[0]!.creatureA.instanceId,
+        },
       });
+      if (!result.ok) return;
+      return finishExchange(result.value);
     },
     nextEncounter(key: string) {
       if (!allowed('finished', key)) return;

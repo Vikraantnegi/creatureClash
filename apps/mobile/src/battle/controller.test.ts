@@ -121,11 +121,11 @@ describe('selection and presentation', () => {
       ai: BATTLE_MODES.GREEDY,
     });
     controller.start();
-    reveal(controller, CATEGORY.ATTACK);
-    next(controller);
     reveal(controller, CATEGORY.DEFENSE);
     next(controller);
-    reveal(controller, CATEGORY.SPEED);
+    reveal(controller, CATEGORY.ATTACK);
+    next(controller);
+    reveal(controller, CATEGORY.SPECIAL);
     const thirdKey = controller.getSnapshot().actionKey;
     expect(controller.getSnapshot().reveal?.exchangeNumber).toBe(3);
     expect(controller.getSnapshot().view.history).toHaveLength(3);
@@ -336,7 +336,7 @@ describe('prepared encounter duels', () => {
     vi.advanceTimersByTime(20_000);
     expect(controller.getSnapshot().phase).toBe('ready');
     controller.start();
-    for (const pick of [CATEGORY.ATTACK, CATEGORY.DEFENSE, CATEGORY.SPEED]) {
+    for (const pick of [CATEGORY.DEFENSE, CATEGORY.ATTACK, CATEGORY.SPECIAL]) {
       reveal(controller, pick);
       expect(completed).not.toHaveBeenCalled();
       next(controller);
@@ -402,17 +402,17 @@ describe('stat visibility comparison', () => {
           controller.getSnapshot().view.opponent,
           controller.getSnapshot().statVisibility,
         );
-      for (const [index, pick] of [CATEGORY.ATTACK, CATEGORY.DEFENSE, CATEGORY.SPEED].entries()) {
+      for (const [index, pick] of [CATEGORY.DEFENSE, CATEGORY.ATTACK, CATEGORY.SPECIAL].entries()) {
         choose(controller, pick);
         expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index);
         vi.advanceTimersByTime(COMMITMENT_MS);
         expect(sheet().categories.filter((row) => row.raw !== null)).toHaveLength(index + 1);
         if (index < 2) next(controller);
       }
-      expect(sheet().categories[3]!.raw).toBeNull();
+      expect(sheet().categories[2]!.raw).toBeNull();
       next(controller);
       expect(controller.getSnapshot().reveal?.isAutomaticFourth).toBe(true);
-      expect(sheet().categories[3]!.raw).toBe('60');
+      expect(sheet().categories[2]!.raw).toBe('35');
       next(controller);
       controller.configureVisibility('exact');
       expect(controller.getSnapshot().phase).toBe('ready');

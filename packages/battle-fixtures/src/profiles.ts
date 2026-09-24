@@ -17,7 +17,7 @@ const profile = (
 const PROFILES: Record<string, SpeciesProfile> = {
   ashkit: profile('high', 'low', 'high', 'balanced'),
   brookfin: profile('balanced', 'balanced', 'low', 'high'),
-  slate: profile('balanced', 'balanced', 'balanced', 'balanced'),
+  slate: profile('high', 'high', 'low', 'low'),
   fernlet: profile('balanced', 'high', 'low', 'high'),
   voltik: profile('balanced', 'low', 'high', 'balanced'),
   emberhorn: profile('high', 'high', 'low', 'balanced'),

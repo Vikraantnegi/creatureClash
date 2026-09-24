@@ -2,7 +2,7 @@
 
 > Update: the current default is Species clues + Tactical AI. See [the experiment](species-clues-experiment.md) for information rules, policy assumptions and the comparison protocol. Earlier Exact/Ranges and greedy-only descriptions below are historical.
 
-This implements the agreed local 3v3 flow and supersedes the temporary fixed-pair UI. It is single-player against a local AI. It does not add networking, disk persistence, XP, or a server ownership ledger.
+This implements the agreed local 3v3 flow and supersedes the temporary fixed-pair UI. It is single-player against a local AI. [Local trainer persistence](trainer-persistence.md) now saves both rosters; networking, XP, and a server ownership ledger remain deferred.
 
 ## Rules
 
@@ -13,7 +13,7 @@ This implements the agreed local 3v3 flow and supersedes the temporary fixed-pai
 - One point per duel victory; a drawn duel awards neither side a point. Equal encounter scores draw. Drawn encounters allow no exchange.
 - After a 3v3 victory, only the winner may optionally give one of their three participants for one of the loser's three participants. No reserve can be offered or taken. Declining leaves both rosters unchanged.
 - The exchange removes both actual instances from their previous owners and inserts them into the other roster in a single engine transition. Instance IDs and all current snapshot data remain unchanged; each owner retains six. Completed battle records remain historical snapshots.
-- The next encounter uses the updated rosters. They remain in app memory across switching between Duel and Gym. Reloading/closing the app resets fixtures; this is not permanent collection storage.
+- The next encounter uses the updated rosters. Completed exchanges are saved on-device before the finished screen appears and survive app restarts. Unfinished encounters restart from the last saved rosters. Saved individual stats are preserved across fixture updates.
 - Standalone 1v1 offers no exchange. The old Swap run and fixed Paired 3v3 entry points have been removed from the app. Their earlier engine modules/tests remain legacy research code, not the current game flow.
 - Winner-stays-on is excluded for this version: D16's playable direction is one duel per selected creature. No relay HP/category carryover is implemented.
 
@@ -45,6 +45,8 @@ Automated tests cover six-roster/instance validation, immutable input copies, te
 Checkpoint: 107 tests passed (75 engine, 29 mobile, 3 study), along with typechecks, lint and Android/iOS bundle exports. Android emulator verification completed six-creature preview, private team selection, deployment in a different order, all three duels despite an early 2–0 lead, background-paused deployment, and a victory exchange of Brookfin for Slate. Both changed rosters appeared in the next encounter and survived switching between Duel and Gym. Decline, AI victory, draw, timeout and stale callbacks are covered by automated tests; this walkthrough did not manually exercise every branch. Physical-phone pacing and strategic enjoyment still require human playtesting.
 
 ## Playtest findings — 2026-09-10
+
+Historical fixture note: the Slate example below describes `phase6-v1`. The later [Slate balance experiment](slate-balance.md) changes its stats and removes that predetermined outcome.
 
 The first human screenshots exposed two distinct problems; neither is fixed by this encounter implementation:
 

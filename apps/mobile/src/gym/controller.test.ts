@@ -11,6 +11,7 @@ import {
 } from '@creature-clash/battle-engine';
 import { createGymController, type GymController } from './controller';
 import { TEAM_SELECTION_MS, DEPLOYMENT_MS } from './constants';
+import { createTrainerRepository } from '../trainer/repository';
 
 let controllers: GymController[];
 beforeEach(() => {
@@ -215,4 +216,87 @@ describe('gym mobile orchestration', () => {
     expect(c.getSnapshot().view.selected).toBeNull();
     expect(c.getSnapshot().stage).toBe('preview');
   });
+
+  it('locks duplicate exchanges while saving and retries failed writes without moving either creature', async () => {
+    let rejectWrite!: (error: Error) => void;
+    const persistRosters = vi.fn(
+      () =>
+        new Promise<void>((_, reject) => {
+          rejectWrite = reject;
+        }),
+    );
+    const c = make({ persistRosters });
+    play(c);
+    const actionKey = key(c);
+    const before = c.getSnapshot().view;
+    const pending = c.exchange({ give: 'a1', receive: 'b2' }, actionKey);
+    c.exchange(null, actionKey);
+    c.nextEncounter(actionKey);
+    expect(persistRosters).toHaveBeenCalledTimes(1);
+    expect(c.getSnapshot().saving).toBe(true);
+    expect(c.getSnapshot().view).toEqual(before);
+    rejectWrite(new Error('disk full'));
+    await pending;
+    expect(c.getSnapshot().stage).toBe('exchange');
+    expect(c.getSnapshot().view).toEqual(before);
+    expect(c.getSnapshot().saveError).toContain('Try again');
+    persistRosters.mockResolvedValueOnce();
+    await c.exchange({ give: 'a1', receive: 'b2' }, actionKey);
+    expect(c.getSnapshot().saving).toBe(false);
+    expect(c.getSnapshot().saveError).toBeNull();
+    expect(c.getSnapshot().stage).toBe('finished');
+    expect(c.getSnapshot().view.roster[1]!.instanceId).toBe('b2');
+    c.exchange({ give: 'a1', receive: 'b2' }, actionKey);
+    expect(persistRosters).toHaveBeenCalledTimes(2);
+  });
+
+  it.each([40, 10])(
+    'restores both owners after a completed gym and restart (player strength %i)',
+    async (power) => {
+      let raw: string | null = null;
+      const storage = {
+        getItem: async () => raw,
+        setItem: async (_key: string, value: string) => {
+          raw = value;
+        },
+      };
+      const repository = createTrainerRepository(storage);
+      const c = make({
+        rosters: rosters(power),
+        persistRosters: (r) => repository.saveRosters(r, 'test'),
+      });
+      play(c);
+      if (power > 20) await c.exchange({ give: 'a1', receive: 'b2' }, key(c));
+      else await c.resolveOpponentExchange(key(c));
+      const savedView = c.getSnapshot().view;
+      c.setActive(false);
+      const restored = await createTrainerRepository(storage).load();
+      const restarted = make({ rosters: restored.rosters });
+      expect(restarted.getSnapshot().view.roster).toEqual(savedView.roster);
+      expect(restarted.getSnapshot().view.opponentRoster).toEqual(savedView.opponentRoster);
+      expect(restarted.getSnapshot().view.completed).toEqual([]);
+      expect(
+        new Set([...restored.rosters.A, ...restored.rosters.B].map((r) => r.instanceId)).size,
+      ).toBe(12);
+      // Re-enter and use an acquired creature. Its identity persists; HP/categories start fresh.
+      const acquired = restarted
+        .getSnapshot()
+        .view.roster.find((r) => r.instanceId.startsWith('b'))!;
+      restarted.beginTeam(key(restarted));
+      const ids = [
+        acquired.instanceId,
+        ...restored.rosters.A.filter((r) => r.instanceId !== acquired.instanceId)
+          .slice(0, 2)
+          .map((r) => r.instanceId),
+      ];
+      ids.forEach((id) => restarted.toggle(id, key(restarted)));
+      restarted.lockTeam(key(restarted));
+      restarted.beginDeployment(key(restarted));
+      restarted.deploy(acquired.instanceId, key(restarted));
+      const duel = restarted.getSnapshot().view.activeDuel!;
+      expect(duel.creatureA).toEqual(acquired);
+      expect(duel.hpA).toBe(2);
+      expect(duel.usedA).toEqual([]);
+    },
+  );
 });

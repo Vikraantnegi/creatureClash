@@ -21,7 +21,7 @@ export function GymScreen({
   display: GymDisplay;
 }) {
   const { stage, view, actionKey, paused, error } = display;
-  const disabled = paused || !!error;
+  const disabled = paused || !!error || display.saving;
   return (
     <ScrollView key={actionKey} contentContainerClassName="gap-4 p-4 pb-8">
       <Text className="text-ink font-sans text-lg font-bold">
@@ -39,6 +39,16 @@ export function GymScreen({
         </Text>
       )}
       {display.notice && <Text className="text-muted font-sans text-sm">{display.notice}</Text>}
+      {display.saving && (
+        <Text accessibilityLiveRegion="polite" className="text-muted font-sans">
+          Saving your exchange…
+        </Text>
+      )}
+      {display.saveError && (
+        <Text accessibilityRole="alert" className="font-sans text-red-800">
+          {display.saveError}
+        </Text>
+      )}
       {stage !== 'preview' && stage !== 'team' && (
         <GymScoreboard view={view} compact={stage === 'dueling'} />
       )}
@@ -51,7 +61,8 @@ export function GymScreen({
           </Text>
           <Text className="text-muted font-sans text-sm">
             The winner may exchange one participating creature with the loser. Your rosters carry
-            into the next encounter while this app stays open. Reloading resets the fixtures.
+            into the next encounter and are saved on this device after the exchange is resolved.
+            Unfinished encounters restart when you reopen the app.
           </Text>
           <Disclosure label="Playtest visibility">
             <StatVisibilityControls
@@ -181,7 +192,7 @@ export function GymScreen({
           </Text>
           <Text testID="exchange-result" className="text-muted font-sans text-sm">
             {view.exchange
-              ? `${view.exchange.winner === PLAYER.A ? 'You' : 'Opponent'} gave ${creatureName(view.exchange.given.speciesId)} and received ${creatureName(view.exchange.received.speciesId)}. Both active rosters are updated.`
+              ? `${view.exchange.winner === PLAYER.A ? 'You' : 'Opponent'} gave ${creatureName(view.exchange.given.speciesId)} and received ${creatureName(view.exchange.received.speciesId)}. Both active rosters are saved on this device.`
               : 'No exchange. Both rosters are unchanged.'}
           </Text>
           <Button

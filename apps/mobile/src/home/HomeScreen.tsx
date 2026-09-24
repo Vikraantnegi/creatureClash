@@ -42,6 +42,9 @@ export function HomeScreen({
       <Text className="text-muted text-center font-sans text-xs leading-5">
         Your active six · {roster.map((c) => creatureName(c.speciesId)).join(' · ')}
       </Text>
+      <Text className="text-muted text-center font-sans text-xs">
+        Your creatures and completed exchanges are saved on this device.
+      </Text>
     </ScrollView>
   );
 }

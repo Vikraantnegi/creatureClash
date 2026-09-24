@@ -23,4 +23,4 @@ Code boundaries: species catalogue in battle-fixtures; pure tactical policy in b
 3. Repeat after learning the fixtures. Track decisions that changed, not just wins. Distinguish uncertainty about numbers from uncertainty about opponent actions.
 4. Try gym team/deployment choices with the same information mode. Do not add alternating counterpicks yet.
 
-If the game becomes mechanical after learning the six creatures, hiding UI numbers has not solved the problem. Fernlet vs Slate remains an uncounterable matchup under current values. Revisit matchup balance and/or duel length/scoring before adding content or animations. No claim that this experiment establishes fun or fixes forced losses.
+If the game becomes mechanical after learning the six creatures, hiding UI numbers has not solved the problem. The original Fernlet vs Slate forced outcome was addressed by the later [Slate fixture change](slate-balance.md). See the [combat checkpoint](combat-checkpoint.md) for controlled follow-up results and the remaining limitations. No claim that hiding information establishes fun or fixes forced losses.

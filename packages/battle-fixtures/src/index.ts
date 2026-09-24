@@ -7,7 +7,7 @@ export enum CREATURES {
   VOLTIK = 'voltik',
   EMBERHORN = 'emberhorn',
 }
-export const FIXTURE_VERSION = 'phase6-v1';
+export const FIXTURE_VERSION = 'phase6-v2-slate';
 
 export const FIXTURES = [
   {
@@ -37,10 +37,10 @@ export const FIXTURES = [
     name: 'Slate',
     typeId: TYPE.ROCK,
     stats: {
-      [CATEGORY.ATTACK]: 60,
-      [CATEGORY.DEFENSE]: 60,
-      [CATEGORY.SPEED]: 60,
-      [CATEGORY.SPECIAL]: 60,
+      [CATEGORY.ATTACK]: 70,
+      [CATEGORY.DEFENSE]: 90,
+      [CATEGORY.SPEED]: 35,
+      [CATEGORY.SPECIAL]: 45,
     },
   },
   {

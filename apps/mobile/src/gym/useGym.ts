@@ -1,9 +1,15 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { AppState } from 'react-native';
 import { createGymController } from './controller';
-export function useGym(enabled: boolean) {
+import type { TrainerSave } from '../trainer/types';
+import { trainerRepository } from '../trainer/storage';
+export function useGym(enabled: boolean, save: TrainerSave) {
   const [controller] = useState(() =>
-    createGymController({ initiallyActive: enabled && AppState.currentState === 'active' }),
+    createGymController({
+      initiallyActive: enabled && AppState.currentState === 'active',
+      rosters: save.rosters,
+      persistRosters: (rosters) => trainerRepository.saveRosters(rosters, save.fixtureVersion),
+    }),
   );
   const display = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
   useEffect(() => {

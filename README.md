@@ -38,9 +38,9 @@ Optional Expo Go smoke (compatible JS-only check; not the working app):
 pnpm --filter @creature-clash/mobile start:go
 ```
 
-The app opens a single-player duel prototype. Choose your creature, opponent, and greedy/random AI, then start. Each selection has ten seconds; the AI commits independently before your controls open. Both choices reveal after a short commitment beat. Press **Continue** to read the next exchange or result. The conditional fourth exchange has its own reveal. Rematch starts a fresh duel with the same setup.
+The app loads your local trainer journal, then offers standalone fixture practice or Gym 3v3. Species clues and Tactical AI are the playable defaults; Exact/Ranges and standalone Greedy/Random remain comparison controls. Each category selection has ten seconds; the AI commits independently before your controls open. Both choices reveal after a short commitment beat. Press **Continue** to read the next exchange or result. The conditional fourth exchange has its own reveal. Rematch starts a fresh duel with the same setup.
 
-Backgrounding pauses the remaining selection time. Fixture/mode controls are available before a duel and after its result. Ashkit/Brookfin reproduce the regression matchup; Slate/Slate provides an all-ties draw fixture. There is no progression or persistence yet.
+Backgrounding pauses the remaining selection time. Fixture/mode controls are available before a duel and after its result. Ashkit/Brookfin reproduce the regression matchup; matching choices in Slate/Slate provide a draw fixture. Completed gym ownership exchanges persist on-device through AsyncStorage; unfinished encounters restart from the last saved rosters. There is no XP progression yet. See [trainer persistence](docs/trainer-persistence.md).
 
 When native dependencies change, rebuild the development client before testing (`pnpm android` or `pnpm ios`); a running Metro server cannot add a missing native module to an old APK. Skia is an existing dependency whose binary-copy postinstall is allowed in `pnpm.onlyBuiltDependencies` so native builds can link it.
 
@@ -96,7 +96,7 @@ The bundle check verifies package resolution and production bundling. Compiling 
 
 ## Later
 
-XP, wild capture, permanent collection storage, networking, relay, signing, and EAS stay for subsequent work. Gym 3v3 now uses one duel per selected creature and an optional participant ownership exchange after the encounter.
+XP, wild capture, inactive inventory, cloud saves, networking, relay, signing, and EAS stay for subsequent work. Gym 3v3 uses one duel per selected creature and an optional participant ownership exchange saved on-device after the encounter.
 
 ## Prototype checks on a device
 
@@ -113,12 +113,12 @@ The mobile starter includes the Expo template's original license in `apps/mobile
 
 The app offers **Duel** (1v1, no exchange) and **Gym 3v3**:
 
-1. Preview the opponent's six active creatures and choose Exact or Ranges for battle stats.
+1. Preview the opponent's six active species/types. Species clues are the default battle visibility; Exact and Ranges remain comparison controls.
 2. Enter the gym, privately lock three within 30 seconds, then secretly deploy an unused participant within 15 seconds before each duel.
 3. Play all three duels with fresh HP/categories; ties award neither side a point.
-4. The encounter winner may exchange one participating instance for one of the loser's three. Both rosters update atomically and carry into the next encounter in app memory. Reloading resets fixtures.
+4. The encounter winner may exchange one participating instance for one of the loser's three. Both rosters are saved together before completion and restored on reopening. Save failure leaves the exchange available to retry.
 
-Mode switching is available before entering or after the encounter finishes. The local AI locks its creature choices before yours, uses greedy category choices, and exercises the same exchange right when it wins. See [gym rules, architecture, and verification](docs/gym-encounter.md).
+Mode switching is available before entering or after the encounter finishes. The local AI locks its creature choices before yours, uses the clue-based tactical category policy, and exercises the same exchange right when it wins. See [gym rules, architecture, and verification](docs/gym-encounter.md) and the [combat checkpoint](docs/combat-checkpoint.md).
 
 `pnpm study` runs offline lookahead comparisons through the same battle engine and writes JSON/CSV to `outputs/battle-study/`. Fixture definitions live in `packages/battle-fixtures`.
 
