@@ -22,6 +22,11 @@ export const validateCreatureSnapshot = (input: unknown): Result<CreatureSnapsho
   }
 
   const { instanceId, speciesId, typeId, stats } = input;
+  if (
+    input.level !== undefined &&
+    (typeof input.level !== 'number' || !Number.isSafeInteger(input.level) || input.level < 1)
+  )
+    return produceFailResult('level must be a positive safe integer');
 
   if (!isNonEmptyString(instanceId)) {
     return produceFailResult('instanceId must be a non-empty string');
@@ -67,6 +72,7 @@ export const validateCreatureSnapshot = (input: unknown): Result<CreatureSnapsho
       speciesId,
       typeId,
       stats: nextStats,
+      ...(input.level === undefined ? {} : { level: input.level as number }),
     },
   };
 };

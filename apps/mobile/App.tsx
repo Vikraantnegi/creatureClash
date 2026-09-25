@@ -11,9 +11,10 @@ import { HomeScreen } from './src/home/HomeScreen';
 import { useTrainerSave } from './src/trainer/useTrainerSave';
 import { TrainerLoading } from './src/trainer/TrainerLoading';
 import type { TrainerSave } from './src/trainer/types';
+import { TrainingJournal } from './src/trainer/TrainingJournal';
 
 function Game({ save }: { save: TrainerSave }) {
-  const { mode, setMode } = useGameMode();
+  const { mode, setMode } = useGameMode(save.pending ? 'gym' : 'home');
   const gym = useGym(mode === 'gym', save);
   return (
     <>
@@ -26,7 +27,14 @@ function Game({ save }: { save: TrainerSave }) {
         </Text>
       </View>
       {mode === 'home' ? (
-        <HomeScreen open={setMode} roster={gym.display.view.roster} />
+        <HomeScreen open={setMode} roster={gym.display.view.roster} disabled={gym.display.saving}>
+          <TrainingJournal
+            save={gym.display.trainer}
+            disabled={gym.display.saving}
+            error={gym.display.saveError}
+            train={gym.controller.train}
+          />
+        </HomeScreen>
       ) : mode === 'duel' ? (
         <BattleScreen leave={() => setMode('home')} />
       ) : (

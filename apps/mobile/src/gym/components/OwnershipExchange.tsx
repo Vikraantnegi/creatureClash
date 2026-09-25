@@ -1,6 +1,6 @@
 import { creatureName } from '@creature-clash/battle-fixtures';
 import { Text, View } from 'react-native';
-import { DUEL_WINNER, type GymView } from '@creature-clash/battle-engine';
+import { DUEL_WINNER, type GymView, type TrainerRosters } from '@creature-clash/battle-engine';
 import { Button } from '../../atoms/Button';
 import { CreatureChoices } from './CreatureChoices';
 import { useExchangeSelection } from '../useExchangeSelection';
@@ -9,11 +9,13 @@ export function OwnershipExchange({
   disabled,
   exchange,
   resolveOpponent,
+  rosters,
 }: {
   view: GymView;
   disabled: boolean;
   exchange: (swap: { give: string; receive: string } | null) => void;
   resolveOpponent: () => void;
+  rosters: TrainerRosters;
 }) {
   const selection = useExchangeSelection();
   if (view.winner === DUEL_WINNER.B)
@@ -21,8 +23,8 @@ export function OwnershipExchange({
       <View className="gap-3">
         <Text className="text-ink font-sans text-xl font-bold">Opponent won the encounter</Text>
         <Text className="text-muted font-sans text-sm">
-          The winner may exchange one participant. This prototype opponent exchanges its first
-          participant for yours.
+          The winner may exchange one participant. The opponent chooses a trade that improves its
+          total trained stats, or declines if none does.
         </Text>
         <Button
           testID="opponent-exchange"
@@ -44,7 +46,9 @@ export function OwnershipExchange({
       <Text className="text-ink font-sans font-semibold">Give one of your three</Text>
       <CreatureChoices
         prefix="give"
-        creatures={view.completed.map((duel) => duel.creatureA)}
+        creatures={view.completed.map(
+          (duel) => rosters.A.find((c) => c.instanceId === duel.creatureA.instanceId)!,
+        )}
         selected={selection.give ? [selection.give] : []}
         choose={selection.setGive}
         disabled={disabled}
@@ -52,7 +56,9 @@ export function OwnershipExchange({
       <Text className="text-ink font-sans font-semibold">Receive one of their three</Text>
       <CreatureChoices
         prefix="receive"
-        creatures={view.completed.map((duel) => duel.creatureB)}
+        creatures={view.completed.map(
+          (duel) => rosters.B.find((c) => c.instanceId === duel.creatureB.instanceId)!,
+        )}
         selected={selection.receive ? [selection.receive] : []}
         choose={selection.setReceive}
         disabled={disabled}

@@ -13,6 +13,8 @@ import { RosterPreview } from './components/RosterPreview';
 import { CreatureChoices } from './components/CreatureChoices';
 import { GymScoreboard } from './components/GymScoreboard';
 import { OwnershipExchange } from './components/OwnershipExchange';
+import { GymRewards } from './components/GymRewards';
+import { TrainingSummary } from '../trainer/TrainingSummary';
 export function GymScreen({
   controller,
   display,
@@ -41,7 +43,7 @@ export function GymScreen({
       {display.notice && <Text className="text-muted font-sans text-sm">{display.notice}</Text>}
       {display.saving && (
         <Text accessibilityLiveRegion="polite" className="text-muted font-sans">
-          Saving your exchange…
+          Saving your progress…
         </Text>
       )}
       {display.saveError && (
@@ -62,7 +64,8 @@ export function GymScreen({
           <Text className="text-muted font-sans text-sm">
             The winner may exchange one participating creature with the loser. Your rosters carry
             into the next encounter and are saved on this device after the exchange is resolved.
-            Unfinished encounters restart when you reopen the app.
+            Unfinished battles restart when you reopen the app. Once gym rewards are saved,
+            reopening returns you to the pending result and exchange.
           </Text>
           <Disclosure label="Playtest visibility">
             <StatVisibilityControls
@@ -173,9 +176,34 @@ export function GymScreen({
         </View>
       )}
       {stage === 'exchange' && (
+        <Disclosure label="Compare participating creatures’ builds">
+          <Text className="text-muted font-sans text-sm">
+            The encounter is over. Both participating teams’ full builds are now visible. XP,
+            training and unspent points travel with each creature.
+          </Text>
+          {view.completed.map((duel) => (
+            <View key={duel.duelId} className="gap-2">
+              <Text className="text-ink font-sans font-semibold">Your participant</Text>
+              <TrainingSummary progress={display.trainer.progress[duel.creatureA.instanceId]!} />
+              <Text className="text-ink font-sans font-semibold">Opponent participant</Text>
+              <TrainingSummary progress={display.trainer.progress[duel.creatureB.instanceId]!} />
+            </View>
+          ))}
+        </Disclosure>
+      )}
+      {stage === 'rewards' && (
+        <GymRewards
+          rewards={display.trainer.pending?.rewards ?? null}
+          disabled={disabled}
+          retry={() => controller.retryRewards(actionKey)}
+          proceed={() => controller.continueRewards(actionKey)}
+        />
+      )}
+      {stage === 'exchange' && (
         <OwnershipExchange
           key={view.encounterId}
           view={view}
+          rosters={display.trainer.rosters}
           disabled={disabled}
           exchange={(swap) => controller.exchange(swap, actionKey)}
           resolveOpponent={() => controller.resolveOpponentExchange(actionKey)}

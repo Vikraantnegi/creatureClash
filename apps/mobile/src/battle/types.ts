@@ -29,6 +29,7 @@ export type Matchup = { yours: CREATURES; opponent: CREATURES; ai: BATTLE_MODES 
 export type StatVisibility = 'exact' | 'approximate' | 'profile';
 
 export type CreatureSheetView = {
+  level: number;
   speciesId: string;
   typeId: SidePublic['creature']['typeId'];
   typeFactor: SidePublic['typeFactor'];

@@ -10,6 +10,7 @@ function Badge({ side, yours }: { side: CreatureSheetView; yours?: boolean }) {
     >
       <Text className="text-ink font-sans text-sm font-bold">
         {creatureName(side.speciesId)} · {typeLabel(side.typeId)}
+        {` · Lv ${side.level}`}
       </Text>
       <View className="flex-row items-center gap-1">
         {[1, 2].map((n) => (

@@ -18,6 +18,7 @@ export type MULTIPLIER_TENTHS = 9 | 10 | 11;
 export type TypeChart = Record<TYPE, Record<TYPE, MULTIPLIER_TENTHS>>;
 
 export type CreatureSnapshot = {
+  level?: number;
   instanceId: string;
   speciesId: string;
   typeId: TYPE;

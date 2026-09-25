@@ -27,7 +27,10 @@ export type GymExchangeAction = {
   side: PLAYER;
   swap: { give: string; receive: string } | null;
 };
-export type CreaturePreview = Pick<CreatureSnapshot, 'instanceId' | 'speciesId' | 'typeId'>;
+export type CreaturePreview = Pick<
+  CreatureSnapshot,
+  'instanceId' | 'speciesId' | 'typeId' | 'level'
+>;
 export type GymView = {
   encounterId: string;
   phase: GymPhase;

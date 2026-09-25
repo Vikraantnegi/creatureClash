@@ -30,6 +30,7 @@ export const copySnapshot = (snapshot: CreatureSnapshot): CreatureSnapshot => ({
   speciesId: snapshot.speciesId,
   typeId: snapshot.typeId,
   stats: { ...snapshot.stats },
+  ...(snapshot.level === undefined ? {} : { level: snapshot.level }),
 });
 
 export const copyTypeChart = (chart: TypeChart): TypeChart => {

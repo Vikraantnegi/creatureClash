@@ -12,7 +12,17 @@ import {
   type DuelState,
   type Result,
   type GymState,
+  type TrainingAllocation,
 } from '@creature-clash/battle-engine';
+import { FIXTURE_VERSION } from '@creature-clash/battle-fixtures';
+import {
+  allocateTraining,
+  chooseOpponentExchange,
+  createTrainerSave,
+  finishSettlement,
+  settleGym,
+} from '../trainer/progression';
+import type { TrainerSave } from '../trainer/types';
 import type { BattleClock, StatVisibility } from '../battle/types';
 import { initialTrainerRosters } from './fixtures';
 import { chooseGymCreatures } from './policy';
@@ -34,30 +44,36 @@ export function createGymController(options: GymOptions = {}) {
   const clock = options.clock ?? systemClock;
   const rng = options.rng ?? Math.random;
   const nextId = options.nextId ?? (() => `gym-${Date.now()}-${++sequence}`);
-  let state = unwrap(
-    createGym({
-      encounterId: nextId(),
-      rosters: options.rosters ?? initialTrainerRosters(),
-      typeChart: DEFAULT_TYPE_CHART,
-    }),
-  );
+  let trainer =
+    options.trainerSave ??
+    createTrainerSave(options.rosters ?? initialTrainerRosters(), FIXTURE_VERSION);
+  let state =
+    trainer.pending?.gym ??
+    unwrap(
+      createGym({
+        encounterId: nextId(),
+        rosters: trainer.rosters,
+        typeChart: DEFAULT_TYPE_CHART,
+      }),
+    );
   let active = options.initiallyActive ?? true;
   let timer: ReturnType<typeof setTimeout> | null = null;
   let deadline: number | null = null;
   let generation = 0;
   const listeners = new Set<() => void>();
   let display: GymDisplay = {
-    stage: 'preview',
+    stage: trainer.pending ? 'rewards' : 'preview',
     view: getGymView(state, PLAYER.A),
     draft: [],
     remainingMs: 0,
     paused: !active,
-    actionKey: `${state.encounterId}:preview:1`,
+    actionKey: `${state.encounterId}:${trainer.pending ? 'rewards' : 'preview'}:1`,
     error: null,
     notice: null,
     visibility: 'profile',
     saving: false,
     saveError: null,
+    trainer,
   };
 
   function publish(patch: Partial<GymDisplay>) {
@@ -99,12 +115,29 @@ export function createGymController(options: GymOptions = {}) {
       key === display.actionKey
     );
   }
+  async function persist(next: TrainerSave) {
+    if (options.persistTrainer) await options.persistTrainer(next, trainer.revision);
+    trainer = next;
+    publish({ trainer });
+  }
+  async function saveRewards() {
+    publish({ saving: true, saveError: null });
+    try {
+      await persist(settleGym(trainer, state));
+      publish({ saving: false });
+    } catch (error) {
+      publish({
+        saving: false,
+        saveError: error instanceof Error ? error.message : 'Could not save rewards. Try again.',
+      });
+    }
+  }
   async function finishExchange(next: GymState) {
     publish({ saving: true, saveError: null });
     try {
       // Commit both owners durably before publishing the new roster or allowing another gym.
-      if (options.persistRosters) await options.persistRosters(next.rosters);
-      state = next;
+      await persist(finishSettlement(trainer, next));
+      state = { ...next, rosters: trainer.rosters };
       publish({ saving: false });
       move('finished');
     } catch {
@@ -256,13 +289,35 @@ export function createGymController(options: GymOptions = {}) {
       const result = recordGymDuel(state, duel);
       if (!result.ok) return; // A completion from an abandoned/previous duel cannot advance this one.
       state = result.value;
-      move(
-        state.phase === 'deployment'
-          ? 'deployment-ready'
-          : state.phase === 'exchange'
-            ? 'exchange'
-            : 'finished',
-      );
+      if (state.phase === 'deployment') move('deployment-ready');
+      else {
+        move('rewards');
+        return saveRewards();
+      }
+    },
+    retryRewards(key: string) {
+      if (!allowed('rewards', key) || trainer.pending) return;
+      return saveRewards();
+    },
+    continueRewards(key: string) {
+      if (!allowed('rewards', key) || !trainer.pending) return;
+      if (state.phase === 'exchange') move('exchange');
+      else return finishExchange(state);
+    },
+    async train(id: string, allocation: TrainingAllocation) {
+      if (display.saving || !['preview', 'finished'].includes(display.stage) || trainer.pending)
+        return;
+      publish({ saving: true, saveError: null });
+      try {
+        await persist(allocateTraining(trainer, id, allocation));
+        state = { ...state, rosters: trainer.rosters };
+        publish({ saving: false, view: getGymView(state, PLAYER.A) });
+      } catch (error) {
+        publish({
+          saving: false,
+          saveError: error instanceof Error ? error.message : 'Could not save training',
+        });
+      }
     },
     exchange(swap: { give: string; receive: string } | null, key: string) {
       if (!allowed('exchange', key) || state.winner !== DUEL_WINNER.A) return;
@@ -276,15 +331,10 @@ export function createGymController(options: GymOptions = {}) {
     },
     resolveOpponentExchange(key: string) {
       if (!allowed('exchange', key) || state.winner !== DUEL_WINNER.B) return;
-      // Prototype opponent always exchanges its first participant for your first participant.
-      // Only completed, publicly revealed participants are considered.
       const result = exchangeGymCreatures(state, {
         encounterId: state.encounterId,
         side: PLAYER.B,
-        swap: {
-          give: state.completed[0]!.creatureB.instanceId,
-          receive: state.completed[0]!.creatureA.instanceId,
-        },
+        swap: chooseOpponentExchange(state, trainer),
       });
       if (!result.ok) return;
       return finishExchange(result.value);

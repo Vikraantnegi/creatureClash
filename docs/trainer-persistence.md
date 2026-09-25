@@ -1,5 +1,7 @@
 # Local trainer ownership
 
+> Historical v1 checkpoint. Phase 7 migrates this record to v2 and adds XP, training allocations, revision checks and durable pending settlement. See [the current implementation](phase-7-verification.md). The original ownership and save-failure principles below still apply; the v1 schema and excluded-progression scope are superseded.
+
 The app loads a versioned AsyncStorage record before mounting gameplay. A missing record seeds both trainers once from the current fixtures. Read failures, malformed data, unsupported versions, invalid stats and duplicate instance IDs show a retry screen without overwriting the saved data.
 
 The single record at `creature-clash:trainer` contains schema version 1, the source fixture version, and both six-creature rosters. Every instance keeps its ID, species, type and individual stats across exchanges and app restarts. Saved snapshots are not regenerated when fixture definitions change. Schema migrations must be explicit; changing the fixture version does not reset an existing trainer.

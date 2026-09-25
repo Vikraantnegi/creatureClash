@@ -40,7 +40,7 @@ pnpm --filter @creature-clash/mobile start:go
 
 The app loads your local trainer journal, then offers standalone fixture practice or Gym 3v3. Species clues and Tactical AI are the playable defaults; Exact/Ranges and standalone Greedy/Random remain comparison controls. Each category selection has ten seconds; the AI commits independently before your controls open. Both choices reveal after a short commitment beat. Press **Continue** to read the next exchange or result. The conditional fourth exchange has its own reveal. Rematch starts a fresh duel with the same setup.
 
-Backgrounding pauses the remaining selection time. Fixture/mode controls are available before a duel and after its result. Ashkit/Brookfin reproduce the regression matchup; matching choices in Slate/Slate provide a draw fixture. Completed gym ownership exchanges persist on-device through AsyncStorage; unfinished encounters restart from the last saved rosters. There is no XP progression yet. See [trainer persistence](docs/trainer-persistence.md).
+Backgrounding pauses the remaining selection time. Fixture/mode controls are available before a duel and after its result. Ashkit/Brookfin reproduce the regression matchup; matching choices in Slate/Slate provide a draw fixture. Gym participants earn XP; level-ups grant training points to allocate in the journal after the exchange. Owned creatures, training and pending gym settlement persist on-device through AsyncStorage. Active battles still restart from the last save. See [Phase 7 progression and verification](docs/phase-7-verification.md).
 
 When native dependencies change, rebuild the development client before testing (`pnpm android` or `pnpm ios`); a running Metro server cannot add a missing native module to an old APK. Skia is an existing dependency whose binary-copy postinstall is allowed in `pnpm.onlyBuiltDependencies` so native builds can link it.
 
@@ -96,7 +96,7 @@ The bundle check verifies package resolution and production bundling. Compiling 
 
 ## Later
 
-XP, wild capture, inactive inventory, cloud saves, networking, relay, signing, and EAS stay for subsequent work. Gym 3v3 uses one duel per selected creature and an optional participant ownership exchange saved on-device after the encounter.
+Wild capture, inactive inventory, cloud saves, networking, relay, signing, and EAS stay for subsequent work. Gym 3v3 uses one duel per selected creature, individual XP/training, and an optional participant ownership exchange saved on-device after the encounter. Progression caps and ranked balance remain provisional.
 
 ## Prototype checks on a device
 
@@ -113,10 +113,12 @@ The mobile starter includes the Expo template's original license in `apps/mobile
 
 The app offers **Duel** (1v1, no exchange) and **Gym 3v3**:
 
-1. Preview the opponent's six active species/types. Species clues are the default battle visibility; Exact and Ranges remain comparison controls.
+1. Preview the opponent's six active species/types/levels. Species clues are the default battle visibility; Exact and Ranges remain comparison controls.
 2. Enter the gym, privately lock three within 30 seconds, then secretly deploy an unused participant within 15 seconds before each duel.
 3. Play all three duels with fresh HP/categories; ties award neither side a point.
-4. The encounter winner may exchange one participating instance for one of the loser's three. Both rosters are saved together before completion and restored on reopening. Save failure leaves the exchange available to retry.
+4. Each participant receives XP from its own duel result. Rewards and the pending settlement are saved together before continuing.
+5. The encounter winner may exchange one participating instance for one of the loser's three. Full participant builds are available to review. Both owners, XP and allocations are saved together; failed writes can be retried.
+6. Return to the journal to spend earned training points. Training locks during a gym. Confirmed allocations stay with the creature across literal exchanges.
 
 Mode switching is available before entering or after the encounter finishes. The local AI locks its creature choices before yours, uses the clue-based tactical category policy, and exercises the same exchange right when it wins. See [gym rules, architecture, and verification](docs/gym-encounter.md) and the [combat checkpoint](docs/combat-checkpoint.md).
 

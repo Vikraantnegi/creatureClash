@@ -174,10 +174,11 @@ export function getGymView(state: GymState, side: PLAYER): GymView {
     phase: state.phase,
     round: Math.min(TEAM_SIZE, state.completed.length + 1),
     roster: state.rosters[side].map(copySnapshot),
-    opponentRoster: state.rosters[opponent].map(({ instanceId, speciesId, typeId }) => ({
+    opponentRoster: state.rosters[opponent].map(({ instanceId, speciesId, typeId, level }) => ({
       instanceId,
       speciesId,
       typeId,
+      ...(level === undefined ? {} : { level }),
     })),
     selected: state.selected[side] ? [...state.selected[side]] : null,
     available: state.rosters[side]

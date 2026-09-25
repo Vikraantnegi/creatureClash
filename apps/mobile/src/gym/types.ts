@@ -1,11 +1,13 @@
 import type { GymView, TrainerRosters } from '@creature-clash/battle-engine';
 import type { BattleClock, StatVisibility } from '../battle/types';
+import type { TrainerSave } from '../trainer/types';
 export type GymStage =
   | 'preview'
   | 'team'
   | 'deployment-ready'
   | 'deployment'
   | 'dueling'
+  | 'rewards'
   | 'exchange'
   | 'finished';
 export type GymDisplay = {
@@ -20,6 +22,7 @@ export type GymDisplay = {
   visibility: StatVisibility;
   saving: boolean;
   saveError: string | null;
+  trainer: TrainerSave;
 };
 export type GymOptions = {
   rosters?: TrainerRosters;
@@ -27,5 +30,6 @@ export type GymOptions = {
   rng?: () => number;
   nextId?: () => string;
   initiallyActive?: boolean;
-  persistRosters?: (rosters: TrainerRosters) => Promise<unknown>;
+  trainerSave?: TrainerSave;
+  persistTrainer?: (save: TrainerSave, expectedRevision: number) => Promise<unknown>;
 };

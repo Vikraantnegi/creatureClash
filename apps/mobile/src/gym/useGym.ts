@@ -7,8 +7,8 @@ export function useGym(enabled: boolean, save: TrainerSave) {
   const [controller] = useState(() =>
     createGymController({
       initiallyActive: enabled && AppState.currentState === 'active',
-      rosters: save.rosters,
-      persistRosters: (rosters) => trainerRepository.saveRosters(rosters, save.fixtureVersion),
+      trainerSave: save,
+      persistTrainer: trainerRepository.commit,
     }),
   );
   const display = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
@@ -24,6 +24,6 @@ export function useGym(enabled: boolean, save: TrainerSave) {
   return {
     controller,
     display,
-    canLeave: display.stage === 'preview' || display.stage === 'finished',
+    canLeave: !display.saving && (display.stage === 'preview' || display.stage === 'finished'),
   };
 }

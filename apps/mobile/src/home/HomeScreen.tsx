@@ -3,12 +3,17 @@ import type { TrainerRosters } from '@creature-clash/battle-engine';
 import { creatureName } from '@creature-clash/battle-fixtures';
 import { CreatureArt } from '../creatures/CreatureArt';
 import { Button } from '../atoms/Button';
+import type { ReactNode } from 'react';
 export function HomeScreen({
   open,
   roster,
+  children,
+  disabled = false,
 }: {
   open: (mode: 'duel' | 'gym') => void;
   roster: TrainerRosters['A'];
+  children?: ReactNode;
+  disabled?: boolean;
 }) {
   return (
     <ScrollView contentContainerClassName="grow justify-between gap-6 p-6 pb-8">
@@ -27,6 +32,7 @@ export function HomeScreen({
       <View className="gap-3">
         <Button
           testID="mode-duel"
+          disabled={disabled}
           primary
           label="Standalone duel  →"
           onPress={() => open('duel')}
@@ -34,7 +40,12 @@ export function HomeScreen({
         <Text className="text-muted px-2 font-sans text-xs">
           One creature each · four categories · two HP
         </Text>
-        <Button testID="mode-gym" label="Gym · 3 v 3  →" onPress={() => open('gym')} />
+        <Button
+          testID="mode-gym"
+          disabled={disabled}
+          label="Gym · 3 v 3  →"
+          onPress={() => open('gym')}
+        />
         <Text className="text-muted px-2 font-sans text-xs">
           Lock three of six · three duels · optional exchange
         </Text>
@@ -42,6 +53,7 @@ export function HomeScreen({
       <Text className="text-muted text-center font-sans text-xs leading-5">
         Your active six · {roster.map((c) => creatureName(c.speciesId)).join(' · ')}
       </Text>
+      {children}
       <Text className="text-muted text-center font-sans text-xs">
         Your creatures and completed exchanges are saved on this device.
       </Text>

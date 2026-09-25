@@ -46,7 +46,9 @@ describe('species knowledge boundary', () => {
   });
   it('does not read unrevealed individual stats for a profile policy', () => {
     const view = getPlayerView(duel(), PLAYER.B);
+    view.opponent.creature.level = 10;
     const before = tacticalObservation(view, 'profile');
+    expect(before.estimatedOpponent.stats.SPEED).toBe(84);
     Object.defineProperty(view.opponent.creature, 'stats', {
       get() {
         throw new Error('Hidden stats read');

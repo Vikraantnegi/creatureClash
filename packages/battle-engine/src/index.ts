@@ -98,3 +98,26 @@ export type {
 } from './gym/types.js';
 
 export { tacticalPolicy, type TacticalObservation } from './policies/tactical.js';
+
+export {
+  createCreatureProgress,
+  getProgressionView,
+  awardDuelXp,
+  trainCreature,
+  emptyTrainingAllocation,
+} from './progression/progression.js';
+export {
+  LEVEL_XP,
+  POINTS_PER_LEVEL,
+  CATEGORY_TRAINING_CAP,
+  PROGRESSION_RULES_VERSION,
+  PARTICIPATION_XP,
+  DUEL_VICTORY_XP,
+} from './progression/constants.js';
+export type {
+  CreatureProgress,
+  TrainingAllocation,
+  ProgressionView,
+  DuelXpOutcome,
+  XpAward,
+} from './progression/types.js';

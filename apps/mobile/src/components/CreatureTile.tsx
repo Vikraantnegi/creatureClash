@@ -12,7 +12,7 @@ export function CreatureTile({
   showStats = false,
   slot,
 }: {
-  creature: Pick<CreatureSnapshot, 'speciesId' | 'typeId'> &
+  creature: Pick<CreatureSnapshot, 'speciesId' | 'typeId' | 'level'> &
     Partial<Pick<CreatureSnapshot, 'stats'>>;
   selected?: boolean;
   disabled?: boolean;
@@ -28,7 +28,7 @@ export function CreatureTile({
       disabled={disabled || !onPress}
       testID={testID}
       accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityLabel={`${slot ? `Slot ${slot}. ` : ''}${name}, ${typeLabel(creature.typeId)}${showStats && creature.stats ? `, Attack ${creature.stats.ATTACK}, Defense ${creature.stats.DEFENSE}, Speed ${creature.stats.SPEED}, Special ${creature.stats.SPECIAL}` : ''}`}
+      accessibilityLabel={`${slot ? `Slot ${slot}. ` : ''}${name}, ${typeLabel(creature.typeId)}, level ${creature.level ?? 1}${showStats && creature.stats ? `, Attack ${creature.stats.ATTACK}, Defense ${creature.stats.DEFENSE}, Speed ${creature.stats.SPEED}, Special ${creature.stats.SPECIAL}` : ''}`}
       accessibilityState={{ selected, disabled }}
       className={`min-h-28 flex-1 items-center justify-center rounded-2xl border p-2 ${selected ? 'border-ink bg-ink' : 'border-line bg-card'} ${disabled ? 'opacity-40' : ''}`}
     >
@@ -41,6 +41,7 @@ export function CreatureTile({
       </Text>
       <Text className={`font-sans text-xs ${selected ? 'text-white' : 'text-muted'}`}>
         {typeLabel(creature.typeId)}
+        {` · Lv ${creature.level ?? 1}`}
         {selected ? ' · selected' : ''}
       </Text>
       {showStats && creature.stats && (

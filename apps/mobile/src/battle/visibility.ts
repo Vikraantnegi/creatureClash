@@ -17,6 +17,7 @@ export function projectCreatureSheet(
   const profile = speciesProfile(side.creature.speciesId);
   return {
     speciesId: side.creature.speciesId,
+    level: side.creature.level ?? 1,
     typeId: side.creature.typeId,
     typeFactor: side.typeFactor,
     hp: side.hp,
